@@ -1,7 +1,16 @@
+import cv2
+
 class DepthMapGenerator:
-    def __init__(self, path_to_image):
-        self.path_to_image = path_to_image
+    # Not needed to declare in Python before assignment in constructor, but added for readability
+    path_to_file = None
+    image = None
+    def __init__(self, path_to_file):
+        self.path_to_image = path_to_file
+        self.image = cv2.imread(path_to_file)
+        cv2.imshow("Image", self.image)
+
 
 if __name__ == '__main__':
-    depth_map_generator = DepthMapGenerator()
-    depth_map_generator.generate_depth_map()
+    path_to_file = "resources/images/skyscrapers.jpeg"
+    depth_map_generator = DepthMapGenerator(path_to_file)
+    # depth_map_generator.generate_depth_map()
