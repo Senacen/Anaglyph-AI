@@ -1,5 +1,6 @@
 import cv2
 import torch
+import numpy as np
 from ai_models.Depth_Anything_V2.depth_anything_v2.dpt import DepthAnythingV2
 
 class DepthMapGenerator:
@@ -23,12 +24,23 @@ class DepthMapGenerator:
         encoder = 'vitl'  # or 'vits', 'vitb', 'vitg'
 
         model = DepthAnythingV2(**model_configs[encoder])
-        model.load_state_dict(torch.load(f'checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
+        model.load_state_dict(torch.load(f'ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
         model = model.to(DEVICE).eval()
 
         depth = model.infer_image(self.image)  # HxW raw depth map in numpy
+        return depth
 
 if __name__ == '__main__':
     path_to_file = "resources/images/skyscrapers.jpeg"
     depth_map_generator = DepthMapGenerator(path_to_file)
-    # depth_map_generator.generate_depth_map()
+    depth_map = depth_map_generator.generate_depth_map()
+    # Normalize the depth map to the range [0, 1]
+    depth_map_normalized = (depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map))
+    # Scale to 0-255
+    depth_map_scaled = (depth_map_normalized * 255).astype(np.uint8)
+    # Apply a colormap
+    depth_map_colored = cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
+    # Display or save the image (for example, using OpenCV)
+    cv2.imshow('Depth Map', depth_map_colored)
+    cv2.waitKey(0)  # Wait until a key is pressed
+    cv2.destroyAllWindows()
