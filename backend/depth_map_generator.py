@@ -2,6 +2,7 @@ import cv2
 import torch
 import numpy as np
 from ai_models.Depth_Anything_V2.depth_anything_v2.dpt import DepthAnythingV2
+# Had to rename Depth-Anything-V2 to Depth_Anything_V2 as hypens are not allowed in module names
 
 class DepthMapGenerator:
     # Not needed to declare in Python before assignment in constructor, but added for readability
