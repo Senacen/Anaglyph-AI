@@ -8,6 +8,10 @@ class DepthMapGenerator:
         self.path_to_image = path_to_file
         self.image = cv2.imread(path_to_file)
         cv2.imshow("Image", self.image)
+        while True:
+            key = cv2.waitKey(1)
+            if key == 27:
+                break
 
 
 if __name__ == '__main__':
