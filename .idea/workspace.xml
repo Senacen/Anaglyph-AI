@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="refactored to make model load first, and all methods are immutable. No state other than model in class">
-      <change afterPath="$PROJECT_DIR$/backend/image_processor.py" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="not used as module, instead as a singleton">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/depth_map_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator_module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/depth_map_generator_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator_module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/image_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/image_processor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +63,9 @@
     "Flask server.Anaglyph AI.executor": "Run",
     "Flask server.Flask (app.py).executor": "Run",
     "Python.depth_map_generator.executor": "Run",
+    "Python.depth_map_generator_module (1).executor": "Run",
     "Python.depth_map_generator_module.executor": "Run",
+    "Python.image_processor.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "node.js.detected.package.eslint": "true",
@@ -83,7 +85,30 @@
       <recent name="$PROJECT_DIR$/backend" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.depth_map_generator_module (1)">
+    <configuration name="depth_map_generator_module (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Anaglyph AI" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/backend" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/backend/depth_map_generator_module.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="depth_map_generator_module" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Anaglyph AI" />
       <option name="ENV_FILES" value="" />
@@ -147,9 +172,11 @@
       <item itemvalue="Flask server.Anaglyph AI" />
       <item itemvalue="Flask server.Flask (backend/app.py)" />
       <item itemvalue="Python.depth_map_generator_module" />
+      <item itemvalue="Python.depth_map_generator_module (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.depth_map_generator_module (1)" />
         <item itemvalue="Python.depth_map_generator_module" />
         <item itemvalue="Flask server.Flask (backend/app.py)" />
       </list>
@@ -174,7 +201,7 @@
       <workItem from="1735496793215" duration="12988000" />
       <workItem from="1735569633492" duration="28000" />
       <workItem from="1735569676283" duration="1669000" />
-      <workItem from="1735571349406" duration="1225000" />
+      <workItem from="1735571349406" duration="3078000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <option name="closed" value="true" />
@@ -264,7 +291,23 @@
       <option name="project" value="LOCAL" />
       <updated>1735571135384</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="will use depth_map_generator_module.py as a module, to ensure singleton">
+      <option name="closed" value="true" />
+      <created>1735572595094</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1735572595094</updated>
+    </task>
+    <task id="LOCAL-00013" summary="not used as module, instead as a singleton">
+      <option name="closed" value="true" />
+      <created>1735573118847</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1735573118847</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,12 +320,16 @@
     <MESSAGE value="check amanda" />
     <MESSAGE value="added timers to time how long imports take" />
     <MESSAGE value="refactored to make model load first, and all methods are immutable. No state other than model in class" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactored to make model load first, and all methods are immutable. No state other than model in class" />
+    <MESSAGE value="will use depth_map_generator_module.py as a module, to ensure singleton" />
+    <MESSAGE value="not used as module, instead as a singleton" />
+    <option name="LAST_COMMIT_MESSAGE" value="not used as module, instead as a singleton" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1735509993980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Anaglyph_AI$image_processor.coverage" NAME="image_processor Coverage Results" MODIFIED="1735574000572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator_module.coverage" NAME="depth_map_generator_module Coverage Results" MODIFIED="1735572009566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/modules" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Anaglyph_AI.coverage" NAME="Anaglyph AI Coverage Results" MODIFIED="1735509812293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator_module__1_.coverage" NAME="depth_map_generator_module (1) Coverage Results" MODIFIED="1735574098962" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator.coverage" NAME="depth_map_generator Coverage Results" MODIFIED="1735571493347" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
   </component>
 </project>

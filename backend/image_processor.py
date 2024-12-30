@@ -1,15 +1,15 @@
 import cv2
 import time
 import numpy as np
-from depth_map_generator_module import DepthMapGenerator
+from depth_map_generator_module import depth_map_generator
 
 start_time = time.time()
 # path_to_file = "resources/images/skyscrapers.jpeg"
 path_to_file = "resources/images/amanda.jpeg"
 image = cv2.imread(path_to_file)
-depth_map = DepthMapGenerator.generate_depth_map(image)
+depth_map = depth_map_generator.generate_depth_map(image)
 # Normalize the depth map to the range [0, 1]
-depth_map_normalised = DepthMapGenerator.normalise_depth_map(depth_map)
+depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map)
 # Scale to 0-255
 depth_map_scaled = (depth_map_normalised * 255).astype(np.uint8)
 # Apply a colormap

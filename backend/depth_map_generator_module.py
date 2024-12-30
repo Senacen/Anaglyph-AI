@@ -21,9 +21,11 @@ class DepthMapGenerator:
         return cls._instance
 
     def __init__(self, encoder="vits"): # or 'vitl', 'vits', 'vitb', 'vitg'
-       self.load_model(encoder)
+        if self.model is None: # Required as __init__ is called
+            self.load_model(encoder)
 
     def load_model(self, encoder):
+        print("Loading model")
         DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
 
         model_configs = {
@@ -43,7 +45,8 @@ class DepthMapGenerator:
     def normalise_depth_map(self, depth_map: np.ndarray) -> np.ndarray:
         return (depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map))
 
-
+# Singleton instance to be imported
+depth_map_generator = DepthMapGenerator()
 
 if __name__ == '__main__':
 
@@ -51,7 +54,6 @@ if __name__ == '__main__':
     # path_to_file = "resources/images/skyscrapers.jpeg"
     path_to_file = "resources/images/amanda.jpeg"
     image = cv2.imread(path_to_file)
-    depth_map_generator = DepthMapGenerator()
     depth_map = depth_map_generator.generate_depth_map(image)
     # Normalize the depth map to the range [0, 1]
     depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map)
