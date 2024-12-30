@@ -12,7 +12,6 @@ print(f"Elapsed time for imports: {elapsed_import_time:.4f} seconds")
 # Singleton
 class DepthMapGenerator:
     _instance = None
-    # Not needed to declare in Python before assignment in constructor, but added for readability
     model = None
 
     def __new__(cls, *args, **kwargs):
