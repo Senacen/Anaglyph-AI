@@ -1,8 +1,13 @@
+import time
+start_import_time = time.time()
 import cv2
 import torch
 import numpy as np
 from ai_models.Depth_Anything_V2.depth_anything_v2.dpt import DepthAnythingV2
-# Had to rename Depth-Anything-V2 to Depth_Anything_V2 as hypens are not allowed in module names
+# Had to rename Depth-Anything-V2 to Depth_Anything_V2 as hyphens are not allowed in module names
+end_import_time = time.time()
+elapsed_import_time = end_import_time - start_import_time
+print(f"Elapsed time for imports: {elapsed_import_time:.4f} seconds")
 
 class DepthMapGenerator:
     # Not needed to declare in Python before assignment in constructor, but added for readability
@@ -22,7 +27,7 @@ class DepthMapGenerator:
             'vitg': {'encoder': 'vitg', 'features': 384, 'out_channels': [1536, 1536, 1536, 1536]}
         }
 
-        encoder = 'vitl'  # or 'vits', 'vitb', 'vitg'
+        encoder = 'vits'  # or 'vitl', 'vits', 'vitb', 'vitg'
 
         model = DepthAnythingV2(**model_configs[encoder])
         model.load_state_dict(torch.load(f'ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
@@ -35,6 +40,8 @@ class DepthMapGenerator:
         return (depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map))
 
 if __name__ == '__main__':
+
+    start_time = time.time()
     # path_to_file = "resources/images/skyscrapers.jpeg"
     path_to_file = "resources/images/amanda.jpeg"
     depth_map_generator = DepthMapGenerator(path_to_file)
@@ -47,5 +54,13 @@ if __name__ == '__main__':
     depth_map_colored = cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
     # Display or save the image (for example, using OpenCV)
     cv2.imshow('Depth Map', depth_map_colored)
-    cv2.waitKey(0)  # Wait until a key is pressed
+
+    # End time
+    end_time = time.time()
+    # Calculate the time taken
+    elapsed_time = end_time - start_time
+    print(f"Elapsed time for depth map: {elapsed_time:.4f} seconds")
+
+    #cv2.waitKey(0)  # Wait until a key is pressed
     cv2.destroyAllWindows()
+
