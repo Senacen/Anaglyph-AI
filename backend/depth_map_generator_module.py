@@ -1,7 +1,4 @@
 import time
-
-from sympy.codegen.cnodes import static
-
 start_import_time = time.time()
 import cv2
 import torch
@@ -16,10 +13,10 @@ class DepthMapGenerator:
     # Not needed to declare in Python before assignment in constructor, but added for readability
     model = None
 
-    def __init__(self):
-       self.load_model()
+    def __init__(self, encoder="vits"): # or 'vitl', 'vits', 'vitb', 'vitg'
+       self.load_model(encoder)
 
-    def load_model(self):
+    def load_model(self, encoder):
         DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
 
         model_configs = {
@@ -28,8 +25,6 @@ class DepthMapGenerator:
             'vitl': {'encoder': 'vitl', 'features': 256, 'out_channels': [256, 512, 1024, 1024]},
             'vitg': {'encoder': 'vitg', 'features': 384, 'out_channels': [1536, 1536, 1536, 1536]}
         }
-
-        encoder = 'vits'  # or 'vitl', 'vits', 'vitb', 'vitg'
 
         self.model = DepthAnythingV2(**model_configs[encoder])
         self.model.load_state_dict(torch.load(f'ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
