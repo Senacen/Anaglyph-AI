@@ -1,4 +1,7 @@
 import time
+
+from sympy.codegen.cnodes import static
+
 start_import_time = time.time()
 import cv2
 import torch
@@ -11,13 +14,12 @@ print(f"Elapsed time for imports: {elapsed_import_time:.4f} seconds")
 
 class DepthMapGenerator:
     # Not needed to declare in Python before assignment in constructor, but added for readability
-    path_to_file = None
-    image = None
-    def __init__(self, path_to_file):
-        self.path_to_image = path_to_file
-        self.image = cv2.imread(path_to_file)
+    model = None
 
-    def generate_depth_map(self) -> np.ndarray:
+    def __init__(self):
+       self.load_model()
+
+    def load_model(self):
         DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
 
         model_configs = {
@@ -29,31 +31,35 @@ class DepthMapGenerator:
 
         encoder = 'vits'  # or 'vitl', 'vits', 'vitb', 'vitg'
 
-        model = DepthAnythingV2(**model_configs[encoder])
-        model.load_state_dict(torch.load(f'ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
-        model = model.to(DEVICE).eval()
+        self.model = DepthAnythingV2(**model_configs[encoder])
+        self.model.load_state_dict(torch.load(f'ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
+        self.model = self.model.to(DEVICE).eval()
 
-        depth = model.infer_image(self.image)  # HxW raw depth map in numpy
-        return depth
+    def generate_depth_map(self, image: np.ndarray) -> np.ndarray:
+        return self.model.infer_image(image)  # HxW raw depth map in numpy
 
     def normalise_depth_map(self, depth_map: np.ndarray) -> np.ndarray:
         return (depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map))
+
+
 
 if __name__ == '__main__':
 
     start_time = time.time()
     # path_to_file = "resources/images/skyscrapers.jpeg"
     path_to_file = "resources/images/amanda.jpeg"
-    depth_map_generator = DepthMapGenerator(path_to_file)
-    depth_map = depth_map_generator.generate_depth_map()
+    image = cv2.imread(path_to_file)
+    depth_map_generator = DepthMapGenerator()
+    depth_map = depth_map_generator.generate_depth_map(image)
     # Normalize the depth map to the range [0, 1]
-    depth_map_normalized = depth_map_generator.normalise_depth_map(depth_map)
+    depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map)
     # Scale to 0-255
-    depth_map_scaled = (depth_map_normalized * 255).astype(np.uint8)
+    depth_map_scaled = (depth_map_normalised * 255).astype(np.uint8)
     # Apply a colormap
     depth_map_colored = cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
     # Display or save the image (for example, using OpenCV)
     cv2.imshow('Depth Map', depth_map_colored)
+    cv2.imshow('Original Image', image)
 
     # End time
     end_time = time.time()
@@ -61,6 +67,6 @@ if __name__ == '__main__':
     elapsed_time = end_time - start_time
     print(f"Elapsed time for depth map: {elapsed_time:.4f} seconds")
 
-    #cv2.waitKey(0)  # Wait until a key is pressed
+    cv2.waitKey(0)  # Wait until a key is pressed
     cv2.destroyAllWindows()
 
