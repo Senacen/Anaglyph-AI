@@ -9,9 +9,16 @@ end_import_time = time.time()
 elapsed_import_time = end_import_time - start_import_time
 print(f"Elapsed time for imports: {elapsed_import_time:.4f} seconds")
 
+# Singleton
 class DepthMapGenerator:
+    _instance = None
     # Not needed to declare in Python before assignment in constructor, but added for readability
     model = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(DepthMapGenerator, cls).__new__(cls)
+        return cls._instance
 
     def __init__(self, encoder="vits"): # or 'vitl', 'vits', 'vitb', 'vitg'
        self.load_model(encoder)
