@@ -29,7 +29,6 @@ class ImageContainer:
             'Depth Map Coloured': self.depth_map_coloured,
             'Left Image': self.left_image,
             'Right Image': self.right_image,
-            'Anaglyph': self.anaglyph
         }
         # Create windows and display images using a loop
         for i, (window_name, img) in enumerate(images.items()):
@@ -41,7 +40,7 @@ class ImageContainer:
             cv2.imshow(window_name, resized_image)
             # Move the window to a specific position
             cv2.moveWindow(window_name, width * i, 0)  # Position next to the previous window
-
+        cv2.imshow("Anaglyph", self.anaglyph)
         cv2.waitKey(0)  # Wait until a key is pressed
         cv2.destroyAllWindows()
 
@@ -62,7 +61,10 @@ if __name__ == '__main__':
     # path_to_file = "resources/images/amanda.jpeg"
     # path_to_file = "resources/images/escher.jpeg"
     # path_to_file = "resources/images/flowerTank.jpg"
-    path_to_file = "resources/images/aiPaintSplash.jpg"
-    image_container = ImageContainer(path_to_file, pop_out=False, max_disparity=50)
+    # path_to_file = "resources/images/aiPaintSplash.jpg"
+    # path_to_file = "resources/images/nightFoliage.jpg"
+    # path_to_file = "resources/images/johnsGate.jpeg"
+    path_to_file = "resources/images/EntryRenderingCompetition.jpeg"
+    image_container = ImageContainer(path_to_file, pop_out=True, max_disparity=100)
     image_container.show_images()
 
