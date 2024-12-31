@@ -6,7 +6,7 @@ from anaglyph_generator import anaglyph_generator
 
 
 class ImageContainer:
-    def __init__(self, path_to_file):
+    def __init__(self, path_to_file, pop_out, max_disparity):
         self.path_to_file = path_to_file
         self.image = cv2.imread(path_to_file)
         if self.image is None:
@@ -15,8 +15,10 @@ class ImageContainer:
         self.depth_map_normalised = depth_map_generator.normalise_depth_map(self.depth_map)
         self.depth_map_scaled = (self.depth_map_normalised * 255).astype(np.uint8)
         self.depth_map_coloured = cv2.applyColorMap(self.depth_map_scaled, cv2.COLORMAP_JET)
+        self.left_image, self.right_image = anaglyph_generator.generate_stereo_image(self.image, self.depth_map_normalised, pop_out, max_disparity)
+        self.anaglyph = anaglyph_generator.generate_anaglyph(self.left_image, self.right_image)
 
-    def show_images(self, width=400):
+    def show_images(self, width=500):
         """
         Display the original image, depth map, and colored depth map in separate windows.
         :param width: Desired width for the display windows. Height is adjusted to maintain aspect ratio.
@@ -24,8 +26,10 @@ class ImageContainer:
         # Create a list of images and their corresponding window names
         images = {
             'Original Image': self.image,
-            'Depth Map': self.depth_map_scaled,
             'Depth Map Coloured': self.depth_map_coloured,
+            'Left Image': self.left_image,
+            'Right Image': self.right_image,
+            'Anaglyph': self.anaglyph
         }
         # Create windows and display images using a loop
         for i, (window_name, img) in enumerate(images.items()):
@@ -56,7 +60,9 @@ class ImageContainer:
 if __name__ == '__main__':
     # path_to_file = "resources/images/skyscrapers.jpeg"
     # path_to_file = "resources/images/amanda.jpeg"
-    path_to_file = "resources/images/escher.jpeg"
-    image_container = ImageContainer(path_to_file)
+    # path_to_file = "resources/images/escher.jpeg"
+    # path_to_file = "resources/images/flowerTank.jpg"
+    path_to_file = "resources/images/aiPaintSplash.jpg"
+    image_container = ImageContainer(path_to_file, pop_out=False, max_disparity=50)
     image_container.show_images()
 

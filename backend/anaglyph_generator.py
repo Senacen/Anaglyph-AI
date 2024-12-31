@@ -50,11 +50,36 @@ class AnaglyphGenerator:
         # Sample the pixels, rows is broadcast to 2D and the samples are used to get the row and col indices of each cell in image for each cell in left and right image
         left_image = image[rows, left_samples]
         right_image = image[rows, right_samples]
+        # TODO: Figure out why escher columns are too thin
 
         return left_image, right_image
 
+# TODO: make optimised anaglyph filters
+    def generate_anaglyph(self, left_image: np.ndarray, right_image: np.ndarray) -> np.ndarray:
+        """
+        Generate an anaglyph image from a stereo image pair.
+        :param left_image: Left image of the stereo pair.
+        :param right_image: Right image of the stereo pair.
+        :return: Anaglyph image.
+        """
+        # Create an anaglyph image by combining the left and right images
+        # BGR format
+        # Initialize the anaglyph image
+        anaglyph = np.zeros_like(left_image)
+        # Assign channels directly
+        anaglyph[:, :, 0] = right_image[:, :, 0]  # Blue channel from right image
+        anaglyph[:, :, 1] = right_image[:, :, 1]  # Green channel from right image
+        anaglyph[:, :, 2] = left_image[:, :, 2]  # Red channel from left image
+
+        return anaglyph
 
     def lerp(self, a, b, t):
+        """
+        Linear interpolation between a and b.
+        :param a: start ndarray or scalar
+        :param b: end ndarray or scalar
+        :param t: progress
+        """
         return a + t * (b - a)
 
 
@@ -68,7 +93,7 @@ if __name__ == '__main__':
     # Normalize the depth map to the range [0, 1]
     depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map)
     # Generate stereo image pair
-    left_image, right_image = stereo_generator.generate_stereo_image(image, depth_map_normalised)
+    left_image, right_image = anaglyph_generator.generate_stereo_image(image, depth_map_normalised)
     # Display the stereo image pair
     cv2.imshow('Left Image', left_image)
     cv2.imshow('Right Image', right_image)
