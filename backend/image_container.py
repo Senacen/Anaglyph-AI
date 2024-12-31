@@ -15,7 +15,7 @@ class ImageContainer:
         self.depth_map_scaled = (self.depth_map_normalised * 255).astype(np.uint8)
         self.depth_map_coloured = cv2.applyColorMap(self.depth_map_scaled, cv2.COLORMAP_JET)
 
-    def show_images(self, width=500):
+    def show_images(self, width=400):
         """
         Display the original image, depth map, and colored depth map in separate windows.
         :param width: Desired width for the display windows. Height is adjusted to maintain aspect ratio.

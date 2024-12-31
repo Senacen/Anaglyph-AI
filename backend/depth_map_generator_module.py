@@ -46,7 +46,7 @@ class DepthMapGenerator:
         """
         Generate a depth map from an image.
         :param image: Image to generate a depth map from.
-        :return: Depth map.
+        :return: Depth map with largest value as closest.
         """
         return self.model.infer_image(image)  # HxW raw depth map in numpy
 
@@ -54,9 +54,10 @@ class DepthMapGenerator:
         """
         Normalise the depth map to the range [0, 1].
         :param depth_map: The depth map to normalise.
-        :return: Normalised depth map.
+        :return: Normalised depth map, with direction flipped so 0 is closest and 1 is furthest.
         """
-        return (depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map))
+        # 0 is closest, 1 is furthest
+        return ((depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map)))
 
 # Singleton instance to be imported
 depth_map_generator = DepthMapGenerator()

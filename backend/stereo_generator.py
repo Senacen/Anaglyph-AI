@@ -12,17 +12,16 @@ class StereoGenerator:
         return cls._instance
 
     # PPI of retina display is 254, which is exactly 100 PPCM
-    def generate_stereo_image(self, image: np.ndarray, depth_map_normalised: np.ndarray, max_disparity=100) -> (np.ndarray, np.ndarray):
+    def generate_stereo_image(self, image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=False, max_disparity=100) -> (np.ndarray, np.ndarray):
         """
-        Generate a stereo image pair from a single image. Makes it pop into the screen, so the plane of zero disparity is the closest point in the depth map.
+        Generate a stereo image pair from a single image.
         :param image: Image to generate a stereo pair from.
         :param depth_map_normalised: Normalised depth map.
+        :param pop_out: Whether to make the image pop out or sink in.
         :param max_disparity: Maximum disparity value.
         :return: Stereo image pair (left, right).
         """
-        # Initialise the left and right images
-        left_image = np.zeros_like(image)
-        right_image = np.zeros_like(image)
+
         height, width, _ = image.shape
 
         # Right image has to be original shifted left, so right image has to sample pixels to the right of the corresponding pixel in the original
@@ -30,27 +29,27 @@ class StereoGenerator:
         # The further away the pixel, the more it has to shift, with a linear interpolation between 0 and max_disparity / 2
         max_disparity_from_original = max_disparity / 2
 
-        import time
-        start_time = time.time()
         # Vectorise and precompute the shifts
-        shifts = self.lerp(0, max_disparity_from_original, depth_map_normalised)
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        print(f"Elapsed time for precomputing shifts: {elapsed_time:.4f} seconds")
-        # Use horizontal interpolation between pixels
-        # Compute left image
-        for row in range(height):
-            for col in range(width):
-                sample_x = col - int(shifts[row, col])
-                if sample_x >= 0:
-                    left_image[row, col] = image[row, sample_x]
+        # Pop out true or false flips the depth map, to make the closest have more disparity or make the furthest have more disparity
+        shifts = np.round(self.lerp(0, max_disparity_from_original, depth_map_normalised if pop_out else 1 - depth_map_normalised)).astype(np.int32)
 
-        # Compute right image
-        for row in range(height):
-            for col in range(width):
-                sample_x = col + int(shifts[row, col])
-                if sample_x < width:
-                    right_image[row, col] = image[row, sample_x]
+        # Vectorise Shifting
+        cols = np.arange(width) # [0, 1, 2, ..., width - 1]
+        # Pop out true or false flips the direction of the shift
+        if pop_out:
+            left_samples = cols - shifts # Broadcasts cols, and results in a 2D array where left_samples[row, col] = sample_col
+            right_samples = cols + shifts
+        else:
+            left_samples = cols + shifts
+            right_samples = cols - shifts
+
+        left_samples = np.clip(left_samples, 0, width - 1) # Clip into range
+        right_samples = np.clip(right_samples, 0, width - 1) # TODO: Check if this causes stretched pixels
+
+        rows = np.arange(height).reshape(height, 1) # make a rows index column vector
+        # Sample the pixels, rows is broadcast to 2D and the samples are used to get the row and col indices of each cell in image for each cell in left and right image
+        left_image = image[rows, left_samples]
+        right_image = image[rows, right_samples]
 
         return left_image, right_image
 

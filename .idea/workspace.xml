@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="started stereo generator, also singleton">
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="finished stereo generator">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/depth_map_generator_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator_module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/image_container.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/image_container.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/stereo_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/stereo_generator.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -86,7 +88,7 @@
       <recent name="$PROJECT_DIR$/backend" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.stereo_generator">
+  <component name="RunManager">
     <configuration name="depth_map_generator_module (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Anaglyph AI" />
       <option name="ENV_FILES" value="" />
@@ -228,7 +230,7 @@
       <workItem from="1735569633492" duration="28000" />
       <workItem from="1735569676283" duration="1669000" />
       <workItem from="1735571349406" duration="3830000" />
-      <workItem from="1735575546017" duration="12476000" />
+      <workItem from="1735575546017" duration="14860000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <option name="closed" value="true" />
@@ -374,7 +376,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735608244120</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="finished stereo generator">
+      <option name="closed" value="true" />
+      <created>1735610883333</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1735610883333</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -393,13 +403,14 @@
     <MESSAGE value="ImageContainer class for all the different images" />
     <MESSAGE value="display images next to each other" />
     <MESSAGE value="started stereo generator, also singleton" />
-    <option name="LAST_COMMIT_MESSAGE" value="started stereo generator, also singleton" />
+    <MESSAGE value="finished stereo generator" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished stereo generator" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1735509993980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$image_processor.coverage" NAME="image_processor Coverage Results" MODIFIED="1735574000572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
-    <SUITE FILE_PATH="coverage/Anaglyph_AI$stereo_generator.coverage" NAME="stereo_generator Coverage Results" MODIFIED="1735610754644" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
-    <SUITE FILE_PATH="coverage/Anaglyph_AI$image_container.coverage" NAME="image_container Coverage Results" MODIFIED="1735604733551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/Anaglyph_AI$stereo_generator.coverage" NAME="stereo_generator Coverage Results" MODIFIED="1735613048933" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/Anaglyph_AI$image_container.coverage" NAME="image_container Coverage Results" MODIFIED="1735612098337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator_module.coverage" NAME="depth_map_generator_module Coverage Results" MODIFIED="1735572009566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/modules" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Anaglyph_AI.coverage" NAME="Anaglyph AI Coverage Results" MODIFIED="1735509812293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator_module__1_.coverage" NAME="depth_map_generator_module (1) Coverage Results" MODIFIED="1735600602184" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
