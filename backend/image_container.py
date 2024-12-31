@@ -53,8 +53,9 @@ class ImageContainer:
         return resized_image
 
 if __name__ == '__main__':
-    path_to_file = "resources/images/skyscrapers.jpeg"
+    # path_to_file = "resources/images/skyscrapers.jpeg"
     # path_to_file = "resources/images/amanda.jpeg"
+    path_to_file = "resources/images/escher.jpeg"
     image_container = ImageContainer(path_to_file)
     image_container.show_images()
 
