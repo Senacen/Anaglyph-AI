@@ -59,12 +59,13 @@ class ImageContainer:
 if __name__ == '__main__':
     # path_to_file = "resources/images/skyscrapers.jpeg"
     # path_to_file = "resources/images/amanda.jpeg"
-    # path_to_file = "resources/images/escher.jpeg"
+    path_to_file = "resources/images/escher.jpeg"
     # path_to_file = "resources/images/flowerTank.jpg"
     # path_to_file = "resources/images/aiPaintSplash.jpg"
     # path_to_file = "resources/images/nightFoliage.jpg"
     # path_to_file = "resources/images/johnsGate.jpeg"
-    path_to_file = "resources/images/EntryRenderingCompetition.jpeg"
-    image_container = ImageContainer(path_to_file, pop_out=True, max_disparity=100)
+    # path_to_file = "resources/images/EntryRenderingCompetition.jpeg"
+    # path_to_file = "resources/images/kittens.jpg"
+    image_container = ImageContainer(path_to_file, pop_out=True, max_disparity=50)
     image_container.show_images()
 

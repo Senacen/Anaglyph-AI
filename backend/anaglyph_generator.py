@@ -11,8 +11,7 @@ class AnaglyphGenerator:
             cls._instance = super(AnaglyphGenerator, cls).__new__(cls)
         return cls._instance
 
-    # PPI of retina display is 254, which is exactly 100 PPCM
-    def generate_stereo_image(self, image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=False, max_disparity=100) -> (np.ndarray, np.ndarray):
+    def generate_stereo_imagetemp(self, image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=False, max_disparity=100) -> (np.ndarray, np.ndarray):
         """
         Generate a stereo image pair from a single image.
         :param image: Image to generate a stereo pair from.
@@ -32,7 +31,7 @@ class AnaglyphGenerator:
         # Vectorise and precompute the shifts
         # Pop out true or false flips the depth map, to make the closest have more disparity or make the furthest have more disparity
         shifts = np.round(self.lerp(0, max_disparity_from_original, depth_map_normalised if pop_out else 1 - depth_map_normalised)).astype(np.int32)
-
+        cv2.imshow("shifts", shifts.astype(np.uint8))
         # Vectorise Shifting
         cols = np.arange(width) # [0, 1, 2, ..., width - 1]
         # Pop out true or false flips the direction of the shift
@@ -50,6 +49,52 @@ class AnaglyphGenerator:
         # Sample the pixels, rows is broadcast to 2D and the samples are used to get the row and col indices of each cell in image for each cell in left and right image
         left_image = image[rows, left_samples]
         right_image = image[rows, right_samples]
+        # TODO: Figure out why escher columns are too thin
+
+        return left_image, right_image
+
+    def generate_stereo_image(self, image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=False,
+                              max_disparity=100) -> (np.ndarray, np.ndarray):
+        """
+        Generate a stereo image pair from a single image.
+        :param image: Image to generate a stereo pair from.
+        :param depth_map_normalised: Normalised depth map.
+        :param pop_out: Whether to make the image pop out or sink in.
+        :param max_disparity: Maximum disparity value.
+        :return: Stereo image pair (left, right).
+        """
+
+        height, width, _ = image.shape
+
+        # Right image has to be original shifted left, so right image has to sample pixels to the right of the corresponding pixel in the original
+        # Left image has to be original shifted right, so left image has to sample pixels to the left of the corresponding pixel in the original
+        # The further away the pixel, the more it has to shift, with a linear interpolation between 0 and max_disparity / 2
+        max_disparity_from_original = max_disparity / 2
+
+        # Vectorise and precompute the shifts
+        # Pop out true or false flips the depth map, to make the closest have more disparity or make the furthest have more disparity
+        shifts = np.round(self.lerp(0, max_disparity_from_original,
+                                    depth_map_normalised if pop_out else 1 - depth_map_normalised)).astype(np.int32)
+        cv2.imshow("shifts", shifts.astype(np.uint8))
+        # Vectorise Shifting
+        cols = np.arange(width)  # [0, 1, 2, ..., width - 1]
+        # Pop out true or false flips the direction of the shift
+        if pop_out:
+            left_end = cols + shifts  # Broadcasts cols, and results in a 2D array where left_samples[row, col] = sample_col
+            right_end = cols - shifts
+        else:
+            left_end = cols - shifts
+            right_end = cols + shifts
+
+        left_end = np.clip(left_end, 0, width - 1)  # Clip into range
+        right_end = np.clip(right_end, 0, width - 1)  # TODO: Check if this causes stretched pixels
+
+        rows = np.arange(height).reshape(height, 1)  # make a rows index column vector
+        left_image = np.zeros_like(image)
+        right_image = np.zeros_like(image)
+        # Sample the pixels, rows is broadcast to 2D and the samples are used to get the row and col indices of each cell in image for each cell in left and right image
+        left_image[rows, left_end] = image
+        right_image[rows, right_end] = image
         # TODO: Figure out why escher columns are too thin
 
         return left_image, right_image
@@ -87,7 +132,7 @@ class AnaglyphGenerator:
 anaglyph_generator = AnaglyphGenerator()
 
 if __name__ == '__main__':
-    path_to_file = "resources/images/amanda.jpeg"
+    path_to_file = "resources/images/escher.jpeg"
     image = cv2.imread(path_to_file)
     depth_map = depth_map_generator.generate_depth_map(image)
     # Normalize the depth map to the range [0, 1]
@@ -97,5 +142,6 @@ if __name__ == '__main__':
     # Display the stereo image pair
     cv2.imshow('Left Image', left_image)
     cv2.imshow('Right Image', right_image)
+    cv2.imshow("Anaglyph", anaglyph_generator.generate_anaglyph(left_image, right_image))
     cv2.waitKey(0)  # Wait until a key is pressed
     cv2.destroyAllWindows()
