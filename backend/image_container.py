@@ -1,7 +1,8 @@
 import cv2
 import time
 import numpy as np
-from depth_map_generator_module import depth_map_generator
+from depth_map_generator import depth_map_generator
+from anaglyph_generator import anaglyph_generator
 
 
 class ImageContainer:
