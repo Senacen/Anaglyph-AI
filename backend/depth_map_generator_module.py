@@ -26,8 +26,7 @@ class DepthMapGenerator:
     def load_model(self, encoder):
         """
         Load the pre-trained model.
-        :param encoder: The version of the model to load
-        :return:
+        :param encoder: The version of the model to load. Options: 'vits', 'vitb', 'vitl', 'vitg'.
         """
         print("Loading model")
         DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
@@ -47,7 +46,7 @@ class DepthMapGenerator:
         """
         Generate a depth map from an image.
         :param image: Image to generate a depth map from.
-        :return:
+        :return: Depth map.
         """
         return self.model.infer_image(image)  # HxW raw depth map in numpy
 
@@ -55,7 +54,7 @@ class DepthMapGenerator:
         """
         Normalise the depth map to the range [0, 1].
         :param depth_map: The depth map to normalise.
-        :return:
+        :return: Normalised depth map.
         """
         return (depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map))
 

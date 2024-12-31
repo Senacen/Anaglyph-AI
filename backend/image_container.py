@@ -15,10 +15,9 @@ class ImageContainer:
         self.depth_map_scaled = (self.depth_map_normalised * 255).astype(np.uint8)
         self.depth_map_coloured = cv2.applyColorMap(self.depth_map_scaled, cv2.COLORMAP_JET)
 
-    def show_images(self, width=800):
+    def show_images(self, width=500):
         """
         Display the original image, depth map, and colored depth map in separate windows.
-
         :param width: Desired width for the display windows. Height is adjusted to maintain aspect ratio.
         """
         # Create a list of images and their corresponding window names
@@ -30,7 +29,7 @@ class ImageContainer:
         # Create windows and display images using a loop
         for i, (window_name, img) in enumerate(images.items()):
             # Create named window
-            cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+            cv2.namedWindow(window_name)
             # Resize image to maintain aspect ratio
             resized_image = self.resize_image(img, width)
             # Show the resized image in the corresponding window
@@ -44,19 +43,18 @@ class ImageContainer:
     def resize_image(self, image, width):
         """
         Resize the image to the specified width, maintaining the aspect ratio.
-
         :param image: The original image to resize.
         :param width: The desired width for the resized image.
         :return: Resized image.
         """
-        aspect_ratio = image.shape[1] / image.shape[0]  # width / height
-        new_height = int(width / aspect_ratio)
+        ratio = width / image.shape[1]  # width / original_width
+        new_height = int(image.shape[0] * ratio) # original_height * ratio
         resized_image = cv2.resize(image, (width, new_height))
         return resized_image
 
 if __name__ == '__main__':
-    # path_to_file = "resources/images/skyscrapers.jpeg"
-    path_to_file = "resources/images/amanda.jpeg"
+    path_to_file = "resources/images/skyscrapers.jpeg"
+    # path_to_file = "resources/images/amanda.jpeg"
     image_container = ImageContainer(path_to_file)
     image_container.show_images()
 
