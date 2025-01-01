@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Got simple red cyan anaglyph working">
-      <change afterPath="$PROJECT_DIR$/backend/resources/images/bars.jpg" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Fixed overwriting, now on forward fill">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/anaglyph_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/anaglyph_generator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/image_container.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/image_container.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -260,7 +258,7 @@
       <workItem from="1735569633492" duration="28000" />
       <workItem from="1735569676283" duration="1669000" />
       <workItem from="1735571349406" duration="3830000" />
-      <workItem from="1735575546017" duration="33984000" />
+      <workItem from="1735575546017" duration="35088000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <option name="closed" value="true" />
@@ -462,7 +460,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735668318225</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Fixed overwriting, now on forward fill">
+      <option name="closed" value="true" />
+      <created>1735697100093</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1735697100093</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -485,15 +491,16 @@
     <MESSAGE value="Vectorised everything, sped it up" />
     <MESSAGE value="renames" />
     <MESSAGE value="Got simple red cyan anaglyph working" />
-    <option name="LAST_COMMIT_MESSAGE" value="Got simple red cyan anaglyph working" />
+    <MESSAGE value="Fixed overwriting, now on forward fill" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed overwriting, now on forward fill" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/backend/anaglyph_generator.py</url>
-          <line>98</line>
-          <option name="timeStamp" value="10" />
+          <line>105</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -506,7 +513,7 @@
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator_module.coverage" NAME="depth_map_generator_module Coverage Results" MODIFIED="1735572009566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/modules" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Anaglyph_AI.coverage" NAME="Anaglyph AI Coverage Results" MODIFIED="1735509812293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator_module__1_.coverage" NAME="depth_map_generator_module (1) Coverage Results" MODIFIED="1735600602184" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
-    <SUITE FILE_PATH="coverage/Anaglyph_AI$anaglyph_generator.coverage" NAME="anaglyph_generator Coverage Results" MODIFIED="1735696554307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/Anaglyph_AI$anaglyph_generator.coverage" NAME="anaglyph_generator Coverage Results" MODIFIED="1735697881742" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator.coverage" NAME="depth_map_generator Coverage Results" MODIFIED="1735571493347" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
   </component>
 </project>

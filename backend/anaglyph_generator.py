@@ -85,18 +85,25 @@ class AnaglyphGenerator:
 
         black_and_white = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         non_black_mask = ~(black_and_white == 0)
-        non_black_mask[:, 0] = True # Make first column all true
-        cv2.imshow("non_black_mask", (non_black_mask * 255).astype(np.uint8))
-        non_black_feed_forward_indexes = np.cumsum(non_black_mask, axis=1) - 1
-        cv2.imshow("non_black_feed_forward_indexes", (non_black_feed_forward_indexes / non_black_feed_forward_indexes.max() * 255).astype(np.uint8))
-        index_of_first_non_black = np.argmax(non_black_feed_forward_indexes, axis=1)
+
+        index_of_first_non_black = np.argmax(non_black_mask, axis=1)
         image_with_first_column_filled = copy.deepcopy(image)
         rows = np.arange(image.shape[0])  # row indexes in row vector (so that it is not broadcasted to 2D, and neither is index_of_first_non_black)
         image_with_first_column_filled[:, 0] = image[rows, index_of_first_non_black]
         cv2.imshow("original", image)
         cv2.imshow("first column filled", image_with_first_column_filled)
-        # TODO: Fix this, it is not working
-        filled_image = image_with_first_column_filled[non_black_mask][non_black_feed_forward_indexes] # Reshape so it will be broadcast to 2D
+        non_black_mask[:, 0] = True # Make first column all true now the first column is filled
+
+        cv2.imshow("non_black_mask", (non_black_mask * 255).astype(np.uint8))
+        non_black_forward_fill_indexes = np.cumsum(non_black_mask, axis=1) - 1
+        cv2.imshow("non_black_forward_fill_indexes", (non_black_forward_fill_indexes / non_black_forward_fill_indexes.max() * 255).astype(np.uint8))
+
+
+        # TODO: Fix this, it is not working: non_black_mask results in different number of pixels, so when indexed does not work. Try fill in the rest with 0s? They won't be used and are needed for the shape to be the same
+        non_black_pixels_no_holes = image_with_first_column_filled[non_black_mask]
+        cv2.imshow("non black pixels in a row", non_black_pixels_no_holes)
+
+        filled_image = image_with_first_column_filled[non_black_mask][non_black_forward_fill_indexes] # Reshape so it will be broadcast to 2D
         cv2.imshow("filled_image", filled_image)
         return filled_image
 
