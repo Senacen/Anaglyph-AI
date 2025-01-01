@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-import copy
+import time
 
 from matplotlib.pyplot import imshow
 
@@ -32,6 +32,7 @@ class AnaglyphGenerator:
         # The further away the pixel, the more it has to shift, with a linear interpolation between 0 and max_disparity / 2
         max_disparity_from_original = max_disparity / 2
 
+        start_time = time.time()
         # Vectorise and precompute the shifts
         # Pop out true or false flips the depth map, to make the closest have more disparity or make the furthest have more disparity
         shifts = np.round(self.lerp(0, max_disparity_from_original,
@@ -71,8 +72,12 @@ class AnaglyphGenerator:
             left_image[rows, left_end[:, ::-1]] = image[:, ::-1]
             right_image[rows, right_end] = image
 
+        print(f"Elapsed time for stereo image pair with holes: {time.time() - start_time:.4f} seconds")
+
+        start_time = time.time()
         left_image = self.fill_holes(left_image)
         right_image = self.fill_holes(right_image)  # Reverse the right image to fill holes from right to left
+        print(f"Elapsed time for stereo image pair fill holes: {time.time() - start_time:.4f} seconds")
         return left_image, right_image
 
     def fill_holes (self, image: np.ndarray) -> np.ndarray:
@@ -81,11 +86,15 @@ class AnaglyphGenerator:
         :param image: Image to be filled.
         :return: Filled image.
         """
-        cv2.imshow("Image", image)
+        #cv2.imshow("Image", image)
         black_and_white = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         black_mask = ((black_and_white == 0) * 255).astype(np.uint8)
-        filled_image = cv2.inpaint(image, black_mask, 3, cv2.INPAINT_TELEA)
-        cv2.imshow("Filled Image", filled_image)
+        # Inpainting Radius = 1 as the holes are very small as we need rough and fast
+        # Currently takes 0.47 seconds to fill holes in water lily, can I improve with forward fill?
+        # On second thoughts, forward fill should take as long, as this is roughly the same as generating the stereo image pair
+        # And forward fill would require as many np vectorised functions
+        filled_image = cv2.inpaint(image, black_mask, 1, cv2.INPAINT_TELEA)
+        #cv2.imshow("Filled Image", filled_image)
         return filled_image
 
 # TODO: make optimised anaglyph filters

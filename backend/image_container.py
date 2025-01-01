@@ -25,7 +25,7 @@ class ImageContainer:
         self.left_image, self.right_image = anaglyph_generator.generate_stereo_image(self.image, self.depth_map_normalised, pop_out, max_disparity)
         self.anaglyph = anaglyph_generator.generate_anaglyph(self.left_image, self.right_image)
         end_time = time.time()
-        print(f"Elapsed time for anaglyph: {end_time - start_time:.4f} seconds")
+        print(f"total Elapsed time for anaglyph generation from depth map: {end_time - start_time:.4f} seconds")
 
     def show_images(self, width=500):
         """
@@ -67,7 +67,7 @@ class ImageContainer:
 
 if __name__ == '__main__':
     # path_to_file = "resources/images/skyscrapers.jpeg"
-    path_to_file = "resources/images/amanda.jpeg"
+    # path_to_file = "resources/images/amanda.jpeg"
     # path_to_file = "resources/images/escher.jpeg"
     # path_to_file = "resources/images/flowerTank.jpg"
     # path_to_file = "resources/images/aiPaintSplash.jpg"
@@ -79,6 +79,12 @@ if __name__ == '__main__':
     # path_to_file = "resources/images/titanic.webp"
     # path_to_file = "resources/images/icy spicy.jpeg"
     # path_to_file = "resources/images/icy spicy alone.JPG"
-    image_container = ImageContainer(path_to_file, pop_out=False, max_disparity=35)
+    # path_to_file = "resources/images/waterLily.jpg"
+    import tkinter as tk
+    from tkinter import filedialog
+    root = tk.Tk()
+    root.withdraw()
+    path_to_file = filedialog.askopenfilename()
+    image_container = ImageContainer(path_to_file, pop_out=True, max_disparity=50)
     image_container.show_images()
 
