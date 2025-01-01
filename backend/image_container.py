@@ -7,15 +7,21 @@ from anaglyph_generator import anaglyph_generator
 
 class ImageContainer:
     def __init__(self, path_to_file, pop_out, max_disparity):
+
         start_time = time.time()
         self.path_to_file = path_to_file
         self.image = cv2.imread(path_to_file)
         if self.image is None:
             raise FileNotFoundError(f"Image not found at path: {path_to_file}")
         self.depth_map = depth_map_generator.generate_depth_map(self.image)
+        end_time = time.time()
+        print(f"Elapsed time for depth map: {end_time - start_time:.4f} seconds")
+
         self.depth_map_normalised = depth_map_generator.normalise_depth_map(self.depth_map)
         self.depth_map_scaled = (self.depth_map_normalised * 255).astype(np.uint8)
         self.depth_map_coloured = cv2.applyColorMap(self.depth_map_scaled, cv2.COLORMAP_JET)
+
+        start_time = time.time()
         self.left_image, self.right_image = anaglyph_generator.generate_stereo_image(self.image, self.depth_map_normalised, pop_out, max_disparity)
         self.anaglyph = anaglyph_generator.generate_anaglyph(self.left_image, self.right_image)
         end_time = time.time()
@@ -61,7 +67,7 @@ class ImageContainer:
 
 if __name__ == '__main__':
     # path_to_file = "resources/images/skyscrapers.jpeg"
-    # path_to_file = "resources/images/amanda.jpeg"
+    path_to_file = "resources/images/amanda.jpeg"
     # path_to_file = "resources/images/escher.jpeg"
     # path_to_file = "resources/images/flowerTank.jpg"
     # path_to_file = "resources/images/aiPaintSplash.jpg"
@@ -71,7 +77,8 @@ if __name__ == '__main__':
     # path_to_file = "resources/images/kittens.jpg"
     # path_to_file = "resources/images/bars.jpg"
     # path_to_file = "resources/images/titanic.webp"
-    path_to_file = "resources/images/icy spicy.jpeg"
-    image_container = ImageContainer(path_to_file, pop_out=False, max_disparity=25)
+    # path_to_file = "resources/images/icy spicy.jpeg"
+    # path_to_file = "resources/images/icy spicy alone.JPG"
+    image_container = ImageContainer(path_to_file, pop_out=False, max_disparity=35)
     image_container.show_images()
 

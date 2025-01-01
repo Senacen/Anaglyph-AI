@@ -81,9 +81,11 @@ class AnaglyphGenerator:
         :param image: Image to be filled.
         :return: Filled image.
         """
+        cv2.imshow("Image", image)
         black_and_white = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         black_mask = ((black_and_white == 0) * 255).astype(np.uint8)
         filled_image = cv2.inpaint(image, black_mask, 3, cv2.INPAINT_TELEA)
+        cv2.imshow("Filled Image", filled_image)
         return filled_image
 
 # TODO: make optimised anaglyph filters
