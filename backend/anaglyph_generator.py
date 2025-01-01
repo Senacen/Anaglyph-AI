@@ -1,6 +1,9 @@
 import numpy as np
 import cv2
 import copy
+
+from matplotlib.pyplot import imshow
+
 from depth_map_generator import depth_map_generator
 
 # Singleton
@@ -13,7 +16,7 @@ class AnaglyphGenerator:
         return cls._instance
 
     def generate_stereo_image(self, image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=True,
-                              max_disparity=100) -> (np.ndarray, np.ndarray):
+                              max_disparity=25) -> (np.ndarray, np.ndarray):
         """
         Generate a stereo image pair from a single image.
         :param image: Image to generate a stereo pair from.
@@ -22,7 +25,6 @@ class AnaglyphGenerator:
         :param max_disparity: Maximum disparity value.
         :return: Stereo image pair (left, right).
         """
-
         height, width, _ = image.shape
 
         # Right image has to be original shifted left, so right image has to sample pixels to the right of the corresponding pixel in the original
@@ -34,7 +36,6 @@ class AnaglyphGenerator:
         # Pop out true or false flips the depth map, to make the closest have more disparity or make the furthest have more disparity
         shifts = np.round(self.lerp(0, max_disparity_from_original,
                                     depth_map_normalised if pop_out else 1 - depth_map_normalised)).astype(np.int32)
-        # cv2.imshow("shifts", ((shifts - shifts.min()) / (shifts.max() - shifts.min()) * 255).astype(np.uint8))
 
         # Vectorise Shifting
         cols = np.arange(width)  # [0, 1, 2, ..., width - 1]
@@ -48,8 +49,6 @@ class AnaglyphGenerator:
 
         left_end = np.clip(left_end, 0, width - 1)  # Clip into range
         right_end = np.clip(right_end, 0, width - 1)  # Removes pixels that would end up off screen
-        # cv2.imshow("left_end", ((left_end - left_end.min()) / (left_end.max() - left_end.min()) * 255).astype(np.uint8))
-        # cv2.imshow("right_end", ((right_end - right_end.min()) / (right_end.max() - right_end.min()) * 255).astype(np.uint8))
 
         rows = np.arange(height).reshape(height, 1)  # make a rows index column vector
         left_image = np.zeros_like(image)
@@ -72,39 +71,19 @@ class AnaglyphGenerator:
             left_image[rows, left_end[:, ::-1]] = image[:, ::-1]
             right_image[rows, right_end] = image
 
-        left_image = self.forward_fill_holes(left_image)
-        right_image[:, ::-1] = self.forward_fill_holes(right_image[:, ::-1])  # Reverse the right image to fill holes from right to left
+        left_image = self.fill_holes(left_image)
+        right_image = self.fill_holes(right_image)  # Reverse the right image to fill holes from right to left
         return left_image, right_image
 
-    def forward_fill_holes (self, image: np.ndarray) -> np.ndarray:
+    def fill_holes (self, image: np.ndarray) -> np.ndarray:
         """
-        Fills in black holes in the image with the last non black pixel in the row.
+        Fills in black holes in the image using cv2.inpaint with the Telea algorithm.
         :param image: Image to be filled.
         :return: Filled image.
         """
-
         black_and_white = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        non_black_mask = ~(black_and_white == 0)
-
-        index_of_first_non_black = np.argmax(non_black_mask, axis=1)
-        image_with_first_column_filled = copy.deepcopy(image)
-        rows = np.arange(image.shape[0])  # row indexes in row vector (so that it is not broadcasted to 2D, and neither is index_of_first_non_black)
-        image_with_first_column_filled[:, 0] = image[rows, index_of_first_non_black]
-        cv2.imshow("original", image)
-        cv2.imshow("first column filled", image_with_first_column_filled)
-        non_black_mask[:, 0] = True # Make first column all true now the first column is filled
-
-        cv2.imshow("non_black_mask", (non_black_mask * 255).astype(np.uint8))
-        non_black_forward_fill_indexes = np.cumsum(non_black_mask, axis=1) - 1
-        cv2.imshow("non_black_forward_fill_indexes", (non_black_forward_fill_indexes / non_black_forward_fill_indexes.max() * 255).astype(np.uint8))
-
-
-        # TODO: Fix this, it is not working: non_black_mask results in different number of pixels, so when indexed does not work. Try fill in the rest with 0s? They won't be used and are needed for the shape to be the same
-        non_black_pixels_no_holes = image_with_first_column_filled[non_black_mask]
-        cv2.imshow("non black pixels in a row", non_black_pixels_no_holes)
-
-        filled_image = image_with_first_column_filled[non_black_mask][non_black_forward_fill_indexes] # Reshape so it will be broadcast to 2D
-        cv2.imshow("filled_image", filled_image)
+        black_mask = ((black_and_white == 0) * 255).astype(np.uint8)
+        filled_image = cv2.inpaint(image, black_mask, 3, cv2.INPAINT_TELEA)
         return filled_image
 
 # TODO: make optimised anaglyph filters
@@ -127,12 +106,6 @@ class AnaglyphGenerator:
         return anaglyph
 
     def lerp(self, a, b, t):
-        """
-        Linear interpolation between a and b.
-        :param a: start ndarray or scalar
-        :param b: end ndarray or scalar
-        :param t: progress
-        """
         return a + t * (b - a)
 
 
@@ -140,7 +113,7 @@ class AnaglyphGenerator:
 anaglyph_generator = AnaglyphGenerator()
 
 if __name__ == '__main__':
-    path_to_file = "resources/images/bars.jpg"
+    path_to_file = "resources/images/kittens.jpg"
     image = cv2.imread(path_to_file)
     depth_map = depth_map_generator.generate_depth_map(image)
     # Normalize the depth map to the range [0, 1]
@@ -148,8 +121,8 @@ if __name__ == '__main__':
     # Generate stereo image pair
     left_image, right_image = anaglyph_generator.generate_stereo_image(image, depth_map_normalised)
     # Display the stereo image pair
-    #cv2.imshow('Left Image', left_image)
-    #cv2.imshow('Right Image', right_image)
-   # cv2.imshow("Anaglyph", anaglyph_generator.generate_anaglyph(left_image, right_image))
+    cv2.imshow('Left Image', left_image)
+    cv2.imshow('Right Image', right_image)
+    cv2.imshow("Anaglyph", anaglyph_generator.generate_anaglyph(left_image, right_image))
     cv2.waitKey(0)  # Wait until a key is pressed
     cv2.destroyAllWindows()

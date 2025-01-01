@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Fixed overwriting, now on forward fill">
+      <change afterPath="$PROJECT_DIR$/backend/resources/images/icy spicy alone.JPG" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/anaglyph_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/anaglyph_generator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/image_container.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/image_container.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +63,7 @@
   "keyToString": {
     "Flask server.Anaglyph AI.executor": "Run",
     "Flask server.Flask (app.py).executor": "Run",
-    "Python.anaglyph_generator.executor": "Debug",
+    "Python.anaglyph_generator.executor": "Run",
     "Python.depth_map_generator.executor": "Run",
     "Python.depth_map_generator_module (1).executor": "Run",
     "Python.depth_map_generator_module.executor": "Run",
@@ -70,6 +72,7 @@
     "Python.stereo_generator.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
+    "last_opened_file_path": "/Users/duyhuynh/Documents/Documents - Duy’s MacBook Pro/Anaglyph AI/backend/resources/images",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -87,7 +90,7 @@
       <recent name="$PROJECT_DIR$/backend" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.anaglyph_generator">
+  <component name="RunManager">
     <configuration name="anaglyph_generator" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Anaglyph AI" />
       <option name="ENV_FILES" value="" />
@@ -258,7 +261,7 @@
       <workItem from="1735569633492" duration="28000" />
       <workItem from="1735569676283" duration="1669000" />
       <workItem from="1735571349406" duration="3830000" />
-      <workItem from="1735575546017" duration="35088000" />
+      <workItem from="1735575546017" duration="38545000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <option name="closed" value="true" />
@@ -468,7 +471,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735697100093</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Fixed overwriting, now on forward fill">
+      <option name="closed" value="true" />
+      <created>1735698010090</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1735698010090</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -494,26 +505,15 @@
     <MESSAGE value="Fixed overwriting, now on forward fill" />
     <option name="LAST_COMMIT_MESSAGE" value="Fixed overwriting, now on forward fill" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/backend/anaglyph_generator.py</url>
-          <line>105</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1735509993980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$image_processor.coverage" NAME="image_processor Coverage Results" MODIFIED="1735574000572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$stereo_generator.coverage" NAME="stereo_generator Coverage Results" MODIFIED="1735613451249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
-    <SUITE FILE_PATH="coverage/Anaglyph_AI$image_container.coverage" NAME="image_container Coverage Results" MODIFIED="1735673572812" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/Anaglyph_AI$image_container.coverage" NAME="image_container Coverage Results" MODIFIED="1735749982311" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator_module.coverage" NAME="depth_map_generator_module Coverage Results" MODIFIED="1735572009566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend/modules" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Anaglyph_AI.coverage" NAME="Anaglyph AI Coverage Results" MODIFIED="1735509812293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator_module__1_.coverage" NAME="depth_map_generator_module (1) Coverage Results" MODIFIED="1735600602184" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
-    <SUITE FILE_PATH="coverage/Anaglyph_AI$anaglyph_generator.coverage" NAME="anaglyph_generator Coverage Results" MODIFIED="1735697881742" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
+    <SUITE FILE_PATH="coverage/Anaglyph_AI$anaglyph_generator.coverage" NAME="anaglyph_generator Coverage Results" MODIFIED="1735749329420" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
     <SUITE FILE_PATH="coverage/Anaglyph_AI$depth_map_generator.coverage" NAME="depth_map_generator Coverage Results" MODIFIED="1735571493347" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/backend" />
   </component>
 </project>

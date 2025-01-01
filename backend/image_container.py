@@ -7,6 +7,7 @@ from anaglyph_generator import anaglyph_generator
 
 class ImageContainer:
     def __init__(self, path_to_file, pop_out, max_disparity):
+        start_time = time.time()
         self.path_to_file = path_to_file
         self.image = cv2.imread(path_to_file)
         if self.image is None:
@@ -17,6 +18,8 @@ class ImageContainer:
         self.depth_map_coloured = cv2.applyColorMap(self.depth_map_scaled, cv2.COLORMAP_JET)
         self.left_image, self.right_image = anaglyph_generator.generate_stereo_image(self.image, self.depth_map_normalised, pop_out, max_disparity)
         self.anaglyph = anaglyph_generator.generate_anaglyph(self.left_image, self.right_image)
+        end_time = time.time()
+        print(f"Elapsed time for anaglyph: {end_time - start_time:.4f} seconds")
 
     def show_images(self, width=500):
         """
@@ -66,7 +69,9 @@ if __name__ == '__main__':
     # path_to_file = "resources/images/johnsGate.jpeg"
     # path_to_file = "resources/images/EntryRenderingCompetition.jpeg"
     # path_to_file = "resources/images/kittens.jpg"
-    path_to_file = "resources/images/bars.jpg"
-    image_container = ImageContainer(path_to_file)
+    # path_to_file = "resources/images/bars.jpg"
+    # path_to_file = "resources/images/titanic.webp"
+    path_to_file = "resources/images/icy spicy.jpeg"
+    image_container = ImageContainer(path_to_file, pop_out=False, max_disparity=25)
     image_container.show_images()
 
