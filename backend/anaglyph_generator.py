@@ -15,7 +15,7 @@ class AnaglyphGenerator:
             cls._instance = super(AnaglyphGenerator, cls).__new__(cls)
         return cls._instance
 
-    def generate_stereo_image(self, image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=True,
+    def generate_stereo_images(self, image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=True,
                               max_disparity=25) -> (np.ndarray, np.ndarray):
         """
         Generate a stereo image pair from a single image.
@@ -80,6 +80,54 @@ class AnaglyphGenerator:
         print(f"Elapsed time for stereo image pair fill holes: {time.time() - start_time:.4f} seconds")
         return left_image, right_image
 
+    def generate_stereo_right_from_left(self, left_image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=True,
+                               max_disparity=25) -> (np.ndarray, np.ndarray):
+
+        """
+        Generate the right image from the left image
+        :param left_image: left image to generate a stereo right pair from.
+        :param depth_map_normalised: Normalised depth map.
+        :param pop_out: Whether to make the image pop out or sink in.
+        :param max_disparity: Maximum disparity value.
+        :return: Stereo image pair (left, right).
+        """
+        height, width, _ = left_image.shape
+
+        start_time = time.time()
+        # Vectorise and precompute the shifts
+        # Pop out true or false flips the depth map, to make the closest have more disparity or make the furthest have more disparity
+        shifts = np.round(self.lerp(0, max_disparity,
+                                    depth_map_normalised if pop_out else 1 - depth_map_normalised)).astype(np.int32)
+
+        # Vectorise Shifting
+        cols = np.arange(width)  # [0, 1, 2, ..., width - 1]
+        # Pop out true or false flips the direction of the shift
+        if pop_out:
+            # Broadcasts cols, and results in a 2D array where left_samples[row, col] = sample_col
+            right_end = cols - shifts
+        else:
+            right_end = cols + shifts
+
+        # Clip into range
+        right_end = np.clip(right_end, 0, width - 1)  # Removes pixels that would end up off screen
+
+        rows = np.arange(height).reshape(height, 1)  # make a rows index column vector
+        right_image = np.zeros_like(left_image)
+
+        # Sample the pixels, rows is broadcast to 2D and the samples are used to get the row and col indices of each
+        # cell in image for each cell in left and right image
+
+        # Both pop in and pop out work for right image assignment order
+        right_image[rows, right_end] = left_image
+
+        print(f"Elapsed time for right image with holes: {time.time() - start_time:.4f} seconds")
+
+        start_time = time.time()
+        right_image = self.fill_holes(right_image)  # Reverse the right image to fill holes from right to left
+        print(f"Elapsed time for right image fill holes: {time.time() - start_time:.4f} seconds")
+        return left_image, right_image
+
+
     def fill_holes (self, image: np.ndarray) -> np.ndarray:
         """
         Fills in black holes in the image using cv2.inpaint with the Telea algorithm.
@@ -98,7 +146,7 @@ class AnaglyphGenerator:
         return filled_image
 
 # TODO: make optimised anaglyph filters
-    def generate_anaglyph(self, left_image: np.ndarray, right_image: np.ndarray) -> np.ndarray:
+    def generate_pure_anaglyph(self, left_image: np.ndarray, right_image: np.ndarray) -> np.ndarray:
         """
         Generate an anaglyph image from a stereo image pair.
         :param left_image: Left image of the stereo pair.
@@ -116,6 +164,38 @@ class AnaglyphGenerator:
 
         return anaglyph
 
+    def generate_optimised_RR_anaglyph(self, left_image: np.ndarray, right_image: np.ndarray) -> np.ndarray:
+        # https://cybereality.com/rendepth-red-cyan-anaglyph-filter-optimized-for-stereoscopic-3d-on-lcd-monitors/
+        """
+        Generate an optimised to reduce retinal rivalry anaglyph image with gamma correction from a stereo image pair, per https://cybereality.com/rendepth-red-cyan-anaglyph-filter-optimized-for-stereoscopic-3d-on-lcd-monitors/
+        :param left_image:
+        :param right_image:
+        :return: Optimised anaglyph image.
+        """
+        left_filter_rgb = np.array([
+            [0.4561, 0.500484, 0.176381],
+            [-0.400822, -0.0378246, -0.0157589],
+            [-0.0152161, -0.0205971, -0.00546856]
+        ])
+
+        right_filter_rgb = np.array([
+            [-0.0434706, -0.0879388, -0.00155529],
+            [0.378476, 0.73364, -0.0184503],
+            [-0.0721527, -0.112961, 1.2264]
+        ])
+
+        # Reverse order of rows and columns as openCV uses BGR format not RGB which those matrices are for
+        left_filter_bgr = left_filter_rgb[::-1, ::-1]
+        right_filter_bgr = right_filter_rgb[::-1, ::-1]
+
+        left_image_transformed = cv2.transform(left_image, left_filter_bgr)
+        right_image_transformed = cv2.transform(right_image, right_filter_bgr)
+
+        optimised_RR_anaglyph_image = left_image_transformed + right_image_transformed
+        return optimised_RR_anaglyph_image
+
+
+
     def lerp(self, a, b, t):
         return a + t * (b - a)
 
@@ -130,10 +210,21 @@ if __name__ == '__main__':
     # Normalize the depth map to the range [0, 1]
     depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map)
     # Generate stereo image pair
-    left_image, right_image = anaglyph_generator.generate_stereo_image(image, depth_map_normalised)
+    left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map_normalised, max_disparity=25)
     # Display the stereo image pair
-    cv2.imshow('Left Image', left_image)
-    cv2.imshow('Right Image', right_image)
-    cv2.imshow("Anaglyph", anaglyph_generator.generate_anaglyph(left_image, right_image))
+    cv2.imshow('Left Image Both', left_image)
+    cv2.imshow('Right Image Both', right_image)
+    start_time = time.time()
+    cv2.imshow("Anaglyph Pure Both", anaglyph_generator.generate_pure_anaglyph(left_image, right_image))
+    print(f"Elapsed time for pure anaglyph: {time.time() - start_time:.4f} seconds")
+    start_time = time.time()
+    cv2.imshow("Anaglyph Optimised Both", anaglyph_generator.generate_optimised_RR_anaglyph(left_image, right_image))
+    print(f"Elapsed time for optimised retinal rivalry anaglyph: {time.time() - start_time:.4f} seconds")
+    # Generate only right image
+    # left_image, right_image = anaglyph_generator.generate_stereo_right_from_left(image, depth_map_normalised, max_disparity=50)
+    # cv2.imshow('Left Image Right', left_image)
+    # cv2.imshow('Right Image Right', right_image)
+    # cv2.imshow("Anaglyph Right", anaglyph_generator.generate_anaglyph(left_image, right_image))
+    # Generate stereo image pair
     cv2.waitKey(0)  # Wait until a key is pressed
     cv2.destroyAllWindows()

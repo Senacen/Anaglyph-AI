@@ -41,6 +41,7 @@ class DepthMapGenerator:
         self.model = DepthAnythingV2(**model_configs[encoder])
         self.model.load_state_dict(torch.load(f'ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
         self.model = self.model.to(DEVICE).eval()
+        print("Loaded model")
 
     def generate_depth_map(self, image: np.ndarray) -> np.ndarray:
         """
