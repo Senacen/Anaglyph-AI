@@ -205,11 +205,9 @@ anaglyph_generator = AnaglyphGenerator()
 if __name__ == '__main__':
     path_to_file = "resources/images/kittens.jpg"
     image = cv2.imread(path_to_file)
-    depth_map = depth_map_generator.generate_depth_map(image)
-    # Normalize the depth map to the range [0, 1]
-    depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map)
+    depth_map = depth_map_generator.generate_normalised_depth_map(image)
     # Generate stereo image pair
-    left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map_normalised, max_disparity=25)
+    left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map, max_disparity=25)
     # Display the stereo image pair
     cv2.imshow('Left Image Both', left_image)
     cv2.imshow('Right Image Both', right_image)

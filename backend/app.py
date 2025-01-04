@@ -140,16 +140,17 @@ def process_depth_maps():
         image = cv2.imread(image_path)
         if image is None:
             raise FileNotFoundError(f"Image not found at path: {image_path}")
-        depth_map = depth_map_generator.generate_depth_map(image)
-        depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map)
-        depth_map_scaled = (depth_map_normalised * 255).astype(np.uint8)
+        depth_map = depth_map_generator.generate_normalised_depth_map(image)
+        # Test downscaling and upscaling performance gain on production server
+        # depth_map = depth_map_generator.generate_normalised_depth_map_performant(image, 256, 256)
+        depth_map_scaled = (depth_map * 255).astype(np.uint8)
         depth_map_coloured = cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
         depth_map_coloured_name = f"{session['session_id']}_depth_map_coloured.jpg"
         depth_map_coloured_path = os.path.join(SESSION_DATA_FOLDER, depth_map_coloured_name)
         cv2.imwrite(depth_map_coloured_path, depth_map_coloured)
-        depth_map_normalised_name = f"{session['session_id']}_depth_map.npy"
-        depth_map_normalised_path = os.path.join(SESSION_DATA_FOLDER, depth_map_normalised_name)
-        np.save(depth_map_normalised_path, depth_map_normalised)
+        depth_map_name = f"{session['session_id']}_depth_map.npy"
+        depth_map_path = os.path.join(SESSION_DATA_FOLDER, depth_map_name)
+        np.save(depth_map_path, depth_map)
     except Exception as e:
         print(f"Error processing depth maps: {e}")
 

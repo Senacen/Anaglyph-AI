@@ -1,4 +1,7 @@
 import time
+
+from torch.nn.init import normal
+
 start_import_time = time.time()
 import cv2
 import torch
@@ -43,13 +46,13 @@ class DepthMapGenerator:
         self.model = self.model.to(DEVICE).eval()
         print("Loaded model")
 
-    def generate_depth_map(self, image: np.ndarray) -> np.ndarray:
+    def generate_normalised_depth_map(self, image: np.ndarray) -> np.ndarray:
         """
-        Generate a depth map from an image.
+        Generate a normalised (0,1) depth map from an image.
         :param image: Image to generate a depth map from.
         :return: Depth map with largest value as closest.
         """
-        return self.model.infer_image(image)  # HxW raw depth map in numpy
+        return self.normalise_depth_map(self.model.infer_image(image))  # HxW raw depth map in numpy, normalises to 0-1
 
     def normalise_depth_map(self, depth_map: np.ndarray) -> np.ndarray:
         """
@@ -81,6 +84,21 @@ class DepthMapGenerator:
         depth_map_scaled = (normalised_depth_map * 255).astype(np.uint8)
         depth_map_normalised_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_LINEAR) / 255
         return depth_map_normalised_upscaled
+    
+    def generate_normalised_depth_map_performant(self, image: np.ndarray, intermediateWidth:int, intermediateHeight:int) -> np.ndarray:
+        """
+        Generate a depth map from an image.
+        :param image: Image to generate a depth map from.
+        :param intermediateWidth: Width to downscale the image to before generating the depth map.
+        :param intermediateHeight: Height to downscale the image to before generating the depth map.
+        :return: Depth map with largest value as closest.
+        """
+        image_downscaled = self.downscale_image(image, intermediateWidth, intermediateHeight)
+        depth_map_downscaled = self.generate_normalised_depth_map(image_downscaled)
+        depth_map_upscaled = self.upscale_normalised_depth_map(depth_map_downscaled, image.shape[1], image.shape[0])
+        return depth_map_upscaled
+
+
 
 # Singleton instance to be imported
 depth_map_generator = DepthMapGenerator()
@@ -91,11 +109,9 @@ if __name__ == '__main__':
     # path_to_file = "resources/images/skyscrapers.jpeg"
     path_to_file = "resources/images/amanda.jpeg"
     image = cv2.imread(path_to_file)
-    depth_map_full = depth_map_generator.generate_depth_map(image)
-    # Normalize the depth map to the range [0, 1]
-    depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map_full)
+    depth_map_full = depth_map_generator.generate_normalised_depth_map(image)
     # Scale to 0-255
-    depth_map_scaled = (depth_map_normalised * 255).astype(np.uint8)
+    depth_map_scaled = (depth_map_full * 255).astype(np.uint8)
     # Apply a colormap
     depth_map_colored = cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
     # End time
@@ -111,12 +127,9 @@ if __name__ == '__main__':
 
     # Test downscaling and upscaling
     start_time = time.time()
-    image_downscaled = depth_map_generator.downscale_image(image, 200, 200)
-    depth_map_downscaled = depth_map_generator.generate_depth_map(image_downscaled)
-    depth_map_downscaled_normalised = depth_map_generator.normalise_depth_map(depth_map_downscaled)
-    depth_map_normalised_upscaled = depth_map_generator.upscale_normalised_depth_map(depth_map_downscaled_normalised, image.shape[1], image.shape[0])
+    depth_map_upscaled = depth_map_generator.generate_normalised_depth_map_performant(image, 100, 100)
     # Scale to 0-255
-    depth_map_upscaled_scaled = (depth_map_normalised_upscaled * 255).astype(np.uint8)
+    depth_map_upscaled_scaled = (depth_map_upscaled * 255).astype(np.uint8)
     # Apply a colormap
     depth_map_colored_upscaled = cv2.applyColorMap(depth_map_upscaled_scaled, cv2.COLORMAP_JET)
     end_time = time.time()
@@ -126,6 +139,6 @@ if __name__ == '__main__':
     cv2.imshow('Depth Map Downscaled Upscaled', depth_map_colored_upscaled)
 
 
-    cv2.waitKey(0)  # Wait until a key is pressed
+    #cv2.waitKey(0)  # Wait until a key is pressed
     cv2.destroyAllWindows()
 
