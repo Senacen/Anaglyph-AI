@@ -60,6 +60,28 @@ class DepthMapGenerator:
         # 0 is closest, 1 is furthest
         return ((depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map)))
 
+    def downscale_image(self, image:np.ndarray, width:int, height:int):
+        """
+        Downscale the image to the specified width and height.
+        :param image: Image to downscale.
+        :param width: Desired width for the image.
+        :param height: Desired height for the image.
+        :return: Downscaled image.
+        """
+        return cv2.resize(image, (width, height), interpolation=cv2.INTER_AREA)
+
+    def upscale_normalised_depth_map(self, normalised_depth_map:np.ndarray, width:int, height:int):
+        """
+        Upscale the normalised depth map to the specified width and height.
+        :param normalised_depth_map: Normalised depth map to upscale.
+        :param width: Desired width for the depth map.
+        :param height: Desired height for the depth map.
+        :return: Upscaled normalised depth map.
+        """
+        depth_map_scaled = (normalised_depth_map * 255).astype(np.uint8)
+        depth_map_normalised_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_LINEAR) / 255
+        return depth_map_normalised_upscaled
+
 # Singleton instance to be imported
 depth_map_generator = DepthMapGenerator()
 
@@ -69,22 +91,40 @@ if __name__ == '__main__':
     # path_to_file = "resources/images/skyscrapers.jpeg"
     path_to_file = "resources/images/amanda.jpeg"
     image = cv2.imread(path_to_file)
-    depth_map = depth_map_generator.generate_depth_map(image)
+    depth_map_full = depth_map_generator.generate_depth_map(image)
     # Normalize the depth map to the range [0, 1]
-    depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map)
+    depth_map_normalised = depth_map_generator.normalise_depth_map(depth_map_full)
     # Scale to 0-255
     depth_map_scaled = (depth_map_normalised * 255).astype(np.uint8)
     # Apply a colormap
     depth_map_colored = cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
-    # Display or save the image (for example, using OpenCV)
-    cv2.imshow('Depth Map', depth_map_colored)
-    cv2.imshow('Original Image', image)
-
     # End time
     end_time = time.time()
     # Calculate the time taken
     elapsed_time = end_time - start_time
     print(f"Elapsed time for depth map: {elapsed_time:.4f} seconds")
+    # Display or save the image (for example, using OpenCV)
+    cv2.imshow('Depth Map Full', depth_map_colored)
+    cv2.imshow('Original Image', image)
+
+
+
+    # Test downscaling and upscaling
+    start_time = time.time()
+    image_downscaled = depth_map_generator.downscale_image(image, 200, 200)
+    depth_map_downscaled = depth_map_generator.generate_depth_map(image_downscaled)
+    depth_map_downscaled_normalised = depth_map_generator.normalise_depth_map(depth_map_downscaled)
+    depth_map_normalised_upscaled = depth_map_generator.upscale_normalised_depth_map(depth_map_downscaled_normalised, image.shape[1], image.shape[0])
+    # Scale to 0-255
+    depth_map_upscaled_scaled = (depth_map_normalised_upscaled * 255).astype(np.uint8)
+    # Apply a colormap
+    depth_map_colored_upscaled = cv2.applyColorMap(depth_map_upscaled_scaled, cv2.COLORMAP_JET)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Elapsed time for depth map downscaling and upscaling: {elapsed_time:.4f}")
+    # Display or save the image (for example, using OpenCV)
+    cv2.imshow('Depth Map Downscaled Upscaled', depth_map_colored_upscaled)
+
 
     cv2.waitKey(0)  # Wait until a key is pressed
     cv2.destroyAllWindows()

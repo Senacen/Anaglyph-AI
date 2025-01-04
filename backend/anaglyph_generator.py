@@ -35,8 +35,7 @@ class AnaglyphGenerator:
         start_time = time.time()
         # Vectorise and precompute the shifts
         # Pop out true or false flips the depth map, to make the closest have more disparity or make the furthest have more disparity
-        shifts = np.round(self.lerp(0, max_disparity_from_original,
-                                    depth_map_normalised if pop_out else 1 - depth_map_normalised)).astype(np.int32)
+        shifts = (max_disparity_from_original * (depth_map_normalised if pop_out else 1 - depth_map_normalised)).astype(np.int32)
 
         # Vectorise Shifting
         cols = np.arange(width)  # [0, 1, 2, ..., width - 1]
