@@ -19,9 +19,8 @@ app.secret_key = 'super secret key'
 # By default, sessions close on the client side as soon as the user's browser is closed or cookies cleared
 SESSION_DATA_FOLDER = 'resources/session_data'
 os.makedirs(SESSION_DATA_FOLDER, exist_ok=True)
-# Dictionary to store the last activity time of each session (session_id: last_activity_time)
-# Kept in memory, so will be lost if the server is restarted so also delete session files after a day in case server was restarted
-session_last_activity = {}
+
+# Previously had a dictionary of session last activity time, but managing concurrency is too hard
 
 ALLOWED_EXTENSIONS = {
     'bmp', 'dib',        # Windows bitmaps
@@ -50,46 +49,26 @@ def assign_session_id():
     if 'session_id' not in session:
         session['session_id'] = uuid.uuid4()
 
-    # Update the last activity time of the session on every request
-    session_last_activity[session["session_id"]] = time.time()
+# Had some issues with debug mode and app context where it thinks it needs the app context.
+# Seems to be sorted after I made the working directory Anaglyph AI and ran the app from there (python backend/app.py)
 
-@app.route("/heartbeat", methods=['Post'])
-def heartbeat():
-    """
-    Updates the last activity time of the session, used to check if the session is still active
-    """
-    session_last_activity[session["session_id"]] = time.time()
-    return jsonify({"success": "Session active"}), 200
-
-# Only works through curl if don't pass in the session_id, as that would update it
-# Actually creates a new session_id for this request
-@app.route("/clear-old-sessions", methods=['Post'])
-def clear_old_sessions():
+def clear_old_session_files():
     """
     Clears all sessions that have been inactive for more than 30 minutes. Clears all files that haven't been modified in a day
     """
     current_time = time.time()
-    sessions_cleared = 0
-    print(session_last_activity)
-    for session_id in list(session_last_activity.keys()): # Need to make a copy of the keys as we are deleting from the dictionary
-        last_activity_time = session_last_activity[session_id]
-        if current_time - last_activity_time > 120: # In seconds
-            for filename in os.listdir(SESSION_DATA_FOLDER):
-                if filename.startswith(str(session_id)):
-                    os.remove(os.path.join(SESSION_DATA_FOLDER, filename))
-            session_last_activity.pop(session_id)
-            sessions_cleared += 1
+    session_files_cleared = 0
 
-    # Also delete any session files that are more than a day old
+    # Delete any session files that are more than a day old
     for filename in os.listdir(SESSION_DATA_FOLDER):
-        if time.time() - os.path.getmtime(os.path.join(SESSION_DATA_FOLDER, filename)) > 60 * 60 * 24:
+        if current_time - os.path.getmtime(os.path.join(SESSION_DATA_FOLDER, filename)) > 30:#60 * 60 * 24:
             os.remove(os.path.join(SESSION_DATA_FOLDER, filename))
+            session_files_cleared += 1
 
-    print(session_last_activity)
-    return jsonify({"success": f"{sessions_cleared} sessions cleared"}), 200
+    print(f"Session files cleared: {session_files_cleared}")
 
 clean_up_scheduler = BackgroundScheduler()
-clean_up_scheduler.add_job(clear_old_sessions, 'interval', minutes=1)
+clean_up_scheduler.add_job(clear_old_session_files, 'interval', seconds=3)
 clean_up_scheduler.start()
 @app.route('/image', methods=['POST'])
 def upload_image():
