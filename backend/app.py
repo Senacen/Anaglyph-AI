@@ -1,6 +1,6 @@
 from sched import scheduler
 
-from flask import Flask, jsonify, request, session, send_from_directory
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 import uuid
 import os
@@ -8,12 +8,13 @@ from PIL import Image
 import cv2
 import time
 import numpy as np
-from werkzeug.utils import send_from_directory
 
 from depth_map_generator import depth_map_generator
 from anaglyph_generator import anaglyph_generator
 from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
+
+from werkzeug.utils import send_from_directory
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -108,9 +109,14 @@ def get_image():
     :returns: The path to the image for the front end to access
     """
     image_name = f"{session['session_id']}_image.jpg"
+    print(image_name)
     if not os.path.exists(os.path.join(SESSION_DATA_FOLDER, image_name)):
         return jsonify({'error': 'Image not found'}), 404
-    return send_from_directory(SESSION_DATA_FOLDER, image_name)
+    # Using werkzeug's send_from_directory instead of flask, as flask's version for some reason uses the backend as the working directory
+    # and that doesn't match with SESSION_DATA_FOLDER or even the os.path.exists check above
+    # werkzeug's version uses one directory above which turns out to work.
+    # Need to pass extra request.environ tho, as flask's version does that for us
+    return send_from_directory(SESSION_DATA_FOLDER, image_name, request.environ)
 
 @app.route('/depth-map', methods=['GET'])
 def get_depth_map():
