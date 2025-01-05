@@ -1,6 +1,6 @@
 from sched import scheduler
 
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify, request, session, send_from_directory
 from flask_cors import CORS
 import uuid
 import os
@@ -8,10 +8,18 @@ from PIL import Image
 import cv2
 import time
 import numpy as np
+from werkzeug.utils import send_from_directory
+
 from depth_map_generator import depth_map_generator
 from anaglyph_generator import anaglyph_generator
 from apscheduler.schedulers.background import BackgroundScheduler
+from dotenv import load_dotenv
 app = Flask(__name__)
+CORS(app, supports_credentials=True)
+
+load_dotenv()
+host = os.getenv("FLASK_HOST")
+port = int(os.getenv("FLASK_PORT"))
 
 # Secret key for session management
 app.secret_key = 'super secret key'
@@ -93,6 +101,16 @@ def upload_image():
     else:
         return jsonify({'error': 'Invalid file type'}), 400
 
+@app.route('/image', methods=['GET'])
+def get_image():
+    """
+    API endpoint to get the image uploaded by the user.
+    :returns: The path to the image for the front end to access
+    """
+    image_name = f"{session['session_id']}_image.jpg"
+    if not os.path.exists(os.path.join(SESSION_DATA_FOLDER, image_name)):
+        return jsonify({'error': 'Image not found'}), 404
+    return send_from_directory(SESSION_DATA_FOLDER, image_name)
 
 @app.route('/depth-map', methods=['GET'])
 def get_depth_map():
@@ -178,4 +196,5 @@ def get_anaglyph():
     return jsonify({"anaglyph_path": anaglyph_path, "left_image_path": left_image_path, "right_image_path": right_image_path}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Don't use 5000, as that's something apple uses. Use 8000 instead
+    app.run(debug=True, host=host, port=port)

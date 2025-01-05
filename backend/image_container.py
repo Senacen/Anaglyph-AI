@@ -63,21 +63,47 @@ class ImageContainer:
         resized_image = cv2.resize(image, (width, new_height))
         return resized_image
 
+def text_anaglyph(path_to_file, pop_out, max_disparity):
+    image = cv2.imread(path_to_file)
+    left_image = image.copy()
+    # Right image is the shifted version
+    rows, cols, _ = image.shape
+    translation_matrix = np.float32([[1, 0, max_disparity], [0, 1, 0]])
+    right_image = cv2.warpAffine(image, translation_matrix, (cols, rows))
+
+    # swap left and right images if pop_out is True
+    if pop_out:
+        left_image = right_image.copy()
+        right_image = image.copy()
+
+    anaglyph = anaglyph_generator.generate_pure_anaglyph(left_image, right_image)
+    cv2.imshow('Left Image', left_image)
+    cv2.imshow('Right Image', right_image)
+    cv2.imshow("image", image)
+    return anaglyph
+
 if __name__ == '__main__':
-    # path_to_file = "resources/images/skyscrapers.jpeg"
-    # path_to_file = "resources/images/amanda.jpeg"
-    # path_to_file = "resources/images/escher.jpeg"
-    # path_to_file = "resources/images/flowerTank.jpg"
-    # path_to_file = "resources/images/aiPaintSplash.jpg"
-    # path_to_file = "resources/images/nightFoliage.jpg"
-    # path_to_file = "resources/images/johnsGate.jpeg"
-    # path_to_file = "resources/images/EntryRenderingCompetition.jpeg"
-    # path_to_file = "resources/images/kittens.jpg"
-    # path_to_file = "resources/images/bars.jpg"
-    # path_to_file = "resources/images/titanic.webp"
-    # path_to_file = "resources/images/icy spicy.jpeg"
-    # path_to_file = "resources/images/icy spicy alone.JPG"
-    # path_to_file = "resources/images/waterLily.jpg"
+    # path_to_file = "backend/resources/images/skyscrapers.jpeg"
+    # path_to_file = "backend/resources/images/amanda.jpeg"
+    # path_to_file = "vresources/images/escher.jpeg"
+    # path_to_file = "backend/resources/images/flowerTank.jpg"
+    # path_to_file = "backend/resources/images/aiPaintSplash.jpg"
+    # path_to_file = "backend/resources/images/nightFoliage.jpg"
+    # path_to_file = "backend/resources/images/johnsGate.jpeg"
+    # path_to_file = "backend/resources/images/EntryRenderingCompetition.jpeg"
+    # path_to_file = "backend/resources/images/kittens.jpg"
+    # path_to_file = "backend/resources/images/bars.jpg"
+    # path_to_file = "backend/resources/images/titanic.webp"
+    # path_to_file = "backend/resources/images/icy spicy.jpeg"
+    # path_to_file = "backend/resources/images/icy spicy alone.JPG"
+    # path_to_file = "backend/resources/images/waterLily.jpg"
+
+    path_to_file = "backend/resources/images/anaglyph_ai.png"
+    text_anaglyph = text_anaglyph(path_to_file, pop_out=True, max_disparity=15)
+    cv2.imshow('Anaglyph', text_anaglyph)
+    cv2.imwrite('backend/resources/images/anaglyph_ai_pop_out.png', text_anaglyph)
+
+    cv2.waitKey(0)
     import tkinter as tk
     from tkinter import filedialog
     root = tk.Tk()
@@ -85,4 +111,6 @@ if __name__ == '__main__':
     path_to_file = filedialog.askopenfilename()
     image_container = ImageContainer(path_to_file, pop_out=True, max_disparity=50)
     image_container.show_images()
+
+
 
