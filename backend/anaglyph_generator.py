@@ -205,7 +205,7 @@ anaglyph_generator = AnaglyphGenerator()
 if __name__ == '__main__':
     path_to_file = "backend/resources/images/kittens.jpg"
     image = cv2.imread(path_to_file)
-    depth_map = depth_map_generator.generate_normalised_depth_map(image)
+    depth_map = depth_map_generator.generate_depth_map(image)
     # Generate stereo image pair
     left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map, max_disparity=25)
     # Display the stereo image pair

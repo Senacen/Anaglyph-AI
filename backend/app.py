@@ -17,7 +17,7 @@ app = Flask(__name__)
 app.secret_key = 'super secret key'
 
 # By default, sessions close on the client side as soon as the user's browser is closed or cookies cleared
-SESSION_DATA_FOLDER = 'resources/session_data'
+SESSION_DATA_FOLDER = 'backend/resources/session_data'
 os.makedirs(SESSION_DATA_FOLDER, exist_ok=True)
 
 # Previously had a dictionary of session last activity time, but managing concurrency is too hard
@@ -61,19 +61,19 @@ def clear_old_session_files():
 
     # Delete any session files that are more than a day old
     for filename in os.listdir(SESSION_DATA_FOLDER):
-        if current_time - os.path.getmtime(os.path.join(SESSION_DATA_FOLDER, filename)) > 30:#60 * 60 * 24:
+        if current_time - os.path.getmtime(os.path.join(SESSION_DATA_FOLDER, filename)) > 60 * 60 * 24:
             os.remove(os.path.join(SESSION_DATA_FOLDER, filename))
             session_files_cleared += 1
 
     print(f"Session files cleared: {session_files_cleared}")
 
 clean_up_scheduler = BackgroundScheduler()
-clean_up_scheduler.add_job(clear_old_session_files, 'interval', seconds=3)
+clean_up_scheduler.add_job(clear_old_session_files, 'interval', hours=1) # Every hour
 clean_up_scheduler.start()
 @app.route('/image', methods=['POST'])
 def upload_image():
     """
-    Uploads an image to the server. Saves it as <session_id>_image.jpg in the session_images folder.
+    Uploads an image to the server. Saves it as <session_id>_image.jpg in the SESSION_DATA_FOLDER folder.
     """
     if 'file' not in request.files: # No file part
         return jsonify({'error': 'No file part'}), 400
@@ -119,11 +119,10 @@ def process_depth_maps():
         image = cv2.imread(image_path)
         if image is None:
             raise FileNotFoundError(f"Image not found at path: {image_path}")
-        depth_map = depth_map_generator.generate_normalised_depth_map(image)
+        depth_map = depth_map_generator.generate_depth_map(image)
         # Test downscaling and upscaling performance gain on production server
-        # depth_map = depth_map_generator.generate_normalised_depth_map_performant(image, 256, 256)
-        depth_map_scaled = (depth_map * 255).astype(np.uint8)
-        depth_map_coloured = cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
+        # depth_map = depth_map_generator.generate_depth_map_performant(image, 256, 256)
+        depth_map_coloured = depth_map_generator.colour_depth_map(depth_map)
         depth_map_coloured_name = f"{session['session_id']}_depth_map_coloured.jpg"
         depth_map_coloured_path = os.path.join(SESSION_DATA_FOLDER, depth_map_coloured_name)
         cv2.imwrite(depth_map_coloured_path, depth_map_coloured)
@@ -137,6 +136,9 @@ def process_depth_maps():
 def get_anaglyph():
     """
     API endpoint to get the anaglyph and stereo images for the uploaded image.
+    :pop_out: Whether the anaglyph should pop out of the screen (default: false)
+    :max_disparity: The maximum disparity for the depth map (default: 25)
+    :optimised_RR_anaglyph: Whether to generate an optimised RR anaglyph (default: false)
     :returns: The path to the anaglyph and left and right images for the front end to access
     """
     anaglyph_name = f"{session['session_id']}_anaglyph.jpg"
@@ -145,9 +147,9 @@ def get_anaglyph():
     right_image_path = os.path.join(SESSION_DATA_FOLDER, f"{session['session_id']}_right_image.jpg")
 
     try:
-        depth_map_normalised_name = f"{session['session_id']}_depth_map.npy"
-        depth_map_normalised_path = os.path.join(SESSION_DATA_FOLDER, depth_map_normalised_name)
-        depth_map_normalised = np.load(depth_map_normalised_path)
+        depth_map_name = f"{session['session_id']}_depth_map.npy"
+        depth_map_path = os.path.join(SESSION_DATA_FOLDER, depth_map_name)
+        depth_map = np.load(depth_map_path)
 
         image_name = f"{session['session_id']}_image.jpg"
         image_path = os.path.join(SESSION_DATA_FOLDER, image_name)
@@ -157,7 +159,7 @@ def get_anaglyph():
 
         pop_out = request.args.get("pop_out", default="false").lower() == "true"
         max_disparity = float(request.args.get("max_disparity", default=25))
-        left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map_normalised, pop_out, max_disparity)
+        left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map, pop_out, max_disparity)
 
         cv2.imwrite(left_image_path, left_image)
         cv2.imwrite(right_image_path, right_image)

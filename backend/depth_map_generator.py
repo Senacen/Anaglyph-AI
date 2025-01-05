@@ -1,7 +1,5 @@
 import time
 
-from torch.nn.init import normal
-
 start_import_time = time.time()
 import cv2
 import torch
@@ -46,15 +44,15 @@ class DepthMapGenerator:
         self.model = self.model.to(DEVICE).eval()
         print("Loaded model")
 
-    def generate_normalised_depth_map(self, image: np.ndarray) -> np.ndarray:
+    def generate_depth_map(self, image: np.ndarray) -> np.ndarray:
         """
         Generate a normalised (0,1) depth map from an image.
         :param image: Image to generate a depth map from.
         :return: Depth map with largest value as closest.
         """
-        return self.normalise_depth_map(self.model.infer_image(image))  # HxW raw depth map in numpy, normalises to 0-1
+        return self.normalise(self.model.infer_image(image))  # HxW raw depth map in numpy, normalises to 0-1
 
-    def normalise_depth_map(self, depth_map: np.ndarray) -> np.ndarray:
+    def normalise(self, depth_map: np.ndarray) -> np.ndarray:
         """
         Normalise the depth map to the range [0, 1].
         :param depth_map: The depth map to normalise.
@@ -73,19 +71,19 @@ class DepthMapGenerator:
         """
         return cv2.resize(image, (width, height), interpolation=cv2.INTER_AREA)
 
-    def upscale_normalised_depth_map(self, normalised_depth_map:np.ndarray, width:int, height:int):
+    def upscale_depth_map(self, depth_map:np.ndarray, width:int, height:int):
         """
         Upscale the normalised depth map to the specified width and height.
-        :param normalised_depth_map: Normalised depth map to upscale.
+        :param depth_map: Normalised depth map to upscale.
         :param width: Desired width for the depth map.
         :param height: Desired height for the depth map.
         :return: Upscaled normalised depth map.
         """
-        depth_map_scaled = (normalised_depth_map * 255).astype(np.uint8)
-        depth_map_normalised_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_LINEAR) / 255
-        return depth_map_normalised_upscaled
+        depth_map_scaled = (depth_map * 255).astype(np.uint8)
+        depth_map_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_LINEAR) / 255
+        return depth_map_upscaled
     
-    def generate_normalised_depth_map_performant(self, image: np.ndarray, intermediateWidth:int, intermediateHeight:int) -> np.ndarray:
+    def generate_depth_map_performant(self, image: np.ndarray, intermediateWidth:int, intermediateHeight:int) -> np.ndarray:
         """
         Generate a depth map from an image.
         :param image: Image to generate a depth map from.
@@ -94,9 +92,18 @@ class DepthMapGenerator:
         :return: Depth map with largest value as closest.
         """
         image_downscaled = self.downscale_image(image, intermediateWidth, intermediateHeight)
-        depth_map_downscaled = self.generate_normalised_depth_map(image_downscaled)
-        depth_map_upscaled = self.upscale_normalised_depth_map(depth_map_downscaled, image.shape[1], image.shape[0])
+        depth_map_downscaled = self.generate_depth_map(image_downscaled)
+        depth_map_upscaled = self.upscale_depth_map(depth_map_downscaled, image.shape[1], image.shape[0])
         return depth_map_upscaled
+
+    def colour_depth_map(self, depth_map: np.ndarray) -> np.ndarray:
+        """
+        Colour the depth map using the jet colormap.
+        :param depth_map: Depth map to colour.
+        :return: Coloured depth map.
+        """
+        depth_map_scaled = (depth_map * 255).astype(np.uint8)
+        return cv2.applyColorMap(depth_map_scaled, cv2.CAP_OPENNI_DEPTH_MAP)
 
 
 
@@ -109,11 +116,9 @@ if __name__ == '__main__':
     # path_to_file = "backend/resources/images/skyscrapers.jpeg"
     path_to_file = "backend/resources/images/amanda.jpeg"
     image = cv2.imread(path_to_file)
-    depth_map_full = depth_map_generator.generate_normalised_depth_map(image)
-    # Scale to 0-255
-    depth_map_scaled = (depth_map_full * 255).astype(np.uint8)
-    # Apply a colormap
-    depth_map_colored = cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
+    depth_map_full = depth_map_generator.generate_depth_map(image)
+
+    depth_map_colored = depth_map_generator.colour_depth_map(depth_map_full)
     # End time
     end_time = time.time()
     # Calculate the time taken
@@ -127,11 +132,11 @@ if __name__ == '__main__':
 
     # Test downscaling and upscaling
     start_time = time.time()
-    depth_map_upscaled = depth_map_generator.generate_normalised_depth_map_performant(image, 100, 100)
+    depth_map_upscaled = depth_map_generator.generate_depth_map_performant(image, 100, 100)
     # Scale to 0-255
     depth_map_upscaled_scaled = (depth_map_upscaled * 255).astype(np.uint8)
     # Apply a colormap
-    depth_map_colored_upscaled = cv2.applyColorMap(depth_map_upscaled_scaled, cv2.COLORMAP_JET)
+    depth_map_colored_upscaled = depth_map_generator.colour_depth_map(depth_map_upscaled)
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"Elapsed time for depth map downscaling and upscaling: {elapsed_time:.4f}")

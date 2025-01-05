@@ -17,12 +17,10 @@ class ImageContainer:
         end_time = time.time()
         print(f"Elapsed time for depth map: {end_time - start_time:.4f} seconds")
 
-        self.depth_map_normalised = depth_map_generator.normalise_depth_map(self.depth_map)
-        self.depth_map_scaled = (self.depth_map_normalised * 255).astype(np.uint8)
-        self.depth_map_coloured = cv2.applyColorMap(self.depth_map_scaled, cv2.COLORMAP_JET)
+        self.depth_map_coloured = depth_map_generator.colour_depth_map(self.depth_map)
 
         start_time = time.time()
-        self.left_image, self.right_image = anaglyph_generator.generate_stereo_images(self.image, self.depth_map_normalised, pop_out, max_disparity)
+        self.left_image, self.right_image = anaglyph_generator.generate_stereo_images(self.image, self.depth_map, pop_out, max_disparity)
         self.anaglyph = anaglyph_generator.generate_pure_anaglyph(self.left_image, self.right_image)
         end_time = time.time()
         print(f"total Elapsed time for anaglyph generation from depth map: {end_time - start_time:.4f} seconds")
