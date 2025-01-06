@@ -1,15 +1,22 @@
 import { useState, useRef } from "react";
 
-function ImageUpload() {
+// @ts-ignore
+function ImageUpload({setIsDepthMapReadyProp}) {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
+    const [depthMapIsLoading, setDepthMapIsLoading] = useState<boolean>(false);
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files && files.length > 0) {
             const selectedImage = files[0]; // Get the selected image file
             console.log("Selected file:", selectedImage); // Log the selected file
+            setIsDepthMapReadyProp(false); // Set depth map ready to false to stop rendering anaglyph editor
             await handleImageUpload(selectedImage); // Call upload function
+            const imageUrl = URL.createObjectURL(selectedImage);
+            setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
+            setImageUrl(imageUrl);
         } else {
             console.error("No files selected");
         }
@@ -17,21 +24,23 @@ function ImageUpload() {
 
     const handleImageUpload = async (imageFile: File) => {
         const formData = new FormData();
-        formData.append("file", imageFile); // Ensure this key matches your Flask app's expectation
+        formData.append("file", imageFile);
         console.log("Uploading image...");
 
         try {
             const response = await fetch("http://localhost:8000/image", {
                 method: "POST",
                 body: formData,
+                credentials: "include",
             });
             console.log("Response status:", response.status); // Log response status
             if (response.ok) {
                 const data = await response.json();
                 console.log("Upload successful:", data);
-                fetchImage();
+                setDepthMapIsLoading(true); // Start loading spinner
+                fetchDepthMap();
             } else {
-                console.error("Failed to upload image", response.statusText);
+                console.error("Failed to upload image", response.json());
             }
         } catch (error) {
             console.error("Failed to upload image", error);
@@ -44,22 +53,25 @@ function ImageUpload() {
         }
     };
 
-    const fetchImage = async () => {
+    const fetchDepthMap = async () => {
         try {
-            const response = await fetch("http://localhost:8000/image", {
+            const response = await fetch("http://localhost:8000/depth-map", {
                 method: "GET",
+                credentials: "include",
             });
             if (response.ok) {
-                const imageBlob = await response.blob();
-                const imageUrl = URL.createObjectURL(imageBlob);
-                setImageUrl(imageUrl);
-                console.log("Image fetched successfully", imageUrl);
+                setDepthMapIsLoading(false); // Stop loading spinner
+                const depthMapBlob = await response.blob();
+                const depthMapUrl = URL.createObjectURL(depthMapBlob);
+                setDepthMapUrl(depthMapUrl);
+                console.log("Depth map fetched successfully", depthMapUrl);
+                setIsDepthMapReadyProp(true); // Set depth map ready to true to start rendering anaglyph editor
 
             } else {
-                console.error("Failed to fetch image", response.statusText);
+                console.error("Failed to fetch depth map", response.statusText);
             }
         } catch (error) {
-            console.error("Failed to fetch image", error);
+            console.error("Failed to fetch depth map", error);
         }
     }
 
@@ -70,13 +82,16 @@ function ImageUpload() {
             </button>
             <input
                 type="file"
-                accept="image/*"
+                accept="image/jpeg, image/jpg, image/gif, image/png"
                 ref={imageInputRef}
                 style={{ display: "none" }}
                 onChange={handleImageChange} // Handle file input changes
             />
-            {imageUrl && <img src={imageUrl} alt="Uploaded" />}
-
+            <div className="imagePairContainer">
+                {imageUrl && <img src={imageUrl} alt="Uploaded" className="imagePairContainerComponent"/>}
+                {depthMapIsLoading && <div className="loader"></div>}
+                {depthMapUrl && <img src={depthMapUrl} alt="Depth Map" className="imagePairContainerComponent"/>}
+            </div>
         </div>
     );
 }

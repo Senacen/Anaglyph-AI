@@ -18,6 +18,7 @@ from werkzeug.utils import send_from_directory
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
+
 load_dotenv()
 host = os.getenv("FLASK_HOST")
 port = int(os.getenv("FLASK_PORT"))
@@ -98,7 +99,7 @@ def upload_image():
             pillow_image.save(image_path, format='JPEG')
             return jsonify({"Success": "Image uploaded successfully"}), 200
         except Exception as e:
-            return jsonify({'error': str(e)}), 400
+            return jsonify({'error': str(e) + " Note: transparent background not allowed"}), 400
     else:
         return jsonify({'error': 'Invalid file type'}), 400
 
@@ -130,7 +131,7 @@ def get_depth_map():
     # Reprocess every time to ensure the latest image is used (as a change in image will still leave the old depth map)
     process_depth_maps()
 
-    return jsonify({"depth_map_path": depth_map_coloured_path}), 200
+    return send_from_directory(SESSION_DATA_FOLDER, depth_map_coloured_name, request.environ)
 
 def process_depth_maps():
     """

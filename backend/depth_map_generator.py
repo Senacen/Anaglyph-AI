@@ -103,7 +103,7 @@ class DepthMapGenerator:
         :return: Coloured depth map.
         """
         depth_map_scaled = (depth_map * 255).astype(np.uint8)
-        return cv2.applyColorMap(depth_map_scaled, cv2.CAP_OPENNI_DEPTH_MAP)
+        return cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
 
 
 
@@ -114,7 +114,6 @@ if __name__ == '__main__':
 
     start_time = time.time()
     path_to_file = "backend/resources/images/skyscrapers.jpeg"
-    path_to_file = "backend/resources/images/anaglyph_ai.png"
     image = cv2.imread(path_to_file)
     depth_map_full = depth_map_generator.generate_depth_map(image)
 

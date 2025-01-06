@@ -5,7 +5,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
+  color-scheme: light;
   color: rgba(0, 0, 0, 1);
   background-color: #fafafa;
 
@@ -21,6 +21,34 @@
   margin: 0 auto;
   margin-bottom: 10%;
   height: auto;
+}
+
+.imagePairContainer {
+    display: flex; /* Use Flexbox for layout */
+    margin-bottom: 10%; /* Add space below the container */
+    margin-top: 5%;
+}
+
+.imagePairContainerComponent {
+    width: 50%; /* Ensure images take up to 48% of the container */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* styles.css */
+
+.loader {
+    border: 5px solid cyan;
+    border-top: 5px solid red; /* Blue */
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    margin: auto; /* Center it */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 
