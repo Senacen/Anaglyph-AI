@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 
 // @ts-ignore
-function ImageUpload({setIsDepthMapReadyProp}) {
+function ImageUpload({ setIsDepthMapReadyStateLifter}) {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
@@ -12,7 +12,7 @@ function ImageUpload({setIsDepthMapReadyProp}) {
         if (files && files.length > 0) {
             const selectedImage = files[0]; // Get the selected image file
             console.log("Selected file:", selectedImage); // Log the selected file
-            setIsDepthMapReadyProp(false); // Set depth map ready to false to stop rendering anaglyph editor
+            setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
             await handleImageUpload(selectedImage); // Call upload function
             const imageUrl = URL.createObjectURL(selectedImage);
             setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
@@ -65,7 +65,7 @@ function ImageUpload({setIsDepthMapReadyProp}) {
                 const depthMapUrl = URL.createObjectURL(depthMapBlob);
                 setDepthMapUrl(depthMapUrl);
                 console.log("Depth map fetched successfully", depthMapUrl);
-                setIsDepthMapReadyProp(true); // Set depth map ready to true to start rendering anaglyph editor
+                setIsDepthMapReadyStateLifter(true); // Set depth map ready to true to start rendering anaglyph editor
 
             } else {
                 console.error("Failed to fetch depth map", response.statusText);

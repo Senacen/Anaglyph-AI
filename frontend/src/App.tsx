@@ -6,6 +6,7 @@ import AnaglyphEditor from './AnaglyphEditor.tsx'
 
 function App() {
     const [isDepthMapReady, setIsDepthMapReady] = useState<boolean>(false)
+
     return (
         <>
             <div>
@@ -13,7 +14,7 @@ function App() {
                    className="responsive_title"
                    alt="Anaglyph AI Logo"/>
             </div>
-            <ImageUpload setIsDepthMapReadyProp={setIsDepthMapReady}/>
+            <ImageUpload setIsDepthMapReadyStateLifter={setIsDepthMapReady}/>
             { isDepthMapReady && <AnaglyphEditor />}
         </>
   )

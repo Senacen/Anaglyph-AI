@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="added getting image back, issue that safari isn't keeping cookies">
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/anaglyph_ai_pop_in_transparent_dark_mode.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/anaglyph_ai_pop_in_transparent_light_mode.svg" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Show the image and depth map, conditionally render AnaglyphEditor.tsx">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/assets/anaglyph_ai_pop_in.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -302,7 +300,7 @@
       <workItem from="1736088114843" duration="2488000" />
       <workItem from="1736090610705" duration="8000" />
       <workItem from="1736100077748" duration="20450000" />
-      <workItem from="1736174538337" duration="1382000" />
+      <workItem from="1736174538337" duration="8413000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <option name="closed" value="true" />
@@ -608,15 +606,29 @@
       <option name="project" value="LOCAL" />
       <updated>1736118245380</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Made transparent svg, and made the white less bright">
+      <option name="closed" value="true" />
+      <created>1736175934095</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1736175934095</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Show the image and depth map, conditionally render AnaglyphEditor.tsx">
+      <option name="closed" value="true" />
+      <created>1736201746875</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1736201746875</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="make depth_map_generator.py" />
-    <MESSAGE value="get depth anything v2 and checkpoints" />
     <MESSAGE value="check amanda" />
     <MESSAGE value="added timers to time how long imports take" />
     <MESSAGE value="refactored to make model load first, and all methods are immutable. No state other than model in class" />
@@ -640,7 +652,9 @@
     <MESSAGE value="added requirements.txt, and upgraded react to 19" />
     <MESSAGE value="started website" />
     <MESSAGE value="added getting image back, issue that safari isn't keeping cookies" />
-    <option name="LAST_COMMIT_MESSAGE" value="added getting image back, issue that safari isn't keeping cookies" />
+    <MESSAGE value="Made transparent svg, and made the white less bright" />
+    <MESSAGE value="Show the image and depth map, conditionally render AnaglyphEditor.tsx" />
+    <option name="LAST_COMMIT_MESSAGE" value="Show the image and depth map, conditionally render AnaglyphEditor.tsx" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1735509993980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
