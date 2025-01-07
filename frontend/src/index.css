@@ -34,11 +34,17 @@
     height: auto; /* Maintain aspect ratio */
 }
 
+.anaglyphImage {
+    width: 100%;
+    height: auto;
+}
+
 /* styles.css */
 
 .loader {
-    border: 5px solid cyan;
-    border-top: 5px solid red; /* Blue */
+    border: 5px solid #fafafa;
+    border-left: 5px solid cyan;
+    border-right: 5px solid red;
     border-radius: 100%;
     width: 20px;
     height: 20px;
@@ -50,6 +56,7 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 

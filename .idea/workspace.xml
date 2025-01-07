@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Converts transparent images to non transparent for jpeg">
-      <change afterPath="$PROJECT_DIR$/backend/resources/images/grammarly.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/resources/images/testLong.png" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Solve issue of crashing on thin images by resizing before depth map, also improves performance">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/anaglyph_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/anaglyph_generator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/depth_map_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/resources/images/amanda.jpeg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/resources/images/amanda.jpeg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -306,7 +304,8 @@
       <workItem from="1736174538337" duration="8462000" />
       <workItem from="1736207513909" duration="805000" />
       <workItem from="1736209815103" duration="1796000" />
-      <workItem from="1736211839966" duration="600000" />
+      <workItem from="1736211839966" duration="637000" />
+      <workItem from="1736261466132" duration="7156000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <option name="closed" value="true" />
@@ -644,14 +643,21 @@
       <option name="project" value="LOCAL" />
       <updated>1736208247695</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Solve issue of crashing on thin images by resizing before depth map, also improves performance">
+      <option name="closed" value="true" />
+      <created>1736214108661</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1736214108661</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added timers to time how long imports take" />
     <MESSAGE value="refactored to make model load first, and all methods are immutable. No state other than model in class" />
     <MESSAGE value="will use depth_map_generator_module.py as a module, to ensure singleton" />
     <MESSAGE value="not used as module, instead as a singleton" />
@@ -676,7 +682,8 @@
     <MESSAGE value="Made transparent svg, and made the white less bright" />
     <MESSAGE value="Show the image and depth map, conditionally render AnaglyphEditor.tsx" />
     <MESSAGE value="Converts transparent images to non transparent for jpeg" />
-    <option name="LAST_COMMIT_MESSAGE" value="Converts transparent images to non transparent for jpeg" />
+    <MESSAGE value="Solve issue of crashing on thin images by resizing before depth map, also improves performance" />
+    <option name="LAST_COMMIT_MESSAGE" value="Solve issue of crashing on thin images by resizing before depth map, also improves performance" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1735509993980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

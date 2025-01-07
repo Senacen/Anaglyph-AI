@@ -46,7 +46,8 @@ ALLOWED_EXTENSIONS = {
 }
 
 # Used to downscale the image before generating the depth map to improve performance and avoid issue with thin images by making it square
-depth_map_resize_dimension = 512
+# 518x518 is a what it was trained on per the paper
+depth_map_resize_dimension = 518
 
 @app.route('/')
 def hello_world():  # put application's code here
@@ -151,11 +152,11 @@ def process_depth_maps():
 @app.route('/anaglyph', methods=['GET'])
 def get_anaglyph():
     """
-    API endpoint to get the anaglyph and stereo images for the uploaded image.
+    API endpoint to get the anaglyph for the uploaded image.
     :pop_out: Whether the anaglyph should pop out of the screen (default: false)
     :max_disparity: The maximum disparity for the depth map (default: 25)
     :optimised_RR_anaglyph: Whether to generate an optimised RR anaglyph (default: false)
-    :returns: The path to the anaglyph and left and right images for the front end to access
+    :returns: The anaglyph image file
     """
     anaglyph_name = f"{session['session_id']}_anaglyph.jpg"
     anaglyph_path = os.path.join(SESSION_DATA_FOLDER, anaglyph_name)
@@ -191,7 +192,8 @@ def get_anaglyph():
     except Exception as e:
         return jsonify({"Error generating anaglyph": str(e)}), 400
 
-    return jsonify({"anaglyph_path": anaglyph_path, "left_image_path": left_image_path, "right_image_path": right_image_path}), 200
+    # Werkzeug's version of send_from_directory
+    return send_from_directory(SESSION_DATA_FOLDER, anaglyph_name, request.environ)
 
 if __name__ == '__main__':
     # Don't use 5000, as that's something apple uses. Use 8000 instead
