@@ -38,6 +38,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter}) {
                 const data = await response.json();
                 console.log("Upload successful:", data);
                 setDepthMapIsLoading(true); // Start loading spinner
+                // Don't use await, causes error where depth map is not shown
                 fetchDepthMap();
             } else {
                 console.error("Failed to upload image", response.json());

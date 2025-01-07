@@ -93,7 +93,7 @@ def upload_image():
     if image.filename.split('.')[-1].lower() in ALLOWED_EXTENSIONS:
         try:
             pillow_image = Image.open(image)
-            pillow_image.convert('RGB') # Required for jpg
+            pillow_image = pillow_image.convert('RGB') # Required for jpg
             image_name = f"{session['session_id']}_image.jpg"
             image_path = os.path.join(SESSION_DATA_FOLDER, image_name)
             pillow_image.save(image_path, format='JPEG')
@@ -103,21 +103,6 @@ def upload_image():
     else:
         return jsonify({'error': 'Invalid file type'}), 400
 
-@app.route('/image', methods=['GET'])
-def get_image():
-    """
-    API endpoint to get the image uploaded by the user.
-    :returns: The path to the image for the front end to access
-    """
-    image_name = f"{session['session_id']}_image.jpg"
-    print(image_name)
-    if not os.path.exists(os.path.join(SESSION_DATA_FOLDER, image_name)):
-        return jsonify({'error': 'Image not found'}), 404
-    # Using werkzeug's send_from_directory instead of flask, as flask's version for some reason uses the backend as the working directory
-    # and that doesn't match with SESSION_DATA_FOLDER or even the os.path.exists check above
-    # werkzeug's version uses one directory above which turns out to work.
-    # Need to pass extra request.environ tho, as flask's version does that for us
-    return send_from_directory(SESSION_DATA_FOLDER, image_name, request.environ)
 
 @app.route('/depth-map', methods=['GET'])
 def get_depth_map():
@@ -131,6 +116,10 @@ def get_depth_map():
     # Reprocess every time to ensure the latest image is used (as a change in image will still leave the old depth map)
     process_depth_maps()
 
+    # Using werkzeug's send_from_directory instead of flask, as flask's version for some reason uses the backend as the working directory
+    # and that doesn't match with SESSION_DATA_FOLDER or even the os.path.exists check above
+    # werkzeug's version uses one directory above which turns out to work.
+    # Need to pass extra request.environ tho, as flask's version does that for us
     return send_from_directory(SESSION_DATA_FOLDER, depth_map_coloured_name, request.environ)
 
 def process_depth_maps():

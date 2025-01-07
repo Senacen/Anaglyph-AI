@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Show the image and depth map, conditionally render AnaglyphEditor.tsx">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,7 +298,8 @@
       <workItem from="1736088114843" duration="2488000" />
       <workItem from="1736090610705" duration="8000" />
       <workItem from="1736100077748" duration="20450000" />
-      <workItem from="1736174538337" duration="8413000" />
+      <workItem from="1736174538337" duration="8462000" />
+      <workItem from="1736207513909" duration="674000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <option name="closed" value="true" />
@@ -622,7 +621,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736201746875</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Show the image and depth map, conditionally render AnaglyphEditor.tsx">
+      <option name="closed" value="true" />
+      <created>1736202413046</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1736202413046</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
