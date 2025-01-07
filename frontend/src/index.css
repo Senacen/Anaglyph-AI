@@ -19,27 +19,28 @@
   display: block;
   max-width: 80%;
   margin: 0 auto;
-  margin-bottom: 10%;
+  margin-bottom: 5%;
   height: auto;
 }
 
 .imagePairContainer {
     display: flex; /* Use Flexbox for layout */
-    margin-bottom: 10%; /* Add space below the container */
-    margin-top: 5%;
+    margin-bottom: 5%; /* Add space below the container */
     justify-content: center;
 }
 
-.imagePairContainerComponent {
-    width: auto; /* Preserve the aspect ratio */
-    height: auto;
-    max-width: 50%; /* Ensure images take up half of the container */
+.imagePair {
+    max-width: 100%; /* Ensure images take up at most half of the imagePairContainer */
     max-height: 80vh; /* Ensure images take at most 80% of the viewport height */
 }
 
+.imagePairWithTitle{
+    display: block;
+    text-align: center;
+    width: 50%;
+}
+
 .anaglyphImage {
-    width: auto; /* Preserve the aspect ratio */
-    height: auto;
     max-width: 100%;
     max-height: 80vh; /* Ensure anaglyph take at most 80% of the viewport height */
 }

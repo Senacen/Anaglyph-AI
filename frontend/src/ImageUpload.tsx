@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 
 // @ts-ignore
-function ImageUpload({ setIsDepthMapReadyStateLifter}) {
+function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
@@ -89,9 +89,19 @@ function ImageUpload({ setIsDepthMapReadyStateLifter}) {
                 onChange={handleImageChange} // Handle file input changes
             />
             <div className="imagePairContainer">
-                {imageUrl && <img src={imageUrl} alt="Uploaded" className="imagePairContainerComponent"/>}
+                {imageUrl && (
+                    <div className="imagePairWithTitle">
+                        <h3>Image</h3>
+                        <img src={imageUrl} alt="Uploaded" className="imagePair" />
+                    </div>
+                )}
                 {depthMapIsLoading && <div className="loader"></div>}
-                {depthMapUrl && <img src={depthMapUrl} alt="Depth Map" className="imagePairContainerComponent"/>}
+                {depthMapUrl && (
+                    <div className="imagePairWithTitle">
+                        <h3>Depth Map</h3>
+                        <img src={depthMapUrl} alt="Depth Map" className="imagePair" />
+                    </div>
+                )}
             </div>
         </div>
     );

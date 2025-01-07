@@ -50,6 +50,7 @@ function AnaglyphEditor() {
 
     return (
         <div>
+            <h1>Anaglyph</h1>
             <form>
                 <label>
                     Pop Out:
