@@ -6,15 +6,15 @@ function AnaglyphEditor() {
 
     // State for form inputs
     const [popOut, setPopOut] = useState<boolean>(false);
-    const [maxDisparity, setMaxDisparity] = useState<number>(25); // Default value
+    const [maxDisparityPercentage, setMaxDisparityPercentage] = useState<number>(1); // Default value
     const [optimiseRRAnaglyph, setOptimiseRRAnaglyph] = useState<boolean>(false);
-    const[sliderValue, setSliderValue] = useState<number>(25);
+    const[sliderValue, setSliderValue] = useState<number>(1);
 
     const fetchAnaglyph = async () => {
         try {
             setAnaglyphIsLoading(true); // Start loading spinner
             const response = await fetch(
-                `http://localhost:8000/anaglyph?pop_out=${popOut}&max_disparity=${maxDisparity}&optimised_RR_anaglyph=${optimiseRRAnaglyph}`,
+                `http://localhost:8000/anaglyph?pop_out=${popOut}&max_disparity_percentage=${maxDisparityPercentage}&optimised_RR_anaglyph=${optimiseRRAnaglyph}`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -37,23 +37,19 @@ function AnaglyphEditor() {
 
     useEffect(() => {
         fetchAnaglyph();
-    }, [popOut, maxDisparity, optimiseRRAnaglyph]);
+    }, [popOut, maxDisparityPercentage, optimiseRRAnaglyph]);
 
-    const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSliderValue(Number(e.target.value));
+    const handleSliderChange = (e: { target: { value: string; }; }) => {
+        setSliderValue(parseFloat(e.target.value));
     }
 
-    const handleSliderMouseUp = (e: React.MouseEvent<HTMLInputElement>) => {
-        setMaxDisparity(sliderValue)
+    const handleSliderReleased = () => {
+        setMaxDisparityPercentage(sliderValue)
     }
 
-    const handleSliderTouchEnd = (e: React.TouchEvent<HTMLInputElement>) => {
-        setMaxDisparity(sliderValue)
-    }
 
     return (
         <div>
-            <h1>Anaglyph Editor</h1>
             <form>
                 <label>
                     Pop Out:
@@ -65,21 +61,21 @@ function AnaglyphEditor() {
                 </label>
                 <br />
                 <label>
-                    Max Disparity:
+                    Max Disparity Percentage:
                     <input
                         type="range"
                         min="0"
-                        max="100"
-                        step="1"
+                        max="5"
+                        step="0.1"
                         value={sliderValue}
                         onChange={handleSliderChange}
-                        onMouseUp={handleSliderMouseUp}
-                        onTouchEnd={handleSliderTouchEnd}
+                        onMouseUp={handleSliderReleased}
+                        onTouchEnd={handleSliderReleased}
                     />
                 </label>
                 <br />
                 <label>
-                    Minimal Retinal Rivalry:
+                    Minimise Retinal Rivalry:
                     <input
                         type="checkbox"
                         checked={optimiseRRAnaglyph}

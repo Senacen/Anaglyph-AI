@@ -78,7 +78,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter}) {
 
     return (
         <div>
-            <button onClick={handleButtonClick} className="anaglyph-button">
+            <button onClick={handleButtonClick} className="anaglyphButton">
                 Upload Image
             </button>
             <input

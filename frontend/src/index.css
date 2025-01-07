@@ -27,19 +27,48 @@
     display: flex; /* Use Flexbox for layout */
     margin-bottom: 10%; /* Add space below the container */
     margin-top: 5%;
+    justify-content: center;
 }
 
 .imagePairContainerComponent {
-    width: 50%; /* Ensure images take up to 48% of the container */
-    height: auto; /* Maintain aspect ratio */
+    width: auto; /* Preserve the aspect ratio */
+    height: auto;
+    max-width: 50%; /* Ensure images take up half of the container */
+    max-height: 80vh; /* Ensure images take at most 80% of the viewport height */
 }
 
 .anaglyphImage {
-    width: 100%;
+    width: auto; /* Preserve the aspect ratio */
     height: auto;
+    max-width: 100%;
+    max-height: 80vh; /* Ensure anaglyph take at most 80% of the viewport height */
 }
 
-/* styles.css */
+.anaglyphButton {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 700;
+    color: #fafafa;
+    background-color: #000;
+    border-width: 0;
+
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.anaglyphButton:hover {
+    scale: 1.05;
+}
+
+.anaglyphButton:active {
+    scale: 0.95;
+}
+
+label, input[type="range"] {
+    vertical-align: middle;
+}
 
 .loader {
     border: 5px solid #fafafa;

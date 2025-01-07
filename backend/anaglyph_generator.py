@@ -16,16 +16,19 @@ class AnaglyphGenerator:
         return cls._instance
 
     def generate_stereo_images(self, image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=True,
-                              max_disparity=25) -> (np.ndarray, np.ndarray):
+                              max_disparity_percentage=25) -> (np.ndarray, np.ndarray):
         """
         Generate a stereo image pair from a single image.
         :param image: Image to generate a stereo pair from.
         :param depth_map_normalised: Normalised depth map.
         :param pop_out: Whether to make the image pop out or sink in.
-        :param max_disparity: Maximum disparity value.
+        :param max_disparity_percentage: What percentage of the total width the maximum disparity should be.
         :return: Stereo image pair (left, right).
         """
         height, width, _ = image.shape
+
+
+        max_disparity = int(max_disparity_percentage / 100 * width)
 
         # Right image has to be original shifted left, so right image has to sample pixels to the right of the corresponding pixel in the original
         # Left image has to be original shifted right, so left image has to sample pixels to the left of the corresponding pixel in the original
@@ -80,7 +83,7 @@ class AnaglyphGenerator:
         return left_image, right_image
 
     def generate_stereo_right_from_left(self, left_image: np.ndarray, depth_map_normalised: np.ndarray, pop_out=True,
-                               max_disparity=25) -> (np.ndarray, np.ndarray):
+                               max_disparity_percentage=25) -> (np.ndarray, np.ndarray):
 
         """
         Generate the right image from the left image
@@ -166,7 +169,7 @@ class AnaglyphGenerator:
     def generate_optimised_RR_anaglyph(self, left_image: np.ndarray, right_image: np.ndarray) -> np.ndarray:
         # https://cybereality.com/rendepth-red-cyan-anaglyph-filter-optimized-for-stereoscopic-3d-on-lcd-monitors/
         """
-        Generate an optimised to reduce retinal rivalry anaglyph image with gamma correction from a stereo image pair, per https://cybereality.com/rendepth-red-cyan-anaglyph-filter-optimized-for-stereoscopic-3d-on-lcd-monitors/
+        Generate an optimised to reduce retinal rivalry anaglyph image from a stereo image pair, per https://cybereality.com/rendepth-red-cyan-anaglyph-filter-optimized-for-stereoscopic-3d-on-lcd-monitors/
         :param left_image:
         :param right_image:
         :return: Optimised anaglyph image.
@@ -207,7 +210,7 @@ if __name__ == '__main__':
     image = cv2.imread(path_to_file)
     depth_map = depth_map_generator.generate_depth_map(image)
     # Generate stereo image pair
-    left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map, max_disparity=25)
+    left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map, max_disparity_percentage=25)
     # Display the stereo image pair
     cv2.imshow('Left Image Both', left_image)
     cv2.imshow('Right Image Both', right_image)

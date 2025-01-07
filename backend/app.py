@@ -95,6 +95,18 @@ def upload_image():
     if image.filename.split('.')[-1].lower() in ALLOWED_EXTENSIONS:
         try:
             pillow_image = Image.open(image)
+
+            # To fix rotation issue with iPhone images
+            exif_data = pillow_image._getexif()
+            if exif_data is not None:
+                orientation = exif_data.get(274)
+                if orientation == 3:
+                    pillow_image = pillow_image.rotate(180, expand=True)
+                elif orientation == 6:
+                    pillow_image = pillow_image.rotate(270, expand=True)
+                elif orientation == 8:
+                    pillow_image = pillow_image.rotate(90, expand=True)
+
             pillow_image = pillow_image.convert('RGB') # Required for jpg
             image_name = f"{session['session_id']}_image.jpg"
             image_path = os.path.join(SESSION_DATA_FOLDER, image_name)
@@ -175,8 +187,8 @@ def get_anaglyph():
             raise FileNotFoundError(f"Image not found at path: {image_path}")
 
         pop_out = request.args.get("pop_out", default="false").lower() == "true"
-        max_disparity = float(request.args.get("max_disparity", default=25))
-        left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map, pop_out, max_disparity)
+        max_disparity_percentage = float(request.args.get("max_disparity_percentage", default=25))
+        left_image, right_image = anaglyph_generator.generate_stereo_images(image, depth_map, pop_out, max_disparity_percentage)
 
         cv2.imwrite(left_image_path, left_image)
         cv2.imwrite(right_image_path, right_image)
