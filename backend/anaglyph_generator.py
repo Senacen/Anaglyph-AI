@@ -203,7 +203,7 @@ class AnaglyphGenerator:
 anaglyph_generator = AnaglyphGenerator()
 
 if __name__ == '__main__':
-    path_to_file = "backend/resources/images/kittens.jpg"
+    path_to_file = "backend/resources/images/testLong.png"
     image = cv2.imread(path_to_file)
     depth_map = depth_map_generator.generate_depth_map(image)
     # Generate stereo image pair

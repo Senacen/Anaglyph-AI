@@ -45,7 +45,8 @@ ALLOWED_EXTENSIONS = {
     'hdr', 'pic'        # Radiance HDR
 }
 
-
+# Used to downscale the image before generating the depth map to improve performance and avoid issue with thin images by making it square
+depth_map_resize_dimension = 512
 
 @app.route('/')
 def hello_world():  # put application's code here
@@ -133,9 +134,10 @@ def process_depth_maps():
         image = cv2.imread(image_path)
         if image is None:
             raise FileNotFoundError(f"Image not found at path: {image_path}")
-        depth_map = depth_map_generator.generate_depth_map(image)
+        # depth_map = depth_map_generator.generate_depth_map(image)
         # Test downscaling and upscaling performance gain on production server
-        # depth_map = depth_map_generator.generate_depth_map_performant(image, 256, 256)
+        # Also, strangely really thin but long images make the depth map generation really slow or crash, so use this
+        depth_map = depth_map_generator.generate_depth_map_performant(image, depth_map_resize_dimension, depth_map_resize_dimension)
         depth_map_coloured = depth_map_generator.colour_depth_map(depth_map)
         depth_map_coloured_name = f"{session['session_id']}_depth_map_coloured.jpg"
         depth_map_coloured_path = os.path.join(SESSION_DATA_FOLDER, depth_map_coloured_name)

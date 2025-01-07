@@ -113,7 +113,7 @@ depth_map_generator = DepthMapGenerator()
 if __name__ == '__main__':
 
     start_time = time.time()
-    path_to_file = "backend/resources/images/skyscrapers.jpeg"
+    path_to_file = "backend/resources/images/amanda.jpeg"
     image = cv2.imread(path_to_file)
     depth_map_full = depth_map_generator.generate_depth_map(image)
 
