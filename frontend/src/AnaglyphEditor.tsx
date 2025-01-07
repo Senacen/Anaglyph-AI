@@ -85,7 +85,9 @@ function AnaglyphEditor() {
                 </label>
                 <br />
             </form>
-            {anaglyphIsLoading && <div className="loader"></div>}
+            {/* Below div is used to display loading spinner, otherwise the image will shift down while it loads then shift back up */}
+            <div style={{display: "flex", height: "40px", justifyContent: "center"}}>{ anaglyphIsLoading && <div className="loader"></div>}</div>
+
             {anaglyphUrl && <img src={anaglyphUrl} alt="Anaglyph" className="anaglyphImage"/>}
         </div>
     );
