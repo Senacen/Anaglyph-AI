@@ -73,16 +73,18 @@
     padding-bottom: 20px;;
 }
 
-label, input[type="range"] {
+label, input {
     vertical-align: middle;
 }
 
 label, input {
-    margin: 0 10px;
+    margin: 0 10px; /* Add space between the anaglyph editor components*/
 }
 
-label, input{
+input[type="checkbox"] {
+    accent-color: #000;
 }
+
 
 .loader {
     border: 5px solid #fafafa;

@@ -71,11 +71,11 @@ function AnaglyphEditor() {
                 </form>
                 <form>
                     <label>
-                        Max Disparity Percentage
+                        Strength
                         <input
                             type="range"
                             min="0"
-                            max="5"
+                            max="6"
                             step="0.1"
                             value={sliderValue}
                             onChange={handleSliderChange}
