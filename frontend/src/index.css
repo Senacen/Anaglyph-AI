@@ -67,17 +67,29 @@
     scale: 0.95;
 }
 
+.anaglyphEditor {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;;
+}
+
 label, input[type="range"] {
     vertical-align: middle;
 }
 
+label, input {
+    margin: 0 10px;
+}
+
+label, input{
+}
+
 .loader {
     border: 5px solid #fafafa;
-    border-left: 5px solid cyan;
-    border-right: 5px solid red;
+    border-top: 5px solid darkgrey;
     border-radius: 100%;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     animation: spin 1s linear infinite;
     margin: auto; /* Center it */
 }
@@ -86,6 +98,8 @@ label, input[type="range"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
 
 
 

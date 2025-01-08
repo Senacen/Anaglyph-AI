@@ -47,46 +47,59 @@ function AnaglyphEditor() {
         setMaxDisparityPercentage(sliderValue)
     }
 
-
+    const handleDownload = () => {
+        const link = document.createElement("a");
+        link.href = anaglyphUrl!; // Non-null assertion operator
+        link.download = "anaglyph.jpeg";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up, remove from dom
+    }
     return (
         <div>
             <h1>Anaglyph</h1>
-            <form>
-                <label>
-                    Pop Out:
-                    <input
-                        type="checkbox"
-                        checked={popOut}
-                        onChange={(e) => setPopOut(e.target.checked)}
-                    />
-                </label>
-                <br />
-                <label>
-                    Max Disparity Percentage:
-                    <input
-                        type="range"
-                        min="0"
-                        max="5"
-                        step="0.1"
-                        value={sliderValue}
-                        onChange={handleSliderChange}
-                        onMouseUp={handleSliderReleased}
-                        onTouchEnd={handleSliderReleased}
-                    />
-                </label>
-                <br />
-                <label>
-                    Minimise Retinal Rivalry:
-                    <input
-                        type="checkbox"
-                        checked={optimiseRRAnaglyph}
-                        onChange={(e) => setOptimiseRRAnaglyph(e.target.checked)}
-                    />
-                </label>
-                <br />
-            </form>
+            <div className="anaglyphEditor">
+                <form>
+                    <label>
+                        Pop Out
+                        <input
+                            type="checkbox"
+                            checked={popOut}
+                            onChange={(e) => setPopOut(e.target.checked)}
+                        />
+                    </label>
+                </form>
+                <form>
+                    <label>
+                        Max Disparity Percentage
+                        <input
+                            type="range"
+                            min="0"
+                            max="5"
+                            step="0.1"
+                            value={sliderValue}
+                            onChange={handleSliderChange}
+                            onMouseUp={handleSliderReleased}
+                            onTouchEnd={handleSliderReleased}
+                        />
+                    </label>
+                </form>
+                <form>
+                    <label>
+                        Minimise Retinal Rivalry
+                        <input
+                            type="checkbox"
+                            checked={optimiseRRAnaglyph}
+                            onChange={(e) => setOptimiseRRAnaglyph(e.target.checked)}
+                        />
+                    </label>
+                </form>
+            </div>
             {/* Below div is used to display loading spinner, otherwise the image will shift down while it loads then shift back up */}
-            <div style={{display: "flex", height: "40px", justifyContent: "center"}}>{ anaglyphIsLoading && <div className="loader"></div>}</div>
+            <div style={{display: "flex", height: "40px", justifyContent: "center", padding: "10px 0"}}>
+                { anaglyphIsLoading && <div className="loader"></div>}
+                { (!anaglyphIsLoading && anaglyphUrl) && <button className="anaglyphButton" onClick={handleDownload}>Download</button>}
+            </div>
 
             {anaglyphUrl && <img src={anaglyphUrl} alt="Anaglyph" className="anaglyphImage"/>}
         </div>
