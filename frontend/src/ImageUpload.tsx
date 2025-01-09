@@ -6,6 +6,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
     const [depthMapIsLoading, setDepthMapIsLoading] = useState<boolean>(false);
+    const apiUrl = process.env.FLASK_BACKEND_API_URL;
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -28,7 +29,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
         console.log("Uploading image...");
 
         try {
-            const response = await fetch("http://localhost:8000/image", {
+            const response = await fetch(`${apiUrl}/image`, {
                 method: "POST",
                 body: formData,
                 credentials: "include",
@@ -56,7 +57,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
     const fetchDepthMap = async () => {
         try {
-            const response = await fetch("http://localhost:8000/depth-map", {
+            const response = await fetch("${apiUrl}/depth-map", {
                 method: "GET",
                 credentials: "include",
             });

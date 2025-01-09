@@ -40,7 +40,7 @@ class DepthMapGenerator:
         }
 
         self.model = DepthAnythingV2(**model_configs[encoder])
-        self.model.load_state_dict(torch.load(f'backend/ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
+        self.model.load_state_dict(torch.load(f'ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
         self.model = self.model.to(DEVICE).eval()
         print("Loaded model")
 
@@ -113,7 +113,7 @@ depth_map_generator = DepthMapGenerator()
 if __name__ == '__main__':
 
     start_time = time.time()
-    path_to_file = "backend/resources/images/amanda.jpeg"
+    path_to_file = "resources/images/amanda.jpeg"
     image = cv2.imread(path_to_file)
     depth_map_full = depth_map_generator.generate_depth_map(image)
 

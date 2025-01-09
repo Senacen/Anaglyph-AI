@@ -27,7 +27,7 @@ port = int(os.getenv("FLASK_PORT"))
 app.secret_key = 'super secret key'
 
 # By default, sessions close on the client side as soon as the user's browser is closed or cookies cleared
-SESSION_DATA_FOLDER = 'backend/resources/session_data'
+SESSION_DATA_FOLDER = 'resources/session_data'
 os.makedirs(SESSION_DATA_FOLDER, exist_ok=True)
 
 # Previously had a dictionary of session last activity time, but managing concurrency is too hard

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 function AnaglyphEditor() {
+    const apiUrl = process.env.FLASK_BACKEND_API_URL;
     const [anaglyphUrl, setAnaglyphUrl] = useState<string | null>(null);
     const [anaglyphIsLoading, setAnaglyphIsLoading] = useState<boolean>(false);
 
@@ -14,7 +15,7 @@ function AnaglyphEditor() {
         try {
             setAnaglyphIsLoading(true); // Start loading spinner
             const response = await fetch(
-                `http://localhost:8000/anaglyph?pop_out=${popOut}&max_disparity_percentage=${maxDisparityPercentage}&optimised_RR_anaglyph=${optimiseRRAnaglyph}`,
+                `${apiUrl}/anaglyph?pop_out=${popOut}&max_disparity_percentage=${maxDisparityPercentage}&optimised_RR_anaglyph=${optimiseRRAnaglyph}`,
                 {
                     method: "GET",
                     credentials: "include",

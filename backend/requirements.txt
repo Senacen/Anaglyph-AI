@@ -21,12 +21,12 @@ packaging==24.2
 pillow==11.0.0
 pyparsing==3.2.0
 python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
 setuptools==75.6.0
 six==1.17.0
 sympy==1.13.1
-torch==2.6.0.dev20241229
-torchaudio==2.6.0.dev20241229
-torchvision==0.22.0.dev20241229
+torch==2.7.0.dev20250109
+torchvision==0.22.0.dev20250109
 typing_extensions==4.12.2
 tzlocal==5.2
 Werkzeug==3.1.3
