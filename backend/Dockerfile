@@ -1,3 +1,4 @@
+# Cloudrun requires linux amd64, used buildx tool to convert it to linux/amd64
 FROM python:3.13-bookworm
 LABEL authors="duyhuynh"
 

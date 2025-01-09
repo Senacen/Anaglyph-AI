@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 function AnaglyphEditor() {
-    const apiUrl = process.env.FLASK_BACKEND_API_URL;
+    const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
     const [anaglyphUrl, setAnaglyphUrl] = useState<string | null>(null);
     const [anaglyphIsLoading, setAnaglyphIsLoading] = useState<boolean>(false);
 

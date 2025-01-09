@@ -6,7 +6,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
     const [depthMapIsLoading, setDepthMapIsLoading] = useState<boolean>(false);
-    const apiUrl = process.env.FLASK_BACKEND_API_URL;
+    const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -57,13 +57,17 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
     const fetchDepthMap = async () => {
         try {
-            const response = await fetch("${apiUrl}/depth-map", {
+            const response = await fetch(`${apiUrl}/depth-map`, {
                 method: "GET",
                 credentials: "include",
             });
             if (response.ok) {
                 setDepthMapIsLoading(false); // Stop loading spinner
                 const depthMapBlob = await response.blob();
+                if (depthMapBlob.size === 0) {
+                    console.error("Depth map is empty");
+                    return;
+                }
                 const depthMapUrl = URL.createObjectURL(depthMapBlob);
                 setDepthMapUrl(depthMapUrl);
                 console.log("Depth map fetched successfully", depthMapUrl);
