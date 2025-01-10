@@ -26,6 +26,9 @@ port = int(os.getenv("FLASK_PORT"))
 # Secret key for session management
 app.secret_key = 'super secret key'
 
+# Maximum dimension for the image to be processed, will resize the largest dimension to this if larger
+MAX_DIMENSION = 2000
+
 # By default, sessions close on the client side as soon as the user's browser is closed or cookies cleared
 SESSION_DATA_FOLDER = 'resources/session_data'
 os.makedirs(SESSION_DATA_FOLDER, exist_ok=True)
@@ -108,6 +111,10 @@ def upload_image():
                     pillow_image = pillow_image.rotate(90, expand=True)
 
             pillow_image = pillow_image.convert('RGB') # Required for jpg
+
+            if pillow_image.width > MAX_DIMENSION or pillow_image.height > MAX_DIMENSION:
+                pillow_image.thumbnail((MAX_DIMENSION, MAX_DIMENSION))
+
             image_name = f"{session['session_id']}_image.jpg"
             image_path = os.path.join(SESSION_DATA_FOLDER, image_name)
             pillow_image.save(image_path, format='JPEG')

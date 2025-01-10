@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="added docker files and env for frontend">
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="nginx docker">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -310,15 +304,8 @@
       <workItem from="1736207513909" duration="805000" />
       <workItem from="1736209815103" duration="1796000" />
       <workItem from="1736211839966" duration="637000" />
-      <workItem from="1736261466132" duration="45392000" />
-    </task>
-    <task id="LOCAL-00003" summary="get depth anything v2 and checkpoints">
-      <option name="closed" value="true" />
-      <created>1735514327699</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1735514327699</updated>
+      <workItem from="1736261466132" duration="48620000" />
+      <workItem from="1736529367706" duration="786000" />
     </task>
     <task id="LOCAL-00004" summary="get depth anything v2 and checkpoints">
       <option name="closed" value="true" />
@@ -704,14 +691,21 @@
       <option name="project" value="LOCAL" />
       <updated>1736442803327</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="nginx docker">
+      <option name="closed" value="true" />
+      <created>1736460153872</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1736460153872</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="finished stereo generator" />
     <MESSAGE value="Vectorised everything, sped it up" />
     <MESSAGE value="renames" />
     <MESSAGE value="Got simple red cyan anaglyph working" />
@@ -736,7 +730,8 @@
     <MESSAGE value="added download button, anaglyph editor css" />
     <MESSAGE value="made checkboxes black accent" />
     <MESSAGE value="added docker files and env for frontend" />
-    <option name="LAST_COMMIT_MESSAGE" value="added docker files and env for frontend" />
+    <MESSAGE value="nginx docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="nginx docker" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1735509993980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
