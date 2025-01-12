@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="nginx docker">
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="added a max dimension to resize larger images to to speed up processing">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -305,15 +307,7 @@
       <workItem from="1736209815103" duration="1796000" />
       <workItem from="1736211839966" duration="637000" />
       <workItem from="1736261466132" duration="48620000" />
-      <workItem from="1736529367706" duration="786000" />
-    </task>
-    <task id="LOCAL-00004" summary="get depth anything v2 and checkpoints">
-      <option name="closed" value="true" />
-      <created>1735515280546</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1735515280546</updated>
+      <workItem from="1736529367706" duration="7552000" />
     </task>
     <task id="LOCAL-00005" summary="get depth anything v2 and checkpoints">
       <option name="closed" value="true" />
@@ -699,14 +693,21 @@
       <option name="project" value="LOCAL" />
       <updated>1736460153872</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="added a max dimension to resize larger images to to speed up processing">
+      <option name="closed" value="true" />
+      <created>1736530278362</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1736530278362</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Vectorised everything, sped it up" />
     <MESSAGE value="renames" />
     <MESSAGE value="Got simple red cyan anaglyph working" />
     <MESSAGE value="Fixed overwriting, now on forward fill" />
@@ -731,7 +732,8 @@
     <MESSAGE value="made checkboxes black accent" />
     <MESSAGE value="added docker files and env for frontend" />
     <MESSAGE value="nginx docker" />
-    <option name="LAST_COMMIT_MESSAGE" value="nginx docker" />
+    <MESSAGE value="added a max dimension to resize larger images to to speed up processing" />
+    <option name="LAST_COMMIT_MESSAGE" value="added a max dimension to resize larger images to to speed up processing" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1735509993980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

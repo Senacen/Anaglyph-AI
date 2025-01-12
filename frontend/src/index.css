@@ -40,10 +40,18 @@
     width: 50%;
 }
 
-.anaglyphImage {
-    max-width: 100%;
-    max-height: 80vh; /* Ensure anaglyph take at most 80% of the viewport height */
+.anaglyphImageContainer {
+    width: 100%;
+    height: 80vh;
 }
+.anaglyphImage {
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    max-width: 100%;       /* Constrain to the container's width */
+    max-height: 100%;
+}
+
 
 .anaglyphButton {
     display: block;

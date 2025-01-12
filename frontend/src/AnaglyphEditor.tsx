@@ -101,8 +101,10 @@ function AnaglyphEditor() {
                 { anaglyphIsLoading && <div className="loader"></div>}
                 { (!anaglyphIsLoading && anaglyphUrl) && <button className="anaglyphButton" onClick={handleDownload}>Download</button>}
             </div>
+            <div className="anaglyphImageContainer">
+                {anaglyphUrl && <img src={anaglyphUrl} alt="Anaglyph" className="anaglyphImage"/>}
+            </div>
 
-            {anaglyphUrl && <img src={anaglyphUrl} alt="Anaglyph" className="anaglyphImage"/>}
         </div>
     );
 }
