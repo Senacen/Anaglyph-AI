@@ -1,5 +1,5 @@
 # Anaglyph AI
-A web application that takes a monocular image as input, and displays a 3D [Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses
+A website that allows a user to upload a monocular image, and converts it to a 3D [Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses
 
 ## Demo
 ### Image Upload and Depth Map Generation
