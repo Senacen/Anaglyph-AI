@@ -71,7 +71,7 @@ If you are viewing with red-cyan analgyph glasses currently, take a look at the 
 <img src="https://github.com/user-attachments/assets/5729f953-b91a-41f2-b17d-9509f639f806" width="400" />
 
 
-To allow the user to reduce the retinal rivalry that the anaglyph produces, I implemented a minimise retinal rivalry option when generating the anaglyph. This is based on the optimised matrices from a [Sanders and McAllister paper](https://research.csc.ncsu.edu/stereographics/ei03.pdf) on transforming the colours of the stereo images before merging them to minimise the sum of the distances between the anagylph color and the left and right eye colors. This is calculated in the CIE Lab colour space, as it is perceptually uniform, and works to minimise retinal rivalry by minimising how different the image seen by the left eye is to the image seen by the right eye.
+To allow the user to reduce the retinal rivalry that the anaglyph produces, I implemented a minimise retinal rivalry option when generating the anaglyph. This is using optimised matrices from a [Sanders and McAllister paper](https://research.csc.ncsu.edu/stereographics/ei03.pdf) to transform the colours of the stereo images before merging them. These matrices are based on the method described in [Eric Dubois' paper](https://www.site.uottawa.ca/~edubois/icassp01/anaglyphdubois.pdf) to create optimised least squares Dubois anaglyphs. This is calculated in the CIE XYZ colour space, and works to minimise retinal rivalry by reducing how different the image seen by the left eye is to the image seen by the right eye as a by product of making the resultant image colours closer to the original.
 
 The result of this on the image above is:
 
