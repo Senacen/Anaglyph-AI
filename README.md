@@ -42,7 +42,7 @@ To fix this, I first considered implementing a forward fill, but it is ambiguous
 <img width="1374" alt="Pasted Graphic 6" src="https://github.com/user-attachments/assets/07aff3b8-d16b-41c3-90b8-1da917e43928" />
 
 
-### Merging Stereo Images into an Anaglyph
+## Merging Stereo Images into an Anaglyph
 After generating the left eye and right eye image, I make the anaglyph image by setting the red channel to that of the left eye image, and the green and blue channel to that of the right eye image. Note: when minimising retinal rivalry, it is a little more complicated and involves transforming the colours of the two images with specific matrices, and then addding the images together 
 
 ## Pop In vs Pop Out
