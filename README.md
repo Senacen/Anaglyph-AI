@@ -1,5 +1,13 @@
 # Anaglyph AI
-A website that allows a user to upload a monocular image, and converts it to a [3D Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses
+A Flask-React website that allows a user to upload a monocular image, and converts it to a [3D Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses
+
+# Contents
+- [Image Upload and Depth Map Generation](#image-upload-and-depth-map-generation)
+- [Anaglyph Generation and Editor](#anaglyph-generation-and-editor)
+- [Converting from Monocular to Stereoscopic](#converting-from-monocular-to-stereoscopic)
+  - [Depth Map Generation](#depth-map-generation)
+  - [Stereo Image Pair Generation from Depth Data](#stereo-image-pair-generation-from-depth-data)
+- [Retinal Rivalry](#retinal-rivalry)
 
 
 
