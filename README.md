@@ -46,6 +46,10 @@ To see this effect with red-cyan anaglyph glasses, below is a pop in version of 
 
 <img width="700" alt="image" src="https://github.com/user-attachments/assets/632ef99f-5844-4337-9364-2e2fd8b99e12" />
 
+## Strength
+This slider actually sets the maximum disparity in terms of a percentage of the image width, from 0% to 6%. This means at 0%, there is no 3D effect, and at 6% of the image width, the two points with the most disparity (the furthest point in pop in, or the closest point in pop out) will have a distance of 6% of the image width between them when comparing the left eye image to the right eye image.
+
+<img width="1198" alt="image" src="https://github.com/user-attachments/assets/5d946aad-f18c-45a1-9303-32b4655458e4" />
 
 
 
