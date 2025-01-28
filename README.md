@@ -1,15 +1,15 @@
 # Anaglyph AI
 A Flask-React website that allows a user to upload a monocular image, and converts it to a [3D Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses
 
-# Contents
+## Contents
 - [Image Upload and Depth Map Generation](#image-upload-and-depth-map-generation)
 - [Anaglyph Generation and Editor](#anaglyph-generation-and-editor)
 - [Converting from Monocular to Stereoscopic](#converting-from-monocular-to-stereoscopic)
   - [Depth Map Generation](#depth-map-generation)
   - [Stereo Image Pair Generation from Depth Data](#stereo-image-pair-generation-from-depth-data)
+- [Pop In vs Pop Out](#pop-in-vs-pop-out)
 - [Retinal Rivalry](#retinal-rivalry)
-
-
+- [Examples](#examples)
 
 ## Image Upload and Depth Map Generation
 <img width="1471" alt="image" src="https://github.com/user-attachments/assets/9a7ac356-cd8e-432a-ac8c-47cd19b80586" />
@@ -37,6 +37,18 @@ However, this leaves "holes" in the eye image, or rather black pixels, where no 
 This is inevitable: when generating stereo images from a monocular image, we are simply missing information, such as "what is behind the edge that they left eye should have been able to see?" 
 To fix this, I first considered implementing a forward fill, but it is ambiguous whether the pixels in the background or those in the foreground should be used to fill the holes, as this depends on the actual geometry of the closer object. Therefore, I used OpenCV's [inpainting](https://docs.opencv.org/4.x/d7/d8b/group__photo__inpaint.html) function to fill the holes, specifically INPAINT_TELEA, as per this [comparative study](https://globaljournals.org/GJCST_Volume21/2-Comparative-Study-of-OpenCV.pdf) of the different inpaint functions efficiency.
 
+## Pop In vs Pop Out
+This option determines where the zero parallax plane is in the scene, which determines if objects appear to be popping into (behind) or poppoing out of (in front of) the screen. Whatever objects are at the zero parallax plane will appear to be at the exact distance of the screen, as no shifting will be performed on them. This is analogous to the focal plane of the eyes. 
+
+However to simplify use, I have decided to restrict the zero parallax plane to be either be at the distance furthest object, which causes the furthest object to appear at the screen distance, and everything else to appear in front of the screen, or the zero parallax plane is at the distance of the closest object, which causes the closest object to appear at the screen distance, and everything else to appear behind the screen. 
+
+To see this effect with red-cyan anaglyph glasses, below is a pop in version of an image, and then a pop out version of the image. I have also added a horizontal bar which should appear to be at the distance of the screen to more easily see in which direction the 3D effect is acting.
+
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/632ef99f-5844-4337-9364-2e2fd8b99e12" />
+
+
+
+
 ## Retinal Rivalry
 Retinal rivalry (or [binocular rivalry](https://en.wikipedia.org/wiki/Binocular_rivalry)) is a visual phenomenon that occurs when each eye recieves different information, and the brain cannot reconcile them. This causes a "flashing" effect, where briefly, one eye will dominate, and you will see what that eye sees, and then the other will take over, and so on (although if you have a very dominant eye, this may not happen as much). 
 
@@ -59,6 +71,18 @@ In a real photo example, compare - through red-cyan anaglyph glasses - the retin
 
 <image src="https://github.com/user-attachments/assets/a55a2adc-6ca6-4225-8f0d-dbf1a85e76ae" width="400" />
 <image src="https://github.com/user-attachments/assets/b1b3c879-6dc9-43fe-adde-c49e55860d30" width="400" />
+
+## Examples
+![anaglyph](https://github.com/user-attachments/assets/9cdc29fe-57e3-4037-a2ab-d247ec066850)
+![anaglyph-2](https://github.com/user-attachments/assets/328ecaad-fcf4-4d34-8f62-3255f6b07a27)
+![anaglyph-9](https://github.com/user-attachments/assets/44a2a282-5d13-423c-8aea-9441c00ad92f)
+![image](https://github.com/user-attachments/assets/4f4c3b7d-c07b-42e2-a948-34398b728519)
+![image](https://github.com/user-attachments/assets/cb994d7f-954f-4b67-9dd4-fd9f18551ef9)
+![image](https://github.com/user-attachments/assets/7ec5c66c-5e29-4e96-9454-3f353df7422c)
+
+
+
+
 
 
 
