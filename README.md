@@ -1,5 +1,5 @@
 # Anaglyph AI
-A website that allows a user to upload a monocular image, and converts it to a 3D [Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses
+A website that allows a user to upload a monocular image, and converts it to a [3D Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses
 
 ## Image Upload and Depth Map Generation
 <img width="1471" alt="image" src="https://github.com/user-attachments/assets/9a7ac356-cd8e-432a-ac8c-47cd19b80586" />
@@ -14,7 +14,24 @@ When wearing red-cyan anaglyph glasses, this effect occurs most strongly when vi
 
 If you are viewing with red-cyan analgyph glasses currently, take a look at the colours below and note the uncomfortable flashing effect in the red portion at the top:
 
-<img src="https://github.com/user-attachments/assets/5729f953-b91a-41f2-b17d-9509f639f806" width="500" />
+<img src="https://github.com/user-attachments/assets/5729f953-b91a-41f2-b17d-9509f639f806" width="400" />
+
+
+To allow the user to reduce the retinal rivalry that the anaglyph produces, I implemented a minimise retinal rivalry option when generating the anaglyph. This is based on the optimised matrices from a [Sanders and McAllister paper](https://research.csc.ncsu.edu/stereographics/ei03.pdf) on transforming the colours of the stereo images before merging them to minimise the sum of the distances between the anagylph color and the left and right eye colors. This is calculated in the CIE Lab colour space, as it is perceptually uniform, and works to minimise retinal rivalry by minimising how different the image seen by the left eye is to the image seen by the right eye.
+
+The result of this on the image above is:
+
+<img src="https://github.com/user-attachments/assets/4f291005-7a0f-449d-9c73-9e0cd8569a03" width="400" />
+
+When viewed through red-cyan anaglyph glasses, the previously "flashing" red portion will now be significantly more stable, and more green, whereas through the glasses the rest of the colours should appear only very slightly affected. Interestingly, the transformation seems very similar to deuteranopia, or red-green colour blindness, when viewed without the glasses.
+
+In a real photo example, compare - through red-cyan anaglyph glasses - the retinal rivalry on my friend in the middle's coat, before and after minimising retinal rivalry:
+
+<image src="https://github.com/user-attachments/assets/a55a2adc-6ca6-4225-8f0d-dbf1a85e76ae" width="400" />
+<image src="https://github.com/user-attachments/assets/b1b3c879-6dc9-43fe-adde-c49e55860d30" width="400" />
+
+
+
 
 
 
