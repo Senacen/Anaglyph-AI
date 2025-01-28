@@ -1,6 +1,8 @@
 # Anaglyph AI
 A website that allows a user to upload a monocular image, and converts it to a [3D Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses
 
+
+
 ## Image Upload and Depth Map Generation
 <img width="1471" alt="image" src="https://github.com/user-attachments/assets/9a7ac356-cd8e-432a-ac8c-47cd19b80586" />
 
@@ -15,7 +17,7 @@ These are called stereoscopic images, and when one eye sees one image and the ot
 The creation of a stereo image pair from a single monocular image can be broken down into 2 steps: generating a depth map, and then using the depth data to transform the image to a left and right eye image.
 
 ### Depth Map Generation
-I used [DepthAnythingV2](https://github.com/DepthAnything/Depth-Anything-V2), an open source depth estimation model, to generate a depth map for the image. This was the simple to implement part.
+I used [DepthAnythingV2](https://github.com/DepthAnything/Depth-Anything-V2), an open source depth estimation model, to generate a depth map for the image.
 
 ### Stereo Image Pair Generation from Depth Data
 I implemented this by first setting a max disparity in terms of number of pixels. This dictates the furthest a pixel in one eye image can be from the corresponding pixel in the other eye image, and can be thought of as the strength of the 3D Anaglyph. Then, I create a 2D NumPy array of shifts, which dictates how far each pixel would have to move from the original image to generate an eye image. This shifts array is calculated as a linear interpolation between 0 and max disparity, with the parameter being the normalised depth data. Once I have the shifts array, I use some NumPy magic and advanced indexing to move all the pixels to their appropriate location, with the closer pixel taking priority if two pixels end up in the same location. 
