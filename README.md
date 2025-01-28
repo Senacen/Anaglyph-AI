@@ -79,6 +79,12 @@ In a real photo example, compare - through red-cyan anaglyph glasses - the retin
 ![image](https://github.com/user-attachments/assets/4f4c3b7d-c07b-42e2-a948-34398b728519)
 ![image](https://github.com/user-attachments/assets/cb994d7f-954f-4b67-9dd4-fd9f18551ef9)
 ![image](https://github.com/user-attachments/assets/7ec5c66c-5e29-4e96-9454-3f353df7422c)
+![anaglyph-13](https://github.com/user-attachments/assets/b9960291-847a-42e3-a210-6fa46476b5f6)
+![anaglyph-14](https://github.com/user-attachments/assets/a016b43a-dc3f-469e-a9dd-e158230052d1)
+![anaglyph-15](https://github.com/user-attachments/assets/46ba0c87-b367-4f86-a391-90587a367b78)
+![anaglyph-16](https://github.com/user-attachments/assets/79e81159-522b-4760-9c67-0bc2ec66e456)
+![anaglyph-17](https://github.com/user-attachments/assets/2d84ea9c-83c5-470b-8788-39ac33d9e16b)
+
 
 
 
