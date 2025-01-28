@@ -7,7 +7,7 @@ A Flask-React website that allows a user to upload a monocular image, and conver
 - [Converting from Monocular to Stereoscopic](#converting-from-monocular-to-stereoscopic)
   - [Depth Map Generation](#depth-map-generation)
   - [Stereo Image Pair Generation from Depth Data](#stereo-image-pair-generation-from-depth-data)
-  - [Merging Stereo Images into an Anaglyph](#merging-stereo-images-into-an-anaglyph
+  - [Merging Stereo Images into an Anaglyph](#merging-stereo-images-into-an-anaglyph)
 - [Pop In vs Pop Out](#pop-in-vs-pop-out)
 - [Strength](#strength)
 - [Retinal Rivalry](#retinal-rivalry)
