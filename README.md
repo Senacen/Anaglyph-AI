@@ -7,7 +7,9 @@ A Flask-React website that allows a user to upload a monocular image, and conver
 - [Converting from Monocular to Stereoscopic](#converting-from-monocular-to-stereoscopic)
   - [Depth Map Generation](#depth-map-generation)
   - [Stereo Image Pair Generation from Depth Data](#stereo-image-pair-generation-from-depth-data)
+  - [Merging Stereo Images into an Anaglyph](#merging-stereo-images-into-an-anaglyph
 - [Pop In vs Pop Out](#pop-in-vs-pop-out)
+- [Strength](#strength)
 - [Retinal Rivalry](#retinal-rivalry)
 - [Examples](#examples)
 
@@ -36,6 +38,9 @@ However, this leaves "holes" in the eye image, or rather black pixels, where no 
 
 This is inevitable: when generating stereo images from a monocular image, we are simply missing information, such as "what is behind the edge that they left eye should have been able to see?" 
 To fix this, I first considered implementing a forward fill, but it is ambiguous whether the pixels in the background or those in the foreground should be used to fill the holes, as this depends on the actual geometry of the closer object. Therefore, I used OpenCV's [inpainting](https://docs.opencv.org/4.x/d7/d8b/group__photo__inpaint.html) function to fill the holes, specifically INPAINT_TELEA, as per this [comparative study](https://globaljournals.org/GJCST_Volume21/2-Comparative-Study-of-OpenCV.pdf) of the different inpaint functions efficiency.
+
+### Merging Stereo Images into an Anaglyph
+After generating the left eye and right eye image, I make the anaglyph image by setting the red channel to that of the left eye image, and the green and blue channel to that of the right eye image. Note: when minimising retinal rivalry, it is a little more complicated and involves transforming the colours of the two images with specific matrices, and then addding the images together 
 
 ## Pop In vs Pop Out
 This option determines where the zero parallax plane is in the scene, which determines if objects appear to be popping into (behind) or poppoing out of (in front of) the screen. Whatever objects are at the zero parallax plane will appear to be at the exact distance of the screen, as no shifting will be performed on them. This is analogous to the focal plane of the eyes. 
