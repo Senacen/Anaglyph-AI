@@ -73,6 +73,7 @@ In a real photo example, compare - through red-cyan anaglyph glasses - the retin
 <image src="https://github.com/user-attachments/assets/b1b3c879-6dc9-43fe-adde-c49e55860d30" width="400" />
 
 ## Examples
+*All have minimise retinal rivalry selected, for more pleasant viewing experience through red-cyan anaglyph glasses*
 ![anaglyph](https://github.com/user-attachments/assets/9cdc29fe-57e3-4037-a2ab-d247ec066850)
 ![anaglyph-2](https://github.com/user-attachments/assets/328ecaad-fcf4-4d34-8f62-3255f6b07a27)
 ![anaglyph-9](https://github.com/user-attachments/assets/44a2a282-5d13-423c-8aea-9441c00ad92f)
