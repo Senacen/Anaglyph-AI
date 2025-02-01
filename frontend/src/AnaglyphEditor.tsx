@@ -106,7 +106,7 @@ function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
             </div>
             {/* Below div is used to display loading spinner, otherwise the image will shift down while it loads then shift back up */}
             <div style={{display: "flex", height: "40px", justifyContent: "center", padding: "10px 0"}}>
-                { anaglyphIsLoading && <div className="loader"></div>}
+                { anaglyphIsLoading && isDepthMapReady && <div className="loader"></div>} {/* Only show loader if depth map is ready but anaglyph is not*/}
                 { (!anaglyphIsLoading && anaglyphUrl) && <button className="anaglyphButton" onClick={handleDownload}>Download</button>}
             </div>
             <div className="anaglyphImageContainer">
