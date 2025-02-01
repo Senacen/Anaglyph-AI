@@ -20,8 +20,8 @@ CORS(app, supports_credentials=True)
 
 
 load_dotenv()
-host = os.getenv("FLASK_HOST")
-port = int(os.getenv("FLASK_PORT"))
+host = os.getenv("FLASK_HOST", "0.0.0.0")
+port = int(os.getenv("FLASK_PORT", 8000))
 
 # Secret key for session management
 app.secret_key = 'super secret key'

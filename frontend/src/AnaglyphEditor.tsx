@@ -7,9 +7,9 @@ function AnaglyphEditor() {
 
     // State for form inputs
     const [popOut, setPopOut] = useState<boolean>(false);
-    const [maxDisparityPercentage, setMaxDisparityPercentage] = useState<number>(1); // Default value
+    const [maxDisparityPercentage, setMaxDisparityPercentage] = useState<number>(2); // Default value
     const [optimiseRRAnaglyph, setOptimiseRRAnaglyph] = useState<boolean>(false);
-    const[sliderValue, setSliderValue] = useState<number>(1);
+    const[sliderValue, setSliderValue] = useState<number>(2);
 
     const fetchAnaglyph = async () => {
         try {

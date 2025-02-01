@@ -1,4 +1,4 @@
-# Cloudrun requires linux amd64, used buildx tool to convert it to linux/amd64
+# If require inux amd64, used buildx tool to convert it to linux/amd64
 FROM python:3.13-bookworm
 LABEL authors="duyhuynh"
 
@@ -13,4 +13,5 @@ COPY . /app
 
 EXPOSE 8000
 
-ENTRYPOINT ["python", "app.py"]
+# Doesn't work in docker compose if using localhost, must be 0.0.0.0
+ENTRYPOINT ["gunicorn", "-w", "1", "app:app", "-b", "0.0.0.0:8000"]
