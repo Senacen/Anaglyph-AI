@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="added a max dimension to resize larger images to to speed up processing">
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="sorted out gunicorn in docker, I don't multithread as bottleneck is ai model not number of processes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/anaglyph_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/anaglyph_generator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -319,15 +315,7 @@
       <workItem from="1737713772505" duration="3060000" />
       <workItem from="1737975704076" duration="8338000" />
       <workItem from="1738244822690" duration="3892000" />
-      <workItem from="1738368034389" duration="2316000" />
-    </task>
-    <task id="LOCAL-00006" summary="get depth anything v2 and checkpoints">
-      <option name="closed" value="true" />
-      <created>1735515875029</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1735515875029</updated>
+      <workItem from="1738368034389" duration="4625000" />
     </task>
     <task id="LOCAL-00007" summary="get depth anything v2 and checkpoints">
       <option name="closed" value="true" />
@@ -713,14 +701,21 @@
       <option name="project" value="LOCAL" />
       <updated>1736725457083</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="sorted out gunicorn in docker, I don't multithread as bottleneck is ai model not number of processes">
+      <option name="closed" value="true" />
+      <created>1738370582690</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1738370582690</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="renames" />
     <MESSAGE value="Got simple red cyan anaglyph working" />
     <MESSAGE value="Fixed overwriting, now on forward fill" />
     <MESSAGE value="used inpainting to fill holes" />
@@ -745,7 +740,8 @@
     <MESSAGE value="added docker files and env for frontend" />
     <MESSAGE value="nginx docker" />
     <MESSAGE value="added a max dimension to resize larger images to to speed up processing" />
-    <option name="LAST_COMMIT_MESSAGE" value="added a max dimension to resize larger images to to speed up processing" />
+    <MESSAGE value="sorted out gunicorn in docker, I don't multithread as bottleneck is ai model not number of processes" />
+    <option name="LAST_COMMIT_MESSAGE" value="sorted out gunicorn in docker, I don't multithread as bottleneck is ai model not number of processes" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

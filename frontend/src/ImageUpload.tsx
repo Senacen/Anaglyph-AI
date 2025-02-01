@@ -13,11 +13,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
         if (files && files.length > 0) {
             const selectedImage = files[0]; // Get the selected image file
             console.log("Selected file:", selectedImage); // Log the selected file
-            setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
             await handleImageUpload(selectedImage); // Call upload function
-            const imageUrl = URL.createObjectURL(selectedImage);
-            setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
-            setImageUrl(imageUrl);
         } else {
             console.error("No files selected");
         }
@@ -29,6 +25,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
         console.log("Uploading image...");
 
         try {
+            setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
             const response = await fetch(`${apiUrl}/image`, {
                 method: "POST",
                 body: formData,
@@ -38,6 +35,9 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Upload successful:", data);
+                const imageUrl = URL.createObjectURL(imageFile);
+                setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
+                setImageUrl(imageUrl);
                 setDepthMapIsLoading(true); // Start loading spinner
                 // Don't use await, causes error where depth map is not shown
                 fetchDepthMap();
@@ -49,11 +49,27 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
         }
     };
 
-    const handleButtonClick = () => {
+    const handleUploadButtonClick = () => {
         if (imageInputRef.current) {
             imageInputRef.current.click();
         }
     };
+
+    const handleRandomButtonClick = async () => {
+        try {
+            const response = await fetch("https://picsum.photos/1500/1000");
+            if (response.ok) {
+                const randomImage = await response.blob();
+                const randomImageFile = new File([randomImage], "randomImage.jpeg");
+                console.log("Random image fetched successfully", randomImageFile);
+                await handleImageUpload(randomImageFile); // Call upload function
+            } else {
+                console.error("Failed to fetch random image", response.statusText);
+            }
+        } catch (error) {
+            console.error("Failed to fetch random image", error);
+        }
+    }
 
     const fetchDepthMap = async () => {
         try {
@@ -83,9 +99,15 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
     return (
         <div>
-            <button onClick={handleButtonClick} className="anaglyphButton">
-                Upload Image
-            </button>
+            <div style={{display: "flex", justifyContent: "center"}}>
+                <button onClick={handleUploadButtonClick} className="anaglyphButton">
+                    Upload Image
+                </button>
+                <button onClick={handleRandomButtonClick} className="anaglyphButton">
+                    Random Image
+                </button>
+            </div>
+
             <input
                 type="file"
                 accept="image/jpeg, image/jpg, image/gif, image/png"
