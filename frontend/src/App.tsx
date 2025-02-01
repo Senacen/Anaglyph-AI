@@ -15,7 +15,7 @@ function App() {
                    alt="Anaglyph AI Logo"/>
             </div>
             <ImageUpload setIsDepthMapReadyStateLifter={setIsDepthMapReady}/>
-            { isDepthMapReady && <AnaglyphEditor />}
+            { <AnaglyphEditor isDepthMapReady={isDepthMapReady}/>}
         </>
   )
 }

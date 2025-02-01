@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function AnaglyphEditor() {
+function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
     const [anaglyphUrl, setAnaglyphUrl] = useState<string | null>(null);
     const [anaglyphIsLoading, setAnaglyphIsLoading] = useState<boolean>(false);
@@ -10,6 +10,14 @@ function AnaglyphEditor() {
     const [maxDisparityPercentage, setMaxDisparityPercentage] = useState<number>(2); // Default value
     const [optimiseRRAnaglyph, setOptimiseRRAnaglyph] = useState<boolean>(false);
     const[sliderValue, setSliderValue] = useState<number>(2);
+
+    // If the depth map is ready, fetch the anaglyph
+    // Causes it be retriggered for every new depth map
+     useEffect(() => {
+        if (isDepthMapReady) {
+            fetchAnaglyph();
+        }
+    }, [isDepthMapReady]);
 
     const fetchAnaglyph = async () => {
         try {
