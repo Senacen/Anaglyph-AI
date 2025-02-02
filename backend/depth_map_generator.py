@@ -83,7 +83,7 @@ class DepthMapGenerator:
         depth_map_scaled = (depth_map * 255).astype(np.uint8)
 
         # Use inter_cubic as better result, even though slower, as only slower than inter_linear by about 2ms
-        depth_map_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_CUBIC) / 255
+        depth_map_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_CUBIC)/ 255
 
         return depth_map_upscaled
     

@@ -147,7 +147,25 @@ class AnaglyphGenerator:
         #cv2.imshow("Filled Image", filled_image)
         return filled_image
 
-# TODO: make optimised anaglyph filters
+    def forward_fill_holes(self, image: np.ndarray) -> np.ndarray:
+        """
+        Fills in black holes in the image using cv2.inpaint with the Telea algorithm.
+        :param image: Image to be filled.
+        :return: Filled image.
+        """
+        # took 0.1595 seconds to fill holes in test woman kayak
+        # inpaint took 0.0308 seconds, and looks better. Both suffer from depth map not being perfect, so some pixels left behind
+        black_mask = np.all(image == [0, 0, 0], axis=-1)
+        first_non_black_indices = np.argmax(~black_mask, axis=1)
+        filled_image = image.copy()
+        rows = np.arange(image.shape[0])
+        filled_image[:,0] = image[rows,first_non_black_indices]
+        for row in range(black_mask.shape[0]):
+            for col in range(1, black_mask.shape[1]):
+                if black_mask[row, col]:
+                    filled_image[row, col] = filled_image[row, col - 1]
+        return filled_image
+
     def generate_pure_anaglyph(self, left_image: np.ndarray, right_image: np.ndarray) -> np.ndarray:
         """
         Generate an anaglyph image from a stereo image pair.
