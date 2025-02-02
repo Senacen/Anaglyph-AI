@@ -7,7 +7,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
     const [depthMapIsLoading, setDepthMapIsLoading] = useState<boolean>(false);
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
-    const maxDimension = 1500; // Client side resizing to reduce internet bandwidth
+    const maxDimension = import.meta.env.VITE_MAX_DIMENSION; // Client side resizing to reduce internet bandwidth
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -95,9 +95,9 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const handleRandomButtonClick = async () => {
         try {
             // Lorem Picsum only has 1084 images, try and look for other service
-            // Try and implement flickr, using node.js flickr-sdk for ease
-            // Prefetch multiple images and store them in a list to reduce api calls
-            const response = await fetch("https://picsum.photos/1500/1000?random=" + new Date().getTime());
+            // Prefetch multiple images and store them in a list to reduce api calls?
+            // Random image with 3:2 aspect ratio
+            const response = await fetch(`https://picsum.photos/${maxDimension}/${Math.round(maxDimension * 2 / 3)}?random=` + new Date().getTime());
             if (response.ok) {
                 const randomImage = await response.blob();
                 const randomImageFile = new File([randomImage], "randomImage.jpeg");

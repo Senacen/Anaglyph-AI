@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="only show loader for anaglyph if depth map is ready but anaglyph is not">
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="client side resizing to reduce internet bandwidth">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/depth_map_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -322,15 +317,7 @@
       <workItem from="1738244822690" duration="3892000" />
       <workItem from="1738368034389" duration="6494000" />
       <workItem from="1738411657957" duration="6052000" />
-      <workItem from="1738522708806" duration="1520000" />
-    </task>
-    <task id="LOCAL-00010" summary="added timers to time how long imports take">
-      <option name="closed" value="true" />
-      <created>1735519849103</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1735519849103</updated>
+      <workItem from="1738522708806" duration="2198000" />
     </task>
     <task id="LOCAL-00011" summary="refactored to make model load first, and all methods are immutable. No state other than model in class">
       <option name="closed" value="true" />
@@ -716,14 +703,21 @@
       <option name="project" value="LOCAL" />
       <updated>1738373553443</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="client side resizing to reduce internet bandwidth">
+      <option name="closed" value="true" />
+      <created>1738524536517</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1738524536517</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added file dialogue to select" />
     <MESSAGE value="added api endpoints, and session data" />
     <MESSAGE value="added clearing old sessions" />
     <MESSAGE value="added downscaling the image, generating depth map, then upscaling again" />
@@ -748,7 +742,8 @@
     <MESSAGE value="implemented random image, from lorem picsum" />
     <MESSAGE value="made it so the anaglyph settings are kept, by always rendering anaglyph editor, and making it retrigger anaglyph when the depth map changes using isDepthMapReady prop" />
     <MESSAGE value="only show loader for anaglyph if depth map is ready but anaglyph is not" />
-    <option name="LAST_COMMIT_MESSAGE" value="only show loader for anaglyph if depth map is ready but anaglyph is not" />
+    <MESSAGE value="client side resizing to reduce internet bandwidth" />
+    <option name="LAST_COMMIT_MESSAGE" value="client side resizing to reduce internet bandwidth" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
