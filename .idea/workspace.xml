@@ -4,8 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="implemented random image, from lorem picsum">
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="only show loader for anaglyph if depth map is ready but anaglyph is not">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/depth_map_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -312,23 +320,9 @@
       <workItem from="1737713772505" duration="3060000" />
       <workItem from="1737975704076" duration="8338000" />
       <workItem from="1738244822690" duration="3892000" />
-      <workItem from="1738368034389" duration="4990000" />
-    </task>
-    <task id="LOCAL-00008" summary="get depth anything v2 and checkpoints">
-      <option name="closed" value="true" />
-      <created>1735516015557</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1735516015557</updated>
-    </task>
-    <task id="LOCAL-00009" summary="check amanda">
-      <option name="closed" value="true" />
-      <created>1735516691363</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1735516691363</updated>
+      <workItem from="1738368034389" duration="6494000" />
+      <workItem from="1738411657957" duration="6052000" />
+      <workItem from="1738522708806" duration="1520000" />
     </task>
     <task id="LOCAL-00010" summary="added timers to time how long imports take">
       <option name="closed" value="true" />
@@ -706,15 +700,29 @@
       <option name="project" value="LOCAL" />
       <updated>1738372825584</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="made it so the anaglyph settings are kept, by always rendering anaglyph editor, and making it retrigger anaglyph when the depth map changes using isDepthMapReady prop">
+      <option name="closed" value="true" />
+      <created>1738373255681</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1738373255681</updated>
+    </task>
+    <task id="LOCAL-00058" summary="only show loader for anaglyph if depth map is ready but anaglyph is not">
+      <option name="closed" value="true" />
+      <created>1738373553443</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1738373553443</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed overwriting, now on forward fill" />
-    <MESSAGE value="used inpainting to fill holes" />
     <MESSAGE value="added file dialogue to select" />
     <MESSAGE value="added api endpoints, and session data" />
     <MESSAGE value="added clearing old sessions" />
@@ -738,7 +746,9 @@
     <MESSAGE value="added a max dimension to resize larger images to to speed up processing" />
     <MESSAGE value="sorted out gunicorn in docker, I don't multithread as bottleneck is ai model not number of processes" />
     <MESSAGE value="implemented random image, from lorem picsum" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented random image, from lorem picsum" />
+    <MESSAGE value="made it so the anaglyph settings are kept, by always rendering anaglyph editor, and making it retrigger anaglyph when the depth map changes using isDepthMapReady prop" />
+    <MESSAGE value="only show loader for anaglyph if depth map is ready but anaglyph is not" />
+    <option name="LAST_COMMIT_MESSAGE" value="only show loader for anaglyph if depth map is ready but anaglyph is not" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

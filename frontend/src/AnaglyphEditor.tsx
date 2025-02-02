@@ -13,11 +13,12 @@ function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
 
     // If the depth map is ready, fetch the anaglyph
     // Causes it be retriggered for every new depth map
+    // Also if the settings change
      useEffect(() => {
         if (isDepthMapReady) {
             fetchAnaglyph();
         }
-    }, [isDepthMapReady]);
+    }, [isDepthMapReady, popOut, maxDisparityPercentage, optimiseRRAnaglyph]);
 
     const fetchAnaglyph = async () => {
         try {
@@ -43,10 +44,6 @@ function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
             console.error("Failed to fetch Anaglyph", error);
         }
     };
-
-    useEffect(() => {
-        fetchAnaglyph();
-    }, [popOut, maxDisparityPercentage, optimiseRRAnaglyph]);
 
     const handleSliderChange = (e: { target: { value: string; }; }) => {
         setSliderValue(parseFloat(e.target.value));

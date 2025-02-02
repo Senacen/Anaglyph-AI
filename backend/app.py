@@ -27,7 +27,7 @@ port = int(os.getenv("FLASK_PORT", 8000))
 app.secret_key = 'super secret key'
 
 # Maximum dimension for the image to be processed, will resize the largest dimension to this if larger
-MAX_DIMENSION = 2000
+MAX_DIMENSION = 1500
 
 # By default, sessions close on the client side as soon as the user's browser is closed or cookies cleared
 SESSION_DATA_FOLDER = 'resources/session_data'

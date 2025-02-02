@@ -79,8 +79,12 @@ class DepthMapGenerator:
         :param height: Desired height for the depth map.
         :return: Upscaled normalised depth map.
         """
+        # Convert to image first to use image resizing
         depth_map_scaled = (depth_map * 255).astype(np.uint8)
-        depth_map_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_LINEAR) / 255
+
+        # Use inter_cubic as better result, even though slower, as only slower than inter_linear by about 2ms
+        depth_map_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_CUBIC) / 255
+
         return depth_map_upscaled
     
     def generate_depth_map_performant(self, image: np.ndarray, intermediateWidth:int, intermediateHeight:int) -> np.ndarray:

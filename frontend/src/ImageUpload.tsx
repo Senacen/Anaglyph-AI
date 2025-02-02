@@ -7,6 +7,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
     const [depthMapIsLoading, setDepthMapIsLoading] = useState<boolean>(false);
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
+    const maxDimension = 1500; // Client side resizing to reduce internet bandwidth
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -20,34 +21,70 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     };
 
     const handleImageUpload = async (imageFile: File) => {
-        const formData = new FormData();
-        formData.append("file", imageFile);
-        console.log("Uploading image...");
+    const formData = new FormData();
 
-        try {
-            setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
-            const response = await fetch(`${apiUrl}/image`, {
-                method: "POST",
-                body: formData,
-                credentials: "include",
-            });
-            console.log("Response status:", response.status); // Log response status
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Upload successful:", data);
-                const imageUrl = URL.createObjectURL(imageFile);
-                setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
-                setImageUrl(imageUrl);
-                setDepthMapIsLoading(true); // Start loading spinner
-                // Don't use await, causes error where depth map is not shown
-                fetchDepthMap();
-            } else {
-                console.error("Failed to upload image", response.json());
+    // Resize image to maxDimension to reduce internet bandwidth
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+
+    image.onload = async () => {
+
+        let width = image.width;
+        let height = image.height;
+
+        if (width > height) {
+            if (width > maxDimension) {
+                height *= maxDimension / width;
+                width = maxDimension;
             }
-        } catch (error) {
-            console.error("Failed to upload image", error);
+        } else {
+            if (height > maxDimension) {
+                width *= maxDimension / height;
+                height = maxDimension;
+            }
         }
+
+        canvas.width = width;
+        canvas.height = height;
+        // @ts-ignore
+        ctx.drawImage(image, 0, 0, width, height);
+
+        // Now send the image to the server
+        canvas.toBlob(async (blob) => {
+            if (blob) {
+                formData.append("file", blob, imageFile.name);
+                console.log("Uploading image...");
+
+                try {
+                    setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
+                    const response = await fetch(`${apiUrl}/image`, {
+                        method: "POST",
+                        body: formData,
+                        credentials: "include",
+                    });
+                    console.log("Response status:", response.status); // Log response status
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log("Upload successful:", data);
+                        const imageUrl = URL.createObjectURL(blob);
+                        setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
+                        setImageUrl(imageUrl);
+                        setDepthMapIsLoading(true); // Start loading spinner
+                        // Don't use await, causes error where depth map is not shown
+                        fetchDepthMap();
+                    } else {
+                        console.error("Failed to upload image", response.json());
+                    }
+                } catch (error) {
+                    console.error("Failed to upload image", error);
+                }
+            }
+        }, "image/jpeg");
     };
+
+    image.src = URL.createObjectURL(imageFile);
+};
 
     const handleUploadButtonClick = () => {
         if (imageInputRef.current) {
@@ -57,7 +94,10 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
     const handleRandomButtonClick = async () => {
         try {
-            const response = await fetch("https://picsum.photos/1500/1000");
+            // Lorem Picsum only has 1084 images, try and look for other service
+            // Try and implement flickr, using node.js flickr-sdk for ease
+            // Prefetch multiple images and store them in a list to reduce api calls
+            const response = await fetch("https://picsum.photos/1500/1000?random=" + new Date().getTime());
             if (response.ok) {
                 const randomImage = await response.blob();
                 const randomImageFile = new File([randomImage], "randomImage.jpeg");

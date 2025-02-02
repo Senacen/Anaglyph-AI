@@ -1,5 +1,7 @@
 APScheduler==3.11.0
 blinker==1.9.0
+certifi==2025.1.31
+charset-normalizer==3.4.1
 click==8.1.8
 contourpy==1.3.1
 cycler==0.12.1
@@ -9,6 +11,7 @@ Flask-Cors==5.0.0
 fonttools==4.55.3
 fsspec==2024.10.0
 gunicorn==23.0.0
+idna==3.10
 itsdangerous==2.2.0
 Jinja2==3.1.5
 kiwisolver==1.4.8
@@ -17,12 +20,16 @@ matplotlib==3.10.0
 mpmath==1.3.0
 networkx==3.4.2
 numpy==2.2.1
+oauthlib==3.2.2
 opencv-python==4.10.0.84
 packaging==24.2
 pillow==11.0.0
 pyparsing==3.2.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
+requests==2.32.3
+requests-oauthlib==2.0.0
+requests-toolbelt==1.0.0
 setuptools==75.6.0
 six==1.17.0
 sympy==1.13.1
@@ -30,5 +37,6 @@ torch==2.7.0.dev20250109
 torchvision==0.22.0.dev20250109
 typing_extensions==4.12.2
 tzlocal==5.2
+urllib3==2.3.0
 Werkzeug==3.1.3
 wheel==0.45.1
