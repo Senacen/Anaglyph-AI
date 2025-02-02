@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="made max dimension an env variable in the vite">
-      <change afterPath="$PROJECT_DIR$/backend/resources/images/fill_holes_test_image.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/resources/images/forward_fill_hole_right.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/resources/images/forward_fill_holes_left.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/anaglyph_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/anaglyph_generator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/depth_map_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator.py" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well">
+      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -319,15 +314,7 @@
       <workItem from="1738244822690" duration="3892000" />
       <workItem from="1738368034389" duration="6494000" />
       <workItem from="1738411657957" duration="6052000" />
-      <workItem from="1738522708806" duration="5754000" />
-    </task>
-    <task id="LOCAL-00012" summary="will use depth_map_generator_module.py as a module, to ensure singleton">
-      <option name="closed" value="true" />
-      <created>1735572595094</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1735572595094</updated>
+      <workItem from="1738522708806" duration="6078000" />
     </task>
     <task id="LOCAL-00013" summary="not used as module, instead as a singleton">
       <option name="closed" value="true" />
@@ -713,14 +700,21 @@
       <option name="project" value="LOCAL" />
       <updated>1738524929270</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well">
+      <option name="closed" value="true" />
+      <created>1738528495194</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1738528495194</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added clearing old sessions" />
     <MESSAGE value="added downscaling the image, generating depth map, then upscaling again" />
     <MESSAGE value="Removed heartbeat, made working directory of everything Anaglyp AI" />
     <MESSAGE value="added requirements.txt, and upgraded react to 19" />
@@ -745,7 +739,8 @@
     <MESSAGE value="only show loader for anaglyph if depth map is ready but anaglyph is not" />
     <MESSAGE value="client side resizing to reduce internet bandwidth" />
     <MESSAGE value="made max dimension an env variable in the vite" />
-    <option name="LAST_COMMIT_MESSAGE" value="made max dimension an env variable in the vite" />
+    <MESSAGE value="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well" />
+    <option name="LAST_COMMIT_MESSAGE" value="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

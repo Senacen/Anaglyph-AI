@@ -139,13 +139,19 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
     return (
         <div>
+            {/* Div around each button to put them on the rightmost and leftmost, with width 50% to make them half the page each
+                and then div around that to make the gap centred on the page */}
             <div style={{display: "flex", justifyContent: "center"}}>
-                <button onClick={handleUploadButtonClick} className="anaglyphButton">
-                    Upload Image
-                </button>
-                <button onClick={handleRandomButtonClick} className="anaglyphButton">
-                    Random Image
-                </button>
+                <div style={{display: "flex", justifyContent: "right", width: "50%"}}>
+                    <button onClick={handleUploadButtonClick} className="anaglyphButton">
+                        Upload Image
+                    </button>
+                </div>
+                <div style={{display: "flex", justifyContent: "left", width: "50%"}}>
+                    <button onClick={handleRandomButtonClick} className="anaglyphButton">
+                        Random Image
+                    </button>
+                </div>
             </div>
 
             <input
