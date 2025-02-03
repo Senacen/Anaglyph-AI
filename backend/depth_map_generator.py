@@ -113,6 +113,27 @@ class DepthMapGenerator:
         depth_map_scaled = (depth_map * 255).astype(np.uint8)
         return cv2.applyColorMap(depth_map_scaled, cv2.COLORMAP_JET)
 
+    def blur_depth_map(self, depth_map: np.ndarray, kernel_width: int) -> np.ndarray:
+        """
+        Blur the depth map horizontally to make edges look nicer.
+        :param depth_map: Depth map to blur.
+        :param kernel_width: Horizontal length of the kernel.
+        :return: Blurred depth map.
+        """
+
+        # Ensure the depth map is in the range [0, 255] for blurring
+        depth_map_scaled = (depth_map * 255).astype(np.uint8)
+
+        # Apply horizontal blur
+        blurred_depth_map_scaled = cv2.blur(depth_map_scaled, (kernel_width, 1))
+
+        # To check its working
+        cv2.imwrite('Blurred Depth Map.jpg', blurred_depth_map_scaled)
+
+        # Normalize back to the range [0, 1]
+        blurred_depth_map = blurred_depth_map_scaled / 255.0
+
+        return blurred_depth_map
 
 
 # Singleton instance to be imported

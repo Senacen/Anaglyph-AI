@@ -147,7 +147,8 @@ def get_depth_map():
 def process_depth_maps():
     """
     Processes the image in the session_data folder to create depth maps.
-    Saves the coloured depth map for display, and saves the normalised depth map as an .npy file for use in stereo image generation
+    Saves the coloured depth map for display, and saves the normalised depth map, with a blur to reduce incorrect edges
+    as an .npy file for use in stereo image generation
     """
     try:
         image_name = f"{session['session_id']}_image.jpg"
@@ -163,9 +164,14 @@ def process_depth_maps():
         depth_map_coloured_name = f"{session['session_id']}_depth_map_coloured.jpg"
         depth_map_coloured_path = os.path.join(SESSION_DATA_FOLDER, depth_map_coloured_name)
         cv2.imwrite(depth_map_coloured_path, depth_map_coloured)
+
+        # Horizontally blur the depth map to make edges look nicer
+        # Experiment with blur kernel
+        depth_map_blurred = depth_map_generator.blur_depth_map(depth_map, 30)
+
         depth_map_name = f"{session['session_id']}_depth_map.npy"
         depth_map_path = os.path.join(SESSION_DATA_FOLDER, depth_map_name)
-        np.save(depth_map_path, depth_map)
+        np.save(depth_map_path, depth_map_blurred)
     except Exception as e:
         print(f"Error processing depth maps: {e}")
 

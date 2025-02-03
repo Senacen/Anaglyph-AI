@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="centred upload image and random image button on the screen, using nested divs">
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="added timer for depth map">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/depth_map_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -254,12 +255,12 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Flask server.Anaglyph AI" />
       <item itemvalue="Python.anaglyph_generator" />
       <item itemvalue="Python.depth_map_generator" />
       <item itemvalue="Python.depth_map_generator_module" />
       <item itemvalue="Python.image_container" />
       <item itemvalue="Python.stereo_generator" />
-      <item itemvalue="Flask server.Anaglyph AI" />
     </list>
     <recent_temporary>
       <list>
@@ -316,15 +317,7 @@
       <workItem from="1738368034389" duration="6494000" />
       <workItem from="1738411657957" duration="6052000" />
       <workItem from="1738522708806" duration="8150000" />
-      <workItem from="1738578082788" duration="209000" />
-    </task>
-    <task id="LOCAL-00014" summary="made it so the class has the instance already created, and you just import the instance">
-      <option name="closed" value="true" />
-      <created>1735574447873</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1735574447873</updated>
+      <workItem from="1738578082788" duration="3000000" />
     </task>
     <task id="LOCAL-00015" summary="ImageContainer class for all the different images">
       <option name="closed" value="true" />
@@ -710,14 +703,21 @@
       <option name="project" value="LOCAL" />
       <updated>1738529048058</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="added timer for depth map">
+      <option name="closed" value="true" />
+      <created>1738578299736</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1738578299736</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Removed heartbeat, made working directory of everything Anaglyp AI" />
     <MESSAGE value="added requirements.txt, and upgraded react to 19" />
     <MESSAGE value="started website" />
     <MESSAGE value="added getting image back, issue that safari isn't keeping cookies" />
@@ -742,7 +742,8 @@
     <MESSAGE value="made max dimension an env variable in the vite" />
     <MESSAGE value="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well" />
     <MESSAGE value="centred upload image and random image button on the screen, using nested divs" />
-    <option name="LAST_COMMIT_MESSAGE" value="centred upload image and random image button on the screen, using nested divs" />
+    <MESSAGE value="added timer for depth map" />
+    <option name="LAST_COMMIT_MESSAGE" value="added timer for depth map" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
