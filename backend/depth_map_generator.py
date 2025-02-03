@@ -95,9 +95,13 @@ class DepthMapGenerator:
         :param intermediateHeight: Height to downscale the image to before generating the depth map.
         :return: Depth map with largest value as closest.
         """
+        start_time = time.time()
         image_downscaled = self.downscale_image(image, intermediateWidth, intermediateHeight)
         depth_map_downscaled = self.generate_depth_map(image_downscaled)
         depth_map_upscaled = self.upscale_depth_map(depth_map_downscaled, image.shape[1], image.shape[0])
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"Elapsed time for depth map generation (performant): {elapsed_time:.4f} seconds")
         return depth_map_upscaled
 
     def colour_depth_map(self, depth_map: np.ndarray) -> np.ndarray:

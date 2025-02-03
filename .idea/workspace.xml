@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well">
-      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="centred upload image and random image button on the screen, using nested divs">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/depth_map_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/depth_map_generator.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,31 +58,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Flask server.Anaglyph AI.executor&quot;: &quot;Run&quot;,
-    &quot;Flask server.Flask (app.py).executor&quot;: &quot;Run&quot;,
-    &quot;Flask server.Flask (backend/app.py).executor&quot;: &quot;Run&quot;,
-    &quot;Python.anaglyph_generator.executor&quot;: &quot;Run&quot;,
-    &quot;Python.depth_map_generator.executor&quot;: &quot;Run&quot;,
-    &quot;Python.depth_map_generator_module (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.depth_map_generator_module.executor&quot;: &quot;Run&quot;,
-    &quot;Python.image_container.executor&quot;: &quot;Run&quot;,
-    &quot;Python.image_processor.executor&quot;: &quot;Run&quot;,
-    &quot;Python.stereo_generator.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/duyhuynh/Documents/Documents - Duy’s MacBook Pro/Anaglyph AI/backend/resources/images&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/duyhuynh/Documents/Documents - Duy’s MacBook Pro/Anaglyph AI/frontend/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Flask server.Anaglyph AI.executor": "Run",
+    "Flask server.Flask (app.py).executor": "Run",
+    "Flask server.Flask (backend/app.py).executor": "Run",
+    "Python.anaglyph_generator.executor": "Run",
+    "Python.depth_map_generator.executor": "Run",
+    "Python.depth_map_generator_module (1).executor": "Run",
+    "Python.depth_map_generator_module.executor": "Run",
+    "Python.image_container.executor": "Run",
+    "Python.image_processor.executor": "Run",
+    "Python.stereo_generator.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/Users/duyhuynh/Documents/Documents - Duy’s MacBook Pro/Anaglyph AI/backend/resources/images",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "ts.external.directory.path": "/Users/duyhuynh/Documents/Documents - Duy’s MacBook Pro/Anaglyph AI/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/backend/resources/images" />
@@ -253,12 +254,12 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Flask server.Anaglyph AI" />
       <item itemvalue="Python.anaglyph_generator" />
       <item itemvalue="Python.depth_map_generator" />
       <item itemvalue="Python.depth_map_generator_module" />
       <item itemvalue="Python.image_container" />
       <item itemvalue="Python.stereo_generator" />
+      <item itemvalue="Flask server.Anaglyph AI" />
     </list>
     <recent_temporary>
       <list>
@@ -314,15 +315,8 @@
       <workItem from="1738244822690" duration="3892000" />
       <workItem from="1738368034389" duration="6494000" />
       <workItem from="1738411657957" duration="6052000" />
-      <workItem from="1738522708806" duration="6078000" />
-    </task>
-    <task id="LOCAL-00013" summary="not used as module, instead as a singleton">
-      <option name="closed" value="true" />
-      <created>1735573118847</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1735573118847</updated>
+      <workItem from="1738522708806" duration="8150000" />
+      <workItem from="1738578082788" duration="209000" />
     </task>
     <task id="LOCAL-00014" summary="made it so the class has the instance already created, and you just import the instance">
       <option name="closed" value="true" />
@@ -708,14 +702,21 @@
       <option name="project" value="LOCAL" />
       <updated>1738528495194</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="centred upload image and random image button on the screen, using nested divs">
+      <option name="closed" value="true" />
+      <created>1738529048058</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1738529048058</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added downscaling the image, generating depth map, then upscaling again" />
     <MESSAGE value="Removed heartbeat, made working directory of everything Anaglyp AI" />
     <MESSAGE value="added requirements.txt, and upgraded react to 19" />
     <MESSAGE value="started website" />
@@ -740,7 +741,8 @@
     <MESSAGE value="client side resizing to reduce internet bandwidth" />
     <MESSAGE value="made max dimension an env variable in the vite" />
     <MESSAGE value="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well" />
-    <option name="LAST_COMMIT_MESSAGE" value="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well" />
+    <MESSAGE value="centred upload image and random image button on the screen, using nested divs" />
+    <option name="LAST_COMMIT_MESSAGE" value="centred upload image and random image button on the screen, using nested divs" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
