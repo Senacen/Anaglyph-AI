@@ -30,6 +30,9 @@ app.secret_key = 'super secret key'
 # Now have implemented this client side, so this is just a backup
 MAX_DIMENSION = 1500
 
+# Kernel width for blurring the depth map
+KERNEL_WIDTH = 30
+
 # By default, sessions close on the client side as soon as the user's browser is closed or cookies cleared
 SESSION_DATA_FOLDER = 'resources/session_data'
 os.makedirs(SESSION_DATA_FOLDER, exist_ok=True)
@@ -167,7 +170,7 @@ def process_depth_maps():
 
         # Horizontally blur the depth map to make edges look nicer
         # Experiment with blur kernel
-        depth_map_blurred = depth_map_generator.blur_depth_map(depth_map, 30)
+        depth_map_blurred = depth_map_generator.blur_depth_map(depth_map, KERNEL_WIDTH)
 
         depth_map_name = f"{session['session_id']}_depth_map.npy"
         depth_map_path = os.path.join(SESSION_DATA_FOLDER, depth_map_name)
