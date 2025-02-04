@@ -128,7 +128,7 @@ class DepthMapGenerator:
         blurred_depth_map_scaled = cv2.blur(depth_map_scaled, (kernel_width, 1))
 
         # To check its working
-        cv2.imwrite('Blurred Depth Map.jpg', blurred_depth_map_scaled)
+        cv2.imwrite('Blurred_Depth_Map.jpg', blurred_depth_map_scaled)
 
         # Normalize back to the range [0, 1]
         blurred_depth_map = blurred_depth_map_scaled / 255.0

@@ -170,6 +170,7 @@ def process_depth_maps():
 
         # Horizontally blur the depth map to make edges look nicer
         # Experiment with blur kernel
+        # Look into open cv dilation, will do what I want more cleanly
         depth_map_blurred = depth_map_generator.blur_depth_map(depth_map, KERNEL_WIDTH)
 
         depth_map_name = f"{session['session_id']}_depth_map.npy"
