@@ -2,4 +2,6 @@ checkpoints/
 session_data/
 random_images/
 random_images_thumbnailed/
+random_images_depth_maps/
+random_images_depth_maps_coloured/
 azure_linux_vm.pem

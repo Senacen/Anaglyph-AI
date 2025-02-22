@@ -135,15 +135,16 @@ def upload_image():
 def get_random_image():
     """
     API endpoint to get a random image from the random_images folder. And put it in session data to be used for anaglyph generation
-    :returns: The random image file
+    :returns: The random image file, with the name image_<random_index>.jpg, where random index will be used to get the depth map
     """
     random_image_index = np.random.randint(0, num_random_images)
     random_image_name = f"image_{random_image_index}.jpg"
     random_image_path = os.path.join(RANDOM_IMAGES_FOLDER, random_image_name)
-    random_image = Image.open(random_image_path)
-    random_image_name = f"{session['session_id']}_image.jpg"
-    random_image_path = os.path.join(SESSION_DATA_FOLDER, random_image_name)
-    random_image.save(random_image_path, format='JPEG')
+
+    session_image = Image.open(random_image_path)
+    session_image_name = f"{session['session_id']}_image.jpg"
+    session_image_path = os.path.join(SESSION_DATA_FOLDER, session_image_name)
+    session_image.save(session_image_path, format='JPEG')
 
     return send_from_directory(RANDOM_IMAGES_FOLDER, random_image_name, request.environ)
 @app.route('/depth-map', methods=['GET'])
