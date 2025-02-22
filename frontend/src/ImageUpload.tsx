@@ -21,72 +21,73 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     };
 
     const handleImageUpload = async (imageFile: File) => {
-    const formData = new FormData();
+        const formData = new FormData();
 
-    // Resize image to maxDimension to reduce internet bandwidth
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const image = new Image();
+        // Resize image to maxDimension to reduce internet bandwidth
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const image = new Image();
 
-    image.onload = async () => {
+        image.onload = async () => {
 
-        let width = image.width;
-        let height = image.height;
+            let width = image.width;
+            let height = image.height;
 
-        if (width > height) {
-            if (width > maxDimension) {
-                height *= maxDimension / width;
-                width = maxDimension;
-            }
-        } else {
-            if (height > maxDimension) {
-                width *= maxDimension / height;
-                height = maxDimension;
-            }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        // @ts-ignore
-        ctx.drawImage(image, 0, 0, width, height);
-
-        // Now send the image to the server
-        canvas.toBlob(async (blob) => {
-            if (blob) {
-                formData.append("file", blob, imageFile.name);
-                console.log("Uploading image...");
-
-                try {
-                    setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
-                    const response = await fetch(`${apiUrl}/image`, {
-                        method: "POST",
-                        body: formData,
-                        credentials: "include",
-                    });
-                    console.log("Response status:", response.status); // Log response status
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log("Upload successful:", data);
-                        const imageUrl = URL.createObjectURL(blob);
-                        setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
-                        setImageUrl(imageUrl);
-                        setDepthMapIsLoading(true); // Start loading spinner
-                        // Don't use await, causes error where depth map is not shown
-                        fetchDepthMap();
-                    } else {
-                        console.error("Failed to upload image", response.json());
-                    }
-                } catch (error) {
-                    console.error("Failed to upload image", error);
+            if (width > height) {
+                if (width > maxDimension) {
+                    height *= maxDimension / width;
+                    width = maxDimension;
+                }
+            } else {
+                if (height > maxDimension) {
+                    width *= maxDimension / height;
+                    height = maxDimension;
                 }
             }
-        }, "image/jpeg");
+
+            canvas.width = width;
+            canvas.height = height;
+            // @ts-ignore
+            ctx.drawImage(image, 0, 0, width, height);
+
+            // Now send the image to the server
+            canvas.toBlob(async (blob) => {
+                if (blob) {
+                    formData.append("file", blob, imageFile.name);
+                    console.log("Uploading image...");
+
+                    try {
+                        setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
+                        const response = await fetch(`${apiUrl}/image`, {
+                            method: "POST",
+                            body: formData,
+                            credentials: "include",
+                        });
+                        console.log("Response status:", response.status); // Log response status
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log("Upload successful:", data);
+                            const imageUrl = URL.createObjectURL(blob);
+                            setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
+                            setImageUrl(imageUrl);
+                            setDepthMapIsLoading(true); // Start loading spinner
+                            await sleep(1000);
+                            // Don't use await, causes error where depth map is not shown
+                            fetchDepthMap();
+                        } else {
+                            console.error("Failed to upload image", response.json());
+                        }
+                    } catch (error) {
+                        console.error("Failed to upload image", error);
+                    }
+                }
+            }, "image/jpeg");
+        };
+
+        image.src = URL.createObjectURL(imageFile);
     };
 
-    image.src = URL.createObjectURL(imageFile);
-};
-
-
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const handleRandomButtonClick = async () => {
         try {
@@ -102,9 +103,10 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
                     return;
                 }
                 const randomImageUrl = URL.createObjectURL(randomImageBlob);
-                setImageUrl(randomImageUrl);
                 setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
                 setDepthMapIsLoading(true); // Start loading spinner
+                setImageUrl(randomImageUrl);
+                await sleep(1000);
                 // Don't use await, causes error where depth map is not shown
                 fetchDepthMap();
             } else {
@@ -122,13 +124,13 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
                 credentials: "include",
             });
             if (response.ok) {
-                setDepthMapIsLoading(false); // Stop loading spinner
                 const depthMapBlob = await response.blob();
                 if (depthMapBlob.size === 0) {
                     console.error("Depth map is empty");
                     return;
                 }
                 const depthMapUrl = URL.createObjectURL(depthMapBlob);
+                setDepthMapIsLoading(false); // Stop loading spinner
                 setDepthMapUrl(depthMapUrl);
                 console.log("Depth map fetched successfully", depthMapUrl);
                 setIsDepthMapReadyStateLifter(true); // Set depth map ready to true to start rendering anaglyph editor
