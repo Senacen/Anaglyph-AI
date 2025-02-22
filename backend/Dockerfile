@@ -7,7 +7,7 @@ COPY requirements.txt /app
 # Install OpenGL library for OpenCV
 RUN apt-get update && apt-get install -y libgl1-mesa-glx
 
-RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/nightly/cpu
+RUN pip3 install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/nightly/cpu
 
 COPY . /app
 

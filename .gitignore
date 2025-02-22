@@ -1,3 +1,5 @@
 checkpoints/
 session_data/
+random_images/
+random_images_thumbnailed/
 azure_linux_vm.pem

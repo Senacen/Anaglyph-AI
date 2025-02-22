@@ -56,6 +56,9 @@ ALLOWED_EXTENSIONS = {
 # 518x518 is a what it was trained on per the paper
 depth_map_resize_dimension = 518
 
+RANDOM_IMAGES_FOLDER = 'resources/random_images'
+num_random_images = len([name for name in os.listdir(RANDOM_IMAGES_FOLDER) if os.path.isfile(os.path.join(RANDOM_IMAGES_FOLDER, name))])
+
 @app.route('/')
 def hello_world():  # put application's code here
     return 'Hello World!!'
@@ -128,7 +131,21 @@ def upload_image():
     else:
         return jsonify({'error': 'Invalid file type'}), 400
 
+@app.route('/random_image', methods=['GET'])
+def get_random_image():
+    """
+    API endpoint to get a random image from the random_images folder. And put it in session data to be used for anaglyph generation
+    :returns: The random image file
+    """
+    random_image_index = np.random.randint(0, num_random_images)
+    random_image_name = f"image_{random_image_index}.jpg"
+    random_image_path = os.path.join(RANDOM_IMAGES_FOLDER, random_image_name)
+    random_image = Image.open(random_image_path)
+    random_image_name = f"{session['session_id']}_image.jpg"
+    random_image_path = os.path.join(SESSION_DATA_FOLDER, random_image_name)
+    random_image.save(random_image_path, format='JPEG')
 
+    return send_from_directory(RANDOM_IMAGES_FOLDER, random_image_name, request.environ)
 @app.route('/depth-map', methods=['GET'])
 def get_depth_map():
     """
