@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="precomputed depth maps and depth map coloured">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/processing_random_images.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/backend/processing_random_images.ipynb" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="got random images working, experimenting with the blur">
       <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -328,15 +324,7 @@
       <workItem from="1738849106613" duration="4061000" />
       <workItem from="1740233614362" duration="851000" />
       <workItem from="1740236297240" duration="867000" />
-      <workItem from="1740245929851" duration="8150000" />
-    </task>
-    <task id="LOCAL-00016" summary="ImageContainer class for all the different images">
-      <option name="closed" value="true" />
-      <created>1735602073165</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1735602073165</updated>
+      <workItem from="1740245929851" duration="10818000" />
     </task>
     <task id="LOCAL-00017" summary="display images next to each other">
       <option name="closed" value="true" />
@@ -722,14 +710,21 @@
       <option name="project" value="LOCAL" />
       <updated>1740249831457</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="got random images working, experimenting with the blur">
+      <option name="closed" value="true" />
+      <created>1740254459994</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1740254459994</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="started website" />
     <MESSAGE value="added getting image back, issue that safari isn't keeping cookies" />
     <MESSAGE value="Made transparent svg, and made the white less bright" />
     <MESSAGE value="Show the image and depth map, conditionally render AnaglyphEditor.tsx" />
@@ -754,7 +749,8 @@
     <MESSAGE value="fixed files disappearing" />
     <MESSAGE value="downloaded and processing random images" />
     <MESSAGE value="precomputed depth maps and depth map coloured" />
-    <option name="LAST_COMMIT_MESSAGE" value="precomputed depth maps and depth map coloured" />
+    <MESSAGE value="got random images working, experimenting with the blur" />
+    <option name="LAST_COMMIT_MESSAGE" value="got random images working, experimenting with the blur" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

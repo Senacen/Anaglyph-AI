@@ -71,7 +71,6 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
                             setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
                             setImageUrl(imageUrl);
                             setDepthMapIsLoading(true); // Start loading spinner
-                            await sleep(1000);
                             // Don't use await, causes error where depth map is not shown
                             fetchDepthMap();
                         } else {
@@ -87,7 +86,6 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
         image.src = URL.createObjectURL(imageFile);
     };
 
-    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const handleRandomButtonClick = async () => {
         try {
@@ -106,7 +104,6 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
                 setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
                 setDepthMapIsLoading(true); // Start loading spinner
                 setImageUrl(randomImageUrl);
-                await sleep(1000);
                 // Don't use await, causes error where depth map is not shown
                 fetchDepthMap();
             } else {
