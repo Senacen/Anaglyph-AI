@@ -14,7 +14,11 @@ from anaglyph_generator import anaglyph_generator
 from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 
+# Used to serve files from the server
 from werkzeug.utils import send_from_directory
+
+# Used to copy precomputed files into session data
+from shutil import copyfile
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -31,7 +35,7 @@ app.secret_key = 'super secret key'
 MAX_DIMENSION = 1500
 
 # Kernel width for blurring the depth map
-KERNEL_WIDTH = 30
+KERNEL_WIDTH = 15
 
 # By default, sessions close on the client side as soon as the user's browser is closed or cookies cleared
 SESSION_DATA_FOLDER = 'resources/session_data'
@@ -58,6 +62,8 @@ depth_map_resize_dimension = 518
 
 RANDOM_IMAGES_FOLDER = 'resources/random_images'
 num_random_images = len([name for name in os.listdir(RANDOM_IMAGES_FOLDER) if os.path.isfile(os.path.join(RANDOM_IMAGES_FOLDER, name))])
+
+RANDOM_IMAGES_DEPTH_MAPS_GREYSCALE_FOLDER = 'resources/random_images_depth_maps_greyscale'
 
 @app.route('/')
 def hello_world():  # put application's code here
@@ -96,7 +102,12 @@ clean_up_scheduler.start()
 def upload_image():
     """
     Uploads an image to the server. Saves it as <session_id>_image.jpg in the SESSION_DATA_FOLDER folder.
+    Sets session random image value to False, for when getting the depth map
     """
+
+    # Uploading an image, so not random.
+    session['random_image'] = False
+
     if 'file' not in request.files: # No file part
         return jsonify({'error': 'No file part'}), 400
     image = request.files['file']
@@ -134,7 +145,8 @@ def upload_image():
 @app.route('/random_image', methods=['GET'])
 def get_random_image():
     """
-    API endpoint to get a random image from the random_images folder. And put it in session data to be used for anaglyph generation
+    API endpoint to get a random image from the random_images folder. And put it in session data to be used for anaglyph generation.
+    Sets session random image value to True, for when getting the depth map, and the random image index for the depth map
     :returns: The random image file, with the name image_<random_index>.jpg, where random index will be used to get the depth map
     """
     random_image_index = np.random.randint(0, num_random_images)
@@ -145,6 +157,10 @@ def get_random_image():
     session_image_name = f"{session['session_id']}_image.jpg"
     session_image_path = os.path.join(SESSION_DATA_FOLDER, session_image_name)
     session_image.save(session_image_path, format='JPEG')
+
+    # Getting a random image, so it is a random image
+    session['random_image'] = True
+    session['random_image_index'] = random_image_index
 
     return send_from_directory(RANDOM_IMAGES_FOLDER, random_image_name, request.environ)
 @app.route('/depth-map', methods=['GET'])
@@ -168,7 +184,7 @@ def get_depth_map():
 def process_depth_maps():
     """
     Processes the image in the session_data folder to create depth maps.
-    Saves the coloured depth map for display, and saves the normalised depth map, with a blur to reduce incorrect edges
+    Saves the coloured depth map for display, and saves the normalised depth map, with a blur (only if uploaded and not random) to reduce incorrect edges
     as an .npy file for use in stereo image generation
     """
     try:
@@ -177,10 +193,27 @@ def process_depth_maps():
         image = cv2.imread(image_path)
         if image is None:
             raise FileNotFoundError(f"Image not found at path: {image_path}")
-        # depth_map = depth_map_generator.generate_depth_map(image)
-        # Test downscaling and upscaling performance gain on production server
-        # Also, strangely really thin but long images make the depth map generation really slow or crash, so use this
-        depth_map = depth_map_generator.generate_depth_map_performant(image, depth_map_resize_dimension, depth_map_resize_dimension)
+
+        # If it is a random image, use the greyscaled depth map to compute the coloured and the depth map
+        # Not storing the actual depth map as for 4k depth maps its 43 gigabytes
+        if session['random_image']:
+            print("depth map computing on random image")
+            random_image_index = session['random_image_index']
+
+            depth_map_greyscaled_name = f"depth_map_greyscale_{random_image_index}.jpg"
+            depth_map_greyscaled_path = os.path.join(RANDOM_IMAGES_DEPTH_MAPS_GREYSCALE_FOLDER, depth_map_greyscaled_name)
+            depth_map_greyscaled = cv2.imread(depth_map_greyscaled_path, cv2.IMREAD_GRAYSCALE)
+            depth_map = depth_map_greyscaled / 255.0
+        else:
+            # Generate the depth map from the image
+            # depth_map = depth_map_generator.generate_depth_map(image)
+            # Test downscaling and upscaling performance gain on production server
+            # Also, strangely really thin but long images make the depth map generation really slow or crash, so use this
+            depth_map = depth_map_generator.generate_depth_map_performant(image, depth_map_resize_dimension,
+                                                                          depth_map_resize_dimension)
+
+
+
         depth_map_coloured = depth_map_generator.colour_depth_map(depth_map)
         depth_map_coloured_name = f"{session['session_id']}_depth_map_coloured.jpg"
         depth_map_coloured_path = os.path.join(SESSION_DATA_FOLDER, depth_map_coloured_name)

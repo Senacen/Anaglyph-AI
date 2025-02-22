@@ -86,23 +86,27 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     image.src = URL.createObjectURL(imageFile);
 };
 
-    const handleUploadButtonClick = () => {
-        if (imageInputRef.current) {
-            imageInputRef.current.click();
-        }
-    };
+
 
     const handleRandomButtonClick = async () => {
         try {
-            // Lorem Picsum only has 1084 images, try and look for other service
-            // Prefetch multiple images and store them in a list to reduce api calls?
-            // Random image with 3:2 aspect ratio
-            const response = await fetch(`https://picsum.photos/${maxDimension}/${Math.round(maxDimension * 2 / 3)}?random=` + new Date().getTime());
+            setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
+            const response = await fetch(`${apiUrl}/random_image`, {
+                method: "GET",
+                credentials: "include",
+            });
             if (response.ok) {
-                const randomImage = await response.blob();
-                const randomImageFile = new File([randomImage], "randomImage.jpeg");
-                console.log("Random image fetched successfully", randomImageFile);
-                await handleImageUpload(randomImageFile); // Call upload function
+                const randomImageBlob = await response.blob();
+                if (randomImageBlob.size === 0) {
+                    console.error("Random image is empty");
+                    return;
+                }
+                const randomImageUrl = URL.createObjectURL(randomImageBlob);
+                setImageUrl(randomImageUrl);
+                setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
+                setDepthMapIsLoading(true); // Start loading spinner
+                // Don't use await, causes error where depth map is not shown
+                fetchDepthMap();
             } else {
                 console.error("Failed to fetch random image", response.statusText);
             }
@@ -137,6 +141,12 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
         }
     }
 
+     const handleUploadButtonClick = () => {
+        if (imageInputRef.current) {
+            imageInputRef.current.click();
+        }
+    };
+
     return (
         <div>
             {/* Div around each button to put them on the rightmost and leftmost, with width 50% to make them half the page each
@@ -159,6 +169,13 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
                 accept="image/jpeg, image/jpg, image/gif, image/png"
                 ref={imageInputRef}
                 style={{ display: "none" }}
+                onClick={(event) => {
+                    // Reset the input value to null to ensure onChange fires even if the same file is selected
+                    // Needed as random image doesn't change the image, so after a random image
+                    // when the previous image is selected it sees it as no change
+                    // However, clicking the button calls the click to the input again, so setting value to ""
+                    // will ensure the onChange will fire as "" is different to the previous value
+                    event.currentTarget.value = "";}}
                 onChange={handleImageChange} // Handle file input changes
             />
             <div className="imagePairContainer">
