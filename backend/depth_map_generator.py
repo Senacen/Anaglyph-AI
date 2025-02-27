@@ -137,7 +137,8 @@ class DepthMapGenerator:
 
 
 # Singleton instance to be imported
-depth_map_generator = DepthMapGenerator()
+# Small for production, large for precomputing
+depth_map_generator = DepthMapGenerator(encoder="vits")
 
 if __name__ == '__main__':
 

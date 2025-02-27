@@ -69,8 +69,8 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
                             console.log("Upload successful:", data);
                             const imageUrl = URL.createObjectURL(blob);
                             setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
-                            setImageUrl(imageUrl);
                             setDepthMapIsLoading(true); // Start loading spinner
+                            setImageUrl(imageUrl);
                             // Don't use await, causes error where depth map is not shown
                             fetchDepthMap();
                         } else {

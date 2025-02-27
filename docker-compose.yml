@@ -7,8 +7,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    volumes:
-      - ./resources/session_data:/app/resources/session_data  # Mounting a local folder to the container
     environment:
       - FLASK_ENV=production  # Set environment variables for the backend service
 

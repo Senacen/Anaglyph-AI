@@ -54,8 +54,12 @@ class AnaglyphGenerator:
         right_end = np.clip(right_end, 0, width - 1)  # Removes pixels that would end up off screen
 
         rows = np.arange(height).reshape(height, 1)  # make a rows index column vector
-        left_image = np.zeros_like(image)
-        right_image = np.zeros_like(image)
+
+        # Default is -1, so we can see where the holes are
+        # Previously used 0 as default, but black was a valid colour in the image, that was being interpreted as holes
+        # int16 so -1 is a valid value
+        left_image = np.full_like(image, -1, dtype=np.int16)
+        right_image = np.full_like(image, -1, dtype=np.int16)
 
         # Sample the pixels, rows is broadcast to 2D and the samples are used to get the row and col indices of each
         # cell in image for each cell in left and right image
@@ -77,6 +81,7 @@ class AnaglyphGenerator:
         print(f"Elapsed time for stereo image pair with holes: {time.time() - start_time:.4f} seconds")
 
         start_time = time.time()
+        # these are int16 before filling holes, becomes returns uint8
         left_image = self.fill_holes(left_image)
         right_image = self.fill_holes(right_image)  # Reverse the right image to fill holes from right to left
         print(f"Elapsed time for stereo image pair fill holes: {time.time() - start_time:.4f} seconds")
@@ -133,17 +138,17 @@ class AnaglyphGenerator:
     def fill_holes (self, image: np.ndarray) -> np.ndarray:
         """
         Fills in black holes in the image using cv2.inpaint with the Telea algorithm.
-        :param image: Image to be filled.
-        :return: Filled image.
+        :param image: Image to be filled in int16, with [-1, -1, -1] for the holes.
+        :return: Filled image as uint8.
         """
         #cv2.imshow("Image", image)
-        black_and_white = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        black_mask = ((black_and_white == 0) * 255).astype(np.uint8)
+        hole_mask = np.all(image == -1, axis=-1).astype(np.uint8) * 255
+
         # Inpainting Radius = 1 as the holes are very small as we need rough and fast
         # Currently takes 0.47 seconds to fill holes in water lily, can I improve with forward fill?
         # On second thoughts, forward fill should take as long, as this is roughly the same as generating the stereo image pair
         # And forward fill would require as many np vectorised functions
-        filled_image = cv2.inpaint(image, black_mask, 1, cv2.INPAINT_TELEA)
+        filled_image = cv2.inpaint(image.astype(np.uint8), hole_mask, 1, cv2.INPAINT_TELEA)
         #cv2.imshow("Filled Image", filled_image)
         return filled_image
 
@@ -155,7 +160,7 @@ class AnaglyphGenerator:
         """
         # took 0.1595 seconds to fill holes in test woman kayak
         # inpaint took 0.0308 seconds, and looks better. Both suffer from depth map not being perfect, so some pixels left behind
-        black_mask = np.all(image == [0, 0, 0], axis=-1)
+        black_mask = np.all(image == [-1, -1, -1], axis=-1)
         first_non_black_indices = np.argmax(~black_mask, axis=1)
         filled_image = image.copy()
         rows = np.arange(image.shape[0])
