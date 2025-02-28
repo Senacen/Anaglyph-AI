@@ -149,26 +149,28 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
     return (
         <div>
-
+            {imageUrl && (
             <div className="imagePairContainer">
-                {imageUrl && (
-                    <div className="imagePairLeft">
-                        <div className="imageWithTitle">
-                            <img src={imageUrl} alt="Uploaded" className="image" />
-                            <h2>Image</h2>
-                        </div>
+                <div className="imagePairLeft">
+                    <div className="imageWithTitle">
+                        <h2>Image</h2>
+                        <img src={imageUrl} alt="Uploaded" className="image" />
+
                     </div>
-                )}
+                </div>
                 {depthMapIsLoading && <div className="loader"></div>}
                 {depthMapUrl && (
                     <div className="imagePairRight">
                         <div className="imageWithTitle">
-                            <img src={depthMapUrl} alt="Depth Map" className="image" />
                             <h2>Depth Map</h2>
+                            <img src={depthMapUrl} alt="Depth Map" className="image" />
+
                         </div>
                     </div>
                 )}
             </div>
+            )}
+
             {/* Div around each button to put them on the rightmost and leftmost, with width 50% to make them half the page each
                 and then div around that to make the gap centred on the page */}
             <div style={{display: "flex", justifyContent: "center", marginBottom: "50px"}}>

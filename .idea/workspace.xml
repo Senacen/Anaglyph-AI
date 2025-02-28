@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="added to gitignore">
-      <change afterPath="$PROJECT_DIR$/frontend/public/favicon.png" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="new favicon, moved button and image labels to below, made images go next to each other, made the button a fixed position based on viewport">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
     </list>
@@ -334,15 +332,7 @@
       <workItem from="1740236297240" duration="867000" />
       <workItem from="1740245929851" duration="25599000" />
       <workItem from="1740652732958" duration="5089000" />
-      <workItem from="1740779540222" duration="3110000" />
-    </task>
-    <task id="LOCAL-00022" summary="Got simple red cyan anaglyph working">
-      <option name="closed" value="true" />
-      <created>1735617069292</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1735617069292</updated>
+      <workItem from="1740779540222" duration="4491000" />
     </task>
     <task id="LOCAL-00023" summary="Got simple red cyan anaglyph working">
       <option name="closed" value="true" />
@@ -728,14 +718,21 @@
       <option name="project" value="LOCAL" />
       <updated>1740619350955</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="new favicon, moved button and image labels to below, made images go next to each other, made the button a fixed position based on viewport">
+      <option name="closed" value="true" />
+      <created>1740782969378</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1740782969378</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Solve issue of crashing on thin images by resizing before depth map, also improves performance" />
     <MESSAGE value="Done anaglyph editor, slider that only sends request on mouse up" />
     <MESSAGE value="make new simple button style" />
     <MESSAGE value="added title to images" />
@@ -760,7 +757,8 @@
     <MESSAGE value="use -1 for holes instead of black, precompute 10,000 images" />
     <MESSAGE value="added docker ignore" />
     <MESSAGE value="added to gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="added to gitignore" />
+    <MESSAGE value="new favicon, moved button and image labels to below, made images go next to each other, made the button a fixed position based on viewport" />
+    <option name="LAST_COMMIT_MESSAGE" value="new favicon, moved button and image labels to below, made images go next to each other, made the button a fixed position based on viewport" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
