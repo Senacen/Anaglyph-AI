@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import "./styles/ImageUpload.css";
 
 // @ts-ignore
 function ImageUpload({ setIsDepthMapReadyStateLifter }) {

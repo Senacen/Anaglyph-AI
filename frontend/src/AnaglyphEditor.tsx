@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./styles/AnaglyphEditor.css";
 
 function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;

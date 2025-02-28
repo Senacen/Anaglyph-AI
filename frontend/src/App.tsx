@@ -1,4 +1,4 @@
-import './App.css'
+import './styles/App.css'
 import anaglyphAILogoLight from './assets/anaglyph_ai_pop_in_transparent_light_mode.svg'
 import ImageUpload from './ImageUpload.tsx'
 import { useState } from 'react'

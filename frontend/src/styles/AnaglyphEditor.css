@@ -1,0 +1,29 @@
+.anaglyphImageContainer {
+    width: 100%;
+    height: 80vh;
+}
+.anaglyphImage {
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    max-width: 100%;       /* Constrain to the container's width */
+    max-height: 100%;
+}
+
+.anaglyphEditor {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+}
+
+label, input {
+    vertical-align: middle;
+}
+
+label, input {
+    margin: 0 10px; /* Add space between the anaglyph editor components*/
+}
+
+input[type="checkbox"] {
+    accent-color: #000;
+}

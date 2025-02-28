@@ -1,0 +1,29 @@
+.imagePairContainer {
+    display: flex; /* Use Flexbox for layout */
+    justify-content: center; /* Necessary for loader to be centered too */
+    align-items: center; /* Center the image and text vertically */
+    height: 90vh; /* must be larger than image max-height viewport, otherwise image overlaps buttons */
+}
+
+.image {
+    max-width: 100%; /* Ensure images take up at most half of the imagePairContainer */
+    max-height: 75vh; /* Ensure images take at most 80% of the viewport height */
+}
+
+.imagePairLeft {
+    display: flex;
+    justify-content: flex-end; /* Pushes content to the right */
+    width: 50%;
+}
+
+.imagePairRight {
+    display: flex;
+    justify-content: flex-start; /* Pushes content to the right */
+    width: 50%;
+}
+
+.imageWithTitle {
+    display: inline-block; /* Keeps image and text together */
+    text-align: center; /* Centers text below the image */
+
+}
