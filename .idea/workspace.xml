@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="use -1 for holes instead of black, precompute 10,000 images">
-      <change afterPath="$PROJECT_DIR$/backend/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.dockerignore" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="added to gitignore">
+      <change afterPath="$PROJECT_DIR$/frontend/public/favicon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,34 +64,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flask server.Anaglyph AI.executor": "Run",
-    "Flask server.Flask (app.py).executor": "Run",
-    "Flask server.Flask (backend/app.py).executor": "Run",
-    "Python.anaglyph_generator.executor": "Run",
-    "Python.depth_map_generator.executor": "Run",
-    "Python.depth_map_generator_module (1).executor": "Run",
-    "Python.depth_map_generator_module.executor": "Run",
-    "Python.image_container.executor": "Run",
-    "Python.image_processor.executor": "Run",
-    "Python.stereo_generator.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/Users/duyhuynh/Documents/Anaglyph AI/backend/ai_models/checkpoints",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "ts.external.directory.path": "/Users/duyhuynh/Documents/Anaglyph AI/frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Flask server.Anaglyph AI.executor&quot;: &quot;Run&quot;,
+    &quot;Flask server.Flask (app.py).executor&quot;: &quot;Run&quot;,
+    &quot;Flask server.Flask (backend/app.py).executor&quot;: &quot;Run&quot;,
+    &quot;Python.anaglyph_generator.executor&quot;: &quot;Run&quot;,
+    &quot;Python.depth_map_generator.executor&quot;: &quot;Run&quot;,
+    &quot;Python.depth_map_generator_module (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.depth_map_generator_module.executor&quot;: &quot;Run&quot;,
+    &quot;Python.image_container.executor&quot;: &quot;Run&quot;,
+    &quot;Python.image_processor.executor&quot;: &quot;Run&quot;,
+    &quot;Python.stereo_generator.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/duyhuynh/Documents/Anaglyph AI/frontend/public&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/duyhuynh/Documents/Anaglyph AI/frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/public" />
       <recent name="$PROJECT_DIR$/backend/ai_models/checkpoints" />
       <recent name="$PROJECT_DIR$/backend/resources" />
       <recent name="$PROJECT_DIR$/backend/resources/images" />
@@ -327,23 +332,9 @@
       <workItem from="1738849106613" duration="4061000" />
       <workItem from="1740233614362" duration="851000" />
       <workItem from="1740236297240" duration="867000" />
-      <workItem from="1740245929851" duration="23743000" />
-    </task>
-    <task id="LOCAL-00020" summary="Vectorised everything, sped it up">
-      <option name="closed" value="true" />
-      <created>1735613535657</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1735613535657</updated>
-    </task>
-    <task id="LOCAL-00021" summary="renames">
-      <option name="closed" value="true" />
-      <created>1735613738953</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1735613738953</updated>
+      <workItem from="1740245929851" duration="25599000" />
+      <workItem from="1740652732958" duration="5089000" />
+      <workItem from="1740779540222" duration="3110000" />
     </task>
     <task id="LOCAL-00022" summary="Got simple red cyan anaglyph working">
       <option name="closed" value="true" />
@@ -721,15 +712,29 @@
       <option name="project" value="LOCAL" />
       <updated>1740618940640</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="added docker ignore">
+      <option name="closed" value="true" />
+      <created>1740619259115</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1740619259115</updated>
+    </task>
+    <task id="LOCAL-00070" summary="added to gitignore">
+      <option name="closed" value="true" />
+      <created>1740619350955</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1740619350955</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Show the image and depth map, conditionally render AnaglyphEditor.tsx" />
-    <MESSAGE value="Converts transparent images to non transparent for jpeg" />
     <MESSAGE value="Solve issue of crashing on thin images by resizing before depth map, also improves performance" />
     <MESSAGE value="Done anaglyph editor, slider that only sends request on mouse up" />
     <MESSAGE value="make new simple button style" />
@@ -753,7 +758,9 @@
     <MESSAGE value="got random images working, experimenting with the blur" />
     <MESSAGE value="moved stop loading spinner to just before the depth map is shown, as stops it flashing" />
     <MESSAGE value="use -1 for holes instead of black, precompute 10,000 images" />
-    <option name="LAST_COMMIT_MESSAGE" value="use -1 for holes instead of black, precompute 10,000 images" />
+    <MESSAGE value="added docker ignore" />
+    <MESSAGE value="added to gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="added to gitignore" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

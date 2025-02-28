@@ -116,6 +116,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
     const fetchDepthMap = async () => {
         try {
+                // Sleep for 1 second to allow the server to process the image
             const response = await fetch(`${apiUrl}/depth-map`, {
                 method: "GET",
                 credentials: "include",
@@ -148,9 +149,29 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
     return (
         <div>
+
+            <div className="imagePairContainer">
+                {imageUrl && (
+                    <div className="imagePairLeft">
+                        <div className="imageWithTitle">
+                            <img src={imageUrl} alt="Uploaded" className="image" />
+                            <h2>Image</h2>
+                        </div>
+                    </div>
+                )}
+                {depthMapIsLoading && <div className="loader"></div>}
+                {depthMapUrl && (
+                    <div className="imagePairRight">
+                        <div className="imageWithTitle">
+                            <img src={depthMapUrl} alt="Depth Map" className="image" />
+                            <h2>Depth Map</h2>
+                        </div>
+                    </div>
+                )}
+            </div>
             {/* Div around each button to put them on the rightmost and leftmost, with width 50% to make them half the page each
                 and then div around that to make the gap centred on the page */}
-            <div style={{display: "flex", justifyContent: "center"}}>
+            <div style={{display: "flex", justifyContent: "center", marginBottom: "50px"}}>
                 <div style={{display: "flex", justifyContent: "right", width: "50%"}}>
                     <button onClick={handleUploadButtonClick} className="anaglyphButton">
                         Upload Image
@@ -177,21 +198,6 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
                     event.currentTarget.value = "";}}
                 onChange={handleImageChange} // Handle file input changes
             />
-            <div className="imagePairContainer">
-                {imageUrl && (
-                    <div className="imagePairWithTitle">
-                        <h3>Image</h3>
-                        <img src={imageUrl} alt="Uploaded" className="imagePair" />
-                    </div>
-                )}
-                {depthMapIsLoading && <div className="loader"></div>}
-                {depthMapUrl && (
-                    <div className="imagePairWithTitle">
-                        <h3>Depth Map</h3>
-                        <img src={depthMapUrl} alt="Depth Map" className="imagePair" />
-                    </div>
-                )}
-            </div>
         </div>
     );
 }
