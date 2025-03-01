@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Moved label back to above, made the image centered and closer to the title">
-      <change afterPath="$PROJECT_DIR$/frontend/src/styles/AnaglyphEditor.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/styles/ImageUpload.css" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="separated index.css to the individual components stylesheet">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/AnaglyphEditor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/ImageUpload.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/ImageUpload.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -337,15 +331,7 @@
       <workItem from="1740236297240" duration="867000" />
       <workItem from="1740245929851" duration="25599000" />
       <workItem from="1740652732958" duration="5089000" />
-      <workItem from="1740779540222" duration="5240000" />
-    </task>
-    <task id="LOCAL-00024" summary="Got simple red cyan anaglyph working">
-      <option name="closed" value="true" />
-      <created>1735617732187</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1735617732187</updated>
+      <workItem from="1740779540222" duration="9405000" />
     </task>
     <task id="LOCAL-00025" summary="Got simple red cyan anaglyph working">
       <option name="closed" value="true" />
@@ -731,14 +717,21 @@
       <option name="project" value="LOCAL" />
       <updated>1740784219711</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="separated index.css to the individual components stylesheet">
+      <option name="closed" value="true" />
+      <created>1740784807520</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1740784807520</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="make new simple button style" />
     <MESSAGE value="added title to images" />
     <MESSAGE value="made it so the loader doesn't push down the anaglyph" />
     <MESSAGE value="added download button, anaglyph editor css" />
@@ -763,7 +756,8 @@
     <MESSAGE value="added to gitignore" />
     <MESSAGE value="new favicon, moved button and image labels to below, made images go next to each other, made the button a fixed position based on viewport" />
     <MESSAGE value="Moved label back to above, made the image centered and closer to the title" />
-    <option name="LAST_COMMIT_MESSAGE" value="Moved label back to above, made the image centered and closer to the title" />
+    <MESSAGE value="separated index.css to the individual components stylesheet" />
+    <option name="LAST_COMMIT_MESSAGE" value="separated index.css to the individual components stylesheet" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

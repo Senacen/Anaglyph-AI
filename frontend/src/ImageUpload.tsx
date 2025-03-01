@@ -153,21 +153,13 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
             {imageUrl && (
             <div className="imagePairContainer">
                 <div className="imagePairLeft">
-                    <div className="imageWithTitle">
-                        <h2>Image</h2>
-                        <img src={imageUrl} alt="Uploaded" className="image" />
-
-                    </div>
+                    <img src={imageUrl} alt="Uploaded" className="image" />
                 </div>
                 {depthMapIsLoading && <div className="loader"></div>}
                 {depthMapUrl && (
-                    <div className="imagePairRight">
-                        <div className="imageWithTitle">
-                            <h2>Depth Map</h2>
-                            <img src={depthMapUrl} alt="Depth Map" className="image" />
-
-                        </div>
-                    </div>
+                <div className="imagePairRight">
+                    <img src={depthMapUrl} alt="Depth Map" className="image" />
+                </div>
                 )}
             </div>
             )}
