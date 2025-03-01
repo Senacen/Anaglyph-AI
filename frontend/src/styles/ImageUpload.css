@@ -1,7 +1,7 @@
 .imagePairContainer {
     display: flex; /* Use Flexbox for layout */
     justify-content: center; /* Necessary for loader to be centered too */
-    height: 80vh; /* must be larger than image max-height viewport, otherwise image overlaps buttons */
+    height: 70vh; /* to always see the logo and the buttons*/
     margin-bottom: 10px;
     margin-top: 10px;
 }
@@ -20,7 +20,7 @@
 
 .imagePairRight {
     display: flex;
-    justify-content: flex-start; /* Pushes content to the right */
+    justify-content: flex-start; /* Pushes content to the left */
     width: 50%;
 }
 
@@ -33,7 +33,7 @@
 
     .imagePairLeft, .imagePairRight {
         max-width: 100%; /* Full width in column layout */
-        width: auto;
+        width: auto; /* override width: 50% from above */
         height: 50%;
         justify-content: center; /* Center content in column layout */
     }
