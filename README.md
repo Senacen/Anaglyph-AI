@@ -33,6 +33,7 @@ I used [DepthAnythingV2](https://github.com/DepthAnything/Depth-Anything-V2), an
 I implemented this by first setting a max disparity in terms of number of pixels. This dictates the furthest a pixel in one eye image can be from the corresponding pixel in the other eye image, and can be thought of as the strength of the 3D Anaglyph. Then, I create a 2D NumPy array of shifts, which dictates how far each pixel would have to move from the original image to generate an eye image. This shifts array is calculated as a linear interpolation between 0 and max disparity, with the parameter being the normalised depth data. Once I have the shifts array, I use some NumPy magic and advanced indexing to move all the pixels to their appropriate location, with the closer pixel taking priority if two pixels end up in the same location. 
 
 However, this leaves "holes" in the eye image, or rather black pixels, where no pixels have ended up after being shifted.
+
 ![image](https://github.com/user-attachments/assets/6dc7579a-e432-4dc6-8bb7-9745b5875b0b)
 ![image](https://github.com/user-attachments/assets/c639a335-09ea-407f-9ec7-6e84520d9653)
 
