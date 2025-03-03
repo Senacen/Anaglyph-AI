@@ -43,10 +43,10 @@ To fix this, I first considered implementing a forward fill, but it is ambiguous
 
 
 ## Merging Stereo Images into an Anaglyph
-After generating the left eye and right eye image, I make the anaglyph image by setting the red channel to that of the left eye image, and the green and blue channel to that of the right eye image. Note: when minimising retinal rivalry, it is a little more complicated and involves transforming the colours of the two images with specific matrices, and then addding the images together 
+After generating the left eye and right eye image, I make the anaglyph image by setting the red channel to that of the left eye image, and the green and blue channel to that of the right eye image. Note: when minimising retinal rivalry, it is a little more complicated and involves transforming the colours of the two images with specific matrices, and then adding the images together 
 
 ## Pop In vs Pop Out
-This option determines where the zero parallax plane is in the scene, which determines if objects appear to be popping into (behind) or poppoing out of (in front of) the screen. Whatever objects are at the zero parallax plane will appear to be at the exact distance of the screen, as no shifting will be performed on them. This is analogous to the focal plane of the eyes. 
+This option determines where the zero parallax plane is in the scene, which determines if objects appear to be popping into (behind) or popping out of (in front of) the screen. Whatever objects are at the zero parallax plane will appear to be at the exact distance of the screen, as no shifting will be performed on them. This is analogous to the focal plane of the eyes. 
 
 However to simplify use, I have decided to restrict the zero parallax plane to be either be at the distance furthest object, which causes the furthest object to appear at the screen distance, and everything else to appear in front of the screen, or the zero parallax plane is at the distance of the closest object, which causes the closest object to appear at the screen distance, and everything else to appear behind the screen. 
 
