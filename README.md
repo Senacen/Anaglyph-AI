@@ -14,7 +14,7 @@ A Flask-React website that allows a user to upload a monocular image, and conver
 - [Examples](#examples)
 
 ## Image Upload and Depth Map Generation
-<img width="1471" alt="image" src="https://github.com/user-attachments/assets/9a7ac356-cd8e-432a-ac8c-47cd19b80586" />
+<img width="1485" alt="image" src="https://github.com/user-attachments/assets/cfb4bfe6-0fee-4c55-befd-ccdfe1c0e399" />
 
 ## Anaglyph Generation and Editor
 <img width="947" alt="image" src="https://github.com/user-attachments/assets/3628605c-d1b2-4cc4-832b-f9c14ed3ed17" />
