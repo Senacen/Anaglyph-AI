@@ -14,14 +14,16 @@ A Flask-React website that allows a user to upload a monocular image, and conver
 - [Examples](#examples)
 
 ## Image Upload and Depth Map Generation
-<img width="1485" alt="image" src="https://github.com/user-attachments/assets/cfb4bfe6-0fee-4c55-befd-ccdfe1c0e399" />
+<img width="1485" alt="ImageAndDepthMap" src="https://github.com/user-attachments/assets/88ce05c5-8834-46db-86ff-64f1696cbe5b" />
+
 
 ## Anaglyph Generation and Editor
-<img width="947" alt="image" src="https://github.com/user-attachments/assets/3628605c-d1b2-4cc4-832b-f9c14ed3ed17" />
+<img width="947" alt="Anaglyph" src="https://github.com/user-attachments/assets/33846a4a-ed99-4303-a461-0daa72df3018" />
+
 
 ## Converting from Monocular to Stereoscopic
 3D images are usually created from taking two photographs from slightly shifted positions, to mimic how our eyes each see a slightly shifted version of the image the other eye sees. 
-![image](https://github.com/user-attachments/assets/beeb8709-ae66-4e25-a2be-237df13d1063)
+![407320149-beeb8709-ae66-4e25-a2be-237df13d1063-min](https://github.com/user-attachments/assets/49ebf6d0-be4b-4f48-a9bd-828c4a375aab)
 These are called stereoscopic images, and when one eye sees one image and the other eye sees the other image, the disparity between the images is used by our brain to determine the depth of different objects in the image. However, requiring two photos to be taken right next to each other is both tedious and requires intention of creating a stereoscopic image pair - if you only take one photo in the moment, you cannot make it 3D later on. This was the problem I intended to solve. 
 
 The creation of a stereo image pair from a single monocular image can be broken down into 2 steps: generating a depth map, and then using the depth data to transform the image to a left and right eye image.
@@ -34,14 +36,13 @@ I implemented this by first setting a max disparity in terms of number of pixels
 
 However, this leaves "holes" in the eye image, or rather black pixels, where no pixels have ended up after being shifted.
 
-![image](https://github.com/user-attachments/assets/6dc7579a-e432-4dc6-8bb7-9745b5875b0b)
-![image](https://github.com/user-attachments/assets/c639a335-09ea-407f-9ec7-6e84520d9653)
+![Holes](https://github.com/user-attachments/assets/cfb15040-6d16-46c2-a0e5-3a6af6641131)
 
-This is inevitable: when generating stereo images from a monocular image, we are simply missing information, such as "what is behind the edge that they left eye should have been able to see?" 
+
+This is inevitable: when generating stereo images from a monocular image, we are simply missing information, such as what the left eye should have been able to see behind a certain edge 
 To fix this, I first considered implementing a forward fill, but it is ambiguous whether the pixels in the background or those in the foreground should be used to fill the holes, as this depends on the actual geometry of the closer object. Therefore, I used OpenCV's [inpainting](https://docs.opencv.org/4.x/d7/d8b/group__photo__inpaint.html) function to fill the holes, specifically INPAINT_TELEA, as per this [comparative study](https://globaljournals.org/GJCST_Volume21/2-Comparative-Study-of-OpenCV.pdf) of the different inpaint functions efficiency.
 
-<img width="1374" alt="Pasted Graphic 6" src="https://github.com/user-attachments/assets/07aff3b8-d16b-41c3-90b8-1da917e43928" />
-
+<img width="1374" alt="Filled" src="https://github.com/user-attachments/assets/07aff3b8-d16b-41c3-90b8-1da917e43928" />
 
 ## Merging Stereo Images into an Anaglyph
 After generating the left eye and right eye image, I make the anaglyph image by setting the red channel to that of the left eye image, and the green and blue channel to that of the right eye image. Note: when minimising retinal rivalry, it is a little more complicated and involves transforming the colours of the two images with specific matrices, and then adding the images together 
@@ -53,14 +54,13 @@ However to simplify use, I have decided to restrict the zero parallax plane to b
 
 To see this effect with red-cyan anaglyph glasses, below is a pop in version of an image, and then a pop out version of the image. I have also added a horizontal bar which should appear to be at the distance of the screen to more easily see in which direction the 3D effect is acting.
 
-<img width="700" alt="image" src="https://github.com/user-attachments/assets/632ef99f-5844-4337-9364-2e2fd8b99e12" />
+<img width="1024" alt="PopOutVSPopIn" src="https://github.com/user-attachments/assets/01fc9fd3-d265-42fb-96fe-fccd142da64b" />
+
 
 ## Strength
 This slider actually sets the maximum disparity in terms of a percentage of the image width, from 0% to 6%. This means at 0%, there is no 3D effect, and at 6% of the image width, the two points with the most disparity (the furthest point in pop in, or the closest point in pop out) will have a distance of 6% of the image width between them when comparing the left eye image to the right eye image.
 
-<img width="1198" alt="image" src="https://github.com/user-attachments/assets/5d946aad-f18c-45a1-9303-32b4655458e4" />
-
-
+<img width="1198" alt="Strength" src="https://github.com/user-attachments/assets/a3362403-2300-4474-978f-fff40e8c2b8a" />
 
 ## Retinal Rivalry
 Retinal rivalry (or [binocular rivalry](https://en.wikipedia.org/wiki/Binocular_rivalry)) is a visual phenomenon that occurs when each eye recieves different information, and the brain cannot reconcile them. This causes a "flashing" effect, where briefly, one eye will dominate, and you will see what that eye sees, and then the other will take over, and so on (although if you have a very dominant eye, this may not happen as much). 
