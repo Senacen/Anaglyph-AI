@@ -1,4 +1,4 @@
-.imagePairContainer {
+.imagePairContainerRow {
     display: flex; /* Use Flexbox for layout */
     justify-content: center; /* Necessary for loader to be centered too */
     height: 70vh; /* to always see the logo and the buttons*/
@@ -12,29 +12,32 @@
     object-fit: contain; /* Ensure images are not stretched */
 }
 
-.imagePairLeft {
+.imagePairLeftRow {
     display: flex;
     justify-content: flex-end; /* Pushes content to the right */
     width: 50%;
 }
 
-.imagePairRight {
+.imagePairRightRow {
     display: flex;
     justify-content: flex-start; /* Pushes content to the left */
     width: 50%;
 }
 
-/* When the screen is taller than it is wide, stack images in a column */
-@media screen and (max-aspect-ratio: 1/1) {
-    .imagePairContainer {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .imagePairLeft, .imagePairRight {
-        max-width: 100%; /* Full width in column layout */
-        width: auto; /* override width: 50% from above */
-        height: 50%;
-        justify-content: center; /* Center content in column layout */
-    }
+.imagePairContainerColumn {
+    display: flex; /* Use Flexbox for layout */
+    justify-content: center; /* Necessary for loader to be centered too */
+    flex-direction: column;
+    align-items: center;
+    height: 70vh; /* to always see the logo and the buttons*/
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
+
+.imagePairLeftColumn, .imagePairRightColumn {
+    max-width: 100%; /* Full width in column layout */
+    width: auto; /* override width: 50% from above */
+    height: 50%;
+    justify-content: center; /* Center content in column layout */
+}
+

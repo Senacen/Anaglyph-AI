@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import "./styles/ImageUpload.css";
+import ResizeObserver from 'react-resize-observer'; // To trigger re calculation of image pair layout on window resize
 
 // @ts-ignore
 function ImageUpload({ setIsDepthMapReadyStateLifter }) {
@@ -8,7 +9,12 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
     const [depthMapIsLoading, setDepthMapIsLoading] = useState<boolean>(false);
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
-    const maxDimension = import.meta.env.VITE_MAX_DIMENSION; // Client side resizing to reduce internet bandwidth
+    const maxDimension = import.meta.env.VITE_MAX_DIMENSION; // Client side resizing to reduce internet bandwidt
+    const [imageAspectRatio, setImageAspectRatio] = useState<number>(0); // width / height
+    const [windowDimensions, setWindowDimensions] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    }); // State just to change, so that the component re-renders
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -48,6 +54,10 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
             canvas.width = width;
             canvas.height = height;
+
+            // Set the image aspect ratio to the width / height for choosing row or column
+            setImageAspectRatio(width / height);
+
             // @ts-ignore
             ctx.drawImage(image, 0, 0, width, height);
 
@@ -105,6 +115,15 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
                 setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
                 setDepthMapIsLoading(true); // Start loading spinner
                 setImageUrl(randomImageUrl);
+
+                // Create an image to get its dimensions
+                const image = new Image();
+                image.onload = () => {
+                    // Set the aspect ratio when the image loads
+                    setImageAspectRatio(image.width / image.height);
+                };
+                image.src = randomImageUrl;
+
                 // Don't use await, causes error where depth map is not shown
                 fetchDepthMap();
             } else {
@@ -148,21 +167,73 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
         }
     };
 
+    const aspectRatioAndAreaDimensionsToCoveredArea = (aspectRatio: number, areaWidth: number, areaHeight: number) => {
+        let width = areaWidth; // Start with full width
+        let height = width / aspectRatio; // Calculate height based on aspect ratio
+        // If the calculated height exceeds areaHeight, scale down
+        if (height > areaHeight) {
+            height = areaHeight;
+            width = height * aspectRatio; // Recalculate width based on the height
+        }
+        // Calculate area for aspect ratio
+        return width * height;
+    }
+
+    const imagePairBestSpaceLayout = () => {
+        const rowAspectRatio = imageAspectRatio * 2; // Doubling width
+        const columnAspectRatio = imageAspectRatio / 2; // Doubling height
+        // If change these display sizes in CSS, make sure to them here as well
+        const areaWidth = windowDimensions.width * 0.95; // 90% of the window width, as root has margins
+        const areaHeight = windowDimensions.height * 0.85; // 70% of the window height in css "height: 70vh; /* to always see the logo and the buttons*/"
+        // Actually I tweaked it, for some reason even though 0.7 would be the correct value, 0.85 turned out better
+        // As it switches  when the areas of each layout are closer to each other
+
+        // Calculate the area covered by each layout
+        const rowArea = aspectRatioAndAreaDimensionsToCoveredArea(rowAspectRatio, areaWidth, areaHeight);
+        const columnArea = aspectRatioAndAreaDimensionsToCoveredArea(columnAspectRatio, areaWidth, areaHeight);
+
+        if (rowArea > columnArea) {
+            // Return row layout
+            return (
+                <div className="imagePairContainerRow">
+                    <div className="imagePairLeftRow">
+                        <img src={imageUrl!} alt="Uploaded" className="image" />
+                    </div>
+                    {depthMapIsLoading && <div className="loader"></div>}
+                    {depthMapUrl && (
+                    <div className="imagePairRightRow">
+                        <img src={depthMapUrl!} alt="Depth Map" className="image" />
+                    </div>
+                    )}
+                </div>
+            );
+        } else {
+            // Return column layout
+            return (
+                <div className="imagePairContainerColumn">
+                    <div className="imagePairLeftColumn">
+                        <img src={imageUrl!} alt="Uploaded" className="image" />
+                    </div>
+                    {depthMapIsLoading && <div className="loader"></div>}
+                    {depthMapUrl && (
+                    <div className="imagePairRightColumn">
+                        <img src={depthMapUrl!} alt="Depth Map" className="image" />
+                    </div>
+                    )}
+                </div>
+            );
+        }
+    }
+
     return (
         <div>
-            {imageUrl && (
-            <div className="imagePairContainer">
-                <div className="imagePairLeft">
-                    <img src={imageUrl} alt="Uploaded" className="image" />
-                </div>
-                {depthMapIsLoading && <div className="loader"></div>}
-                {depthMapUrl && (
-                <div className="imagePairRight">
-                    <img src={depthMapUrl} alt="Depth Map" className="image" />
-                </div>
-                )}
-            </div>
-            )}
+            {imageUrl && imagePairBestSpaceLayout()}
+            {/* Resize Observer to detect window size changes and retrigger the above line*/}
+            <ResizeObserver
+                onResize={({ width, height }) => {
+                    setWindowDimensions({ width, height });
+                }}
+            />
 
             {/* Div around each button to put them on the rightmost and leftmost, with width 50% to make them half the page each
                 and then div around that to make the gap centred on the page */}
