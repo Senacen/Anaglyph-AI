@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import {useState, useRef} from "react";
 import "./styles/ImageUpload.css";
 import ResizeObserver from 'react-resize-observer'; // To trigger re calculation of image pair layout on window resize
 
@@ -182,8 +182,9 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const imagePairBestSpaceLayout = () => {
         const rowAspectRatio = imageAspectRatio * 2; // Doubling width
         const columnAspectRatio = imageAspectRatio / 2; // Doubling height
+
         // If change these display sizes in CSS, make sure to them here as well
-        const areaWidth = windowDimensions.width * 0.95; // 90% of the window width, as root has margins
+        const areaWidth = windowDimensions.width * 0.95; // 95% of the window width, as root has margins
         const areaHeight = windowDimensions.height * 0.85; // 70% of the window height in css "height: 70vh; /* to always see the logo and the buttons*/"
         // Actually I tweaked it, for some reason even though 0.7 would be the correct value, 0.85 turned out better
         // As it switches  when the areas of each layout are closer to each other
@@ -225,13 +226,19 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
         }
     }
 
+
+
+
     return (
         <div>
             {imageUrl && imagePairBestSpaceLayout()}
             {/* Resize Observer to detect window size changes and retrigger the above line*/}
             <ResizeObserver
-                onResize={({ width, height }) => {
-                    setWindowDimensions({ width, height });
+                // Originaly used onResize{(width, height) and then set window dimensions to width and height
+                // but this is just wrong. Messes up height at start, and is much smaller than the actual window size
+                // Most likely onResize is working on a specific element, not the window
+                onResize={() => {
+                    setWindowDimensions({ width: window.innerWidth, height: window.innerHeight });
                 }}
             />
 
