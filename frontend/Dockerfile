@@ -18,7 +18,7 @@ RUN npm install
 COPY . .
 
 # Set the environment variables for the build process to point to the backend service not local
-ENV VITE_FLASK_BACKEND_API_URL=http://backend.anaglyph-ai.com
+ENV VITE_FLASK_BACKEND_API_URL=https://backend.anaglyph-ai.com
 
 # Build the application (this will depend on your specific setup)
 RUN npm run build  # Adjust this command as necessary

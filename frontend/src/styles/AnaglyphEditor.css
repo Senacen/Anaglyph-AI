@@ -1,6 +1,6 @@
 .anaglyphImageContainer {
     width: 100%;
-    height: 80vh;
+    height: 75vh;
 }
 .anaglyphImage {
     width: auto;
@@ -21,7 +21,7 @@ label, input {
 }
 
 label, input {
-    margin: 0 10px; /* Add space between the anaglyph editor components*/
+    margin: 0 10px; /* Add space between the anaglyph editor components width ways*/
 }
 
 input[type="checkbox"] {

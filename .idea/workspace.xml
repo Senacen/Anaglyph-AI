@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="Build with domain name environment variable.">
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="fixed window resizing dimensions incorrect, especially at the start before any resize.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/AnaglyphEditor.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/AnaglyphEditor.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/styles/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -335,15 +337,7 @@
       <workItem from="1740953267412" duration="870000" />
       <workItem from="1741024196500" duration="5335000" />
       <workItem from="1741170447726" duration="3494000" />
-      <workItem from="1742902279755" duration="9586000" />
-    </task>
-    <task id="LOCAL-00031" summary="added api endpoints, and session data">
-      <option name="closed" value="true" />
-      <created>1735934930310</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1735934930310</updated>
+      <workItem from="1742902279755" duration="12313000" />
     </task>
     <task id="LOCAL-00032" summary="added clearing old sessions">
       <option name="closed" value="true" />
@@ -729,14 +723,21 @@
       <option name="project" value="LOCAL" />
       <updated>1742915199571</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="fixed window resizing dimensions incorrect, especially at the start before any resize.">
+      <option name="closed" value="true" />
+      <created>1742920439332</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1742920439332</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added a max dimension to resize larger images to to speed up processing" />
     <MESSAGE value="sorted out gunicorn in docker, I don't multithread as bottleneck is ai model not number of processes" />
     <MESSAGE value="implemented random image, from lorem picsum" />
     <MESSAGE value="made it so the anaglyph settings are kept, by always rendering anaglyph editor, and making it retrigger anaglyph when the depth map changes using isDepthMapReady prop" />
@@ -761,7 +762,8 @@
     <MESSAGE value="cleaned notebook" />
     <MESSAGE value="get columns instead of head" />
     <MESSAGE value="Build with domain name environment variable." />
-    <option name="LAST_COMMIT_MESSAGE" value="Build with domain name environment variable." />
+    <MESSAGE value="fixed window resizing dimensions incorrect, especially at the start before any resize." />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed window resizing dimensions incorrect, especially at the start before any resize." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
