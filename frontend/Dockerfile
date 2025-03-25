@@ -5,6 +5,9 @@ FROM node:18-alpine AS build
 # Set the working directory
 WORKDIR /app
 
+# Define build arguments
+ARG VITE_FLASK_BACKEND_API_URL
+
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
@@ -13,6 +16,9 @@ RUN npm install
 
 # Copy the rest of the application code
 COPY . .
+
+# Set the environment variables for the build process to point to the backend service not local
+ENV VITE_FLASK_BACKEND_API_URL=http://backend.anaglyph-ai.com
 
 # Build the application (this will depend on your specific setup)
 RUN npm run build  # Adjust this command as necessary

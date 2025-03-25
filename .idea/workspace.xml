@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="cleaned notebook" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="get columns instead of head">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/index.css" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -275,8 +283,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-PY-243.24978.54" />
-        <option value="bundled-python-sdk-91e3b7efe1d4-466328ff949b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.24978.54" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PY-243.26053.29" />
+        <option value="bundled-python-sdk-b1dbf8ef85a6-4df51de95216-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.26053.29" />
       </set>
     </attachedChunks>
   </component>
@@ -328,15 +336,9 @@
       <workItem from="1740652732958" duration="5089000" />
       <workItem from="1740779540222" duration="10795000" />
       <workItem from="1740953267412" duration="870000" />
-      <workItem from="1741024196500" duration="4345000" />
-    </task>
-    <task id="LOCAL-00029" summary="used inpainting to fill holes">
-      <option name="closed" value="true" />
-      <created>1735750946972</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1735750946972</updated>
+      <workItem from="1741024196500" duration="5335000" />
+      <workItem from="1741170447726" duration="3494000" />
+      <workItem from="1742902279755" duration="6404000" />
     </task>
     <task id="LOCAL-00030" summary="added file dialogue to select">
       <option name="closed" value="true" />
@@ -722,14 +724,21 @@
       <option name="project" value="LOCAL" />
       <updated>1741044391845</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="get columns instead of head">
+      <option name="closed" value="true" />
+      <created>1741044588290</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1741044588290</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added docker files and env for frontend" />
     <MESSAGE value="nginx docker" />
     <MESSAGE value="added a max dimension to resize larger images to to speed up processing" />
     <MESSAGE value="sorted out gunicorn in docker, I don't multithread as bottleneck is ai model not number of processes" />
@@ -754,7 +763,8 @@
     <MESSAGE value="comments" />
     <MESSAGE value="best layout for space usage, dependent on image aspect ratio and screen dimensions. Added resize observer to force re render upon each resize" />
     <MESSAGE value="cleaned notebook" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleaned notebook" />
+    <MESSAGE value="get columns instead of head" />
+    <option name="LAST_COMMIT_MESSAGE" value="get columns instead of head" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

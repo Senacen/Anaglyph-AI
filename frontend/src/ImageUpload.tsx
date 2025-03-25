@@ -9,7 +9,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
     const [depthMapIsLoading, setDepthMapIsLoading] = useState<boolean>(false);
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
-    const maxDimension = import.meta.env.VITE_MAX_DIMENSION; // Client side resizing to reduce internet bandwidt
+    const maxDimension = import.meta.env.VITE_MAX_DIMENSION; // Client side resizing to reduce internet bandwidth
     const [imageAspectRatio, setImageAspectRatio] = useState<number>(0); // width / height
     const [windowDimensions, setWindowDimensions] = useState({
         width: window.innerWidth,

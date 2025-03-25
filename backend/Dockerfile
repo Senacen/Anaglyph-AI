@@ -8,7 +8,7 @@ COPY requirements.txt /app
 RUN apt-get update && apt-get install -y libgl1-mesa-glx
 
 # Needs to be nightly version to work, as requires version 2.7.0, and stable is 2.6.0
-RUN pip3 install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/nightly/cpu
+RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/nightly/cpu
 
 COPY . /app
 
