@@ -40,7 +40,7 @@ However, this leaves "holes" in the eye image, or rather black pixels, where no 
 
 
 This is inevitable: when generating stereo images from a monocular image, we are simply missing information, such as what the left eye should have been able to see behind a certain edge. 
-To fix this, I first considered implementing a forward fill, but it is ambiguous whether the pixels in the background or those in the foreground should be used to fill the holes, as this depends on the actual geometry of the closer object. Therefore, I used OpenCV's [inpainting](https://docs.opencv.org/4.x/d7/d8b/group__photo__inpaint.html) function to fill the holes, specifically INPAINT_TELEA, as per this [comparative study](https://globaljournals.org/GJCST_Volume21/2-Comparative-Study-of-OpenCV.pdf) of the different inpaint functions efficiency.
+To fix this, I first considered implementing a forward fill, but it is ambiguous whether the pixels in the background or those in the foreground should be used to fill the holes, as this depends on the actual geometry of the closer object. Therefore, I used OpenCV's [inpainting](https://docs.opencv.org/4.x/d7/d8b/group__photo__inpaint.html) function to fill the holes, specifically INPAINT_TELEA, as per this [comparative study](https://globaljournals.org/GJCST_Volume21/2-Comparative-Study-of-OpenCV.pdf) of the different inpaint algorithms efficiency.
 
 <img width="1374" alt="Filled" src="https://github.com/user-attachments/assets/07aff3b8-d16b-41c3-90b8-1da917e43928" />
 
@@ -52,7 +52,7 @@ This option determines where the zero parallax plane is in the scene, which dete
 
 However to simplify use, I have decided to restrict the zero parallax plane to be either be at the distance furthest object, which causes the furthest object to appear at the screen distance, and everything else to appear in front of the screen, or the zero parallax plane is at the distance of the closest object, which causes the closest object to appear at the screen distance, and everything else to appear behind the screen. 
 
-To see this effect with red-cyan anaglyph glasses, below is a pop in version of an image, and then a pop out version of the image. I have also added a horizontal bar which should appear to be at the distance of the screen to more easily see in which direction the 3D effect is acting.
+To see this effect with red-cyan anaglyph glasses, below is a pop in version of an image, and then a pop out version of the image.
 
 <img width="1024" alt="PopOutVSPopIn" src="https://github.com/user-attachments/assets/01fc9fd3-d265-42fb-96fe-fccd142da64b" />
 
