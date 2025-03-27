@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./styles/AnaglyphEditor.css";
 
-function AnaglyphEditor({ isDepthMapReady, setIsUploadReadyStateLifter}: { isDepthMapReady: boolean , setIsUploadReadyStateLifter: any}) {
+function AnaglyphEditor({ isDepthMapReady, isChangeAllowed, setIsUploadReadyStateLifter}: { isDepthMapReady: boolean , isChangeAllowed: boolean, setIsUploadReadyStateLifter: (value: boolean) => void}) {
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
     const [anaglyphUrl, setAnaglyphUrl] = useState<string | null>(null);
     const [anaglyphIsLoading, setAnaglyphIsLoading] = useState<boolean>(false);
@@ -54,12 +54,31 @@ function AnaglyphEditor({ isDepthMapReady, setIsUploadReadyStateLifter}: { isDep
     };
 
     const handleSliderChange = (e: { target: { value: string; }; }) => {
+        if (!isChangeAllowed) {
+            return;
+        }
         setSliderValue(parseFloat(e.target.value));
     }
 
     const handleSliderReleased = () => {
+        if (!isChangeAllowed) {
+            return;
+        }
         setMaxDisparityPercentage(sliderValue)
     }
+
+    const handleMinimiseRRCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (isChangeAllowed) {
+            setOptimiseRRAnaglyph(e.target.checked);
+        }
+    };
+
+    const handlePopOutCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (isChangeAllowed) {
+            setPopOut(e.target.checked);
+        }
+    }
+
 
     const handleDownload = () => {
         // Tried to use web share api so that on iphone it allows to save image to camera roll
@@ -81,7 +100,7 @@ function AnaglyphEditor({ isDepthMapReady, setIsUploadReadyStateLifter}: { isDep
                         <input
                             type="checkbox"
                             checked={popOut}
-                            onChange={(e) => setPopOut(e.target.checked)}
+                            onChange={handlePopOutCheckboxChange}
                         />
                     </label>
                 </form>
@@ -106,7 +125,7 @@ function AnaglyphEditor({ isDepthMapReady, setIsUploadReadyStateLifter}: { isDep
                         <input
                             type="checkbox"
                             checked={optimiseRRAnaglyph}
-                            onChange={(e) => setOptimiseRRAnaglyph(e.target.checked)}
+                            onChange={handleMinimiseRRCheckboxChange}
                         />
                     </label>
                 </form>

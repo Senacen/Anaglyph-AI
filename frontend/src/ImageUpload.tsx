@@ -3,7 +3,7 @@ import "./styles/ImageUpload.css";
 import ResizeObserver from 'react-resize-observer'; // To trigger re calculation of image pair layout on window resize
 
 // @ts-ignore
-function ImageUpload({ setIsDepthMapReadyStateLifter, isUploadReady, setIsUploadReadyStateLifter }) {
+function ImageUpload({ setIsDepthMapReadyStateLifter, isChangeAllowed, setIsUploadReadyStateLifter }) {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
@@ -105,8 +105,9 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isUploadReady, setIsUpload
 
 
     const handleRandomButtonClick = async () => {
-        // Check if the upload is ready (so image upload, depth map retrieval and anaglyph generation is done)
-        if (isUploadReady == false) return;
+        // Check if change is allowed (so image upload, depth map retrieval and anaglyph generation is done)
+        // but allow it if no image has been uploaded yet
+        if (isChangeAllowed == false && imageUrl != null) return;
         try {
             setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
             // Uploading, so block the upload buttons
@@ -146,7 +147,6 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isUploadReady, setIsUpload
 
     const fetchDepthMap = async () => {
         try {
-                // Sleep for 1 second to allow the server to process the image
             const response = await fetch(`${apiUrl}/depth-map`, {
                 method: "GET",
                 credentials: "include",
@@ -172,8 +172,9 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isUploadReady, setIsUpload
     }
 
      const handleUploadButtonClick = () => {
-        // Check if the upload is ready (so image upload, depth map retrieval and anaglyph generation is done)
-        if (isUploadReady == false) return;
+        // Check if the change is allowed (so image upload, depth map retrieval and anaglyph generation is done)
+         // but allow it if no image has been uploaded yet
+        if (isChangeAllowed == false && imageUrl != null) return;
         if (imageInputRef.current) {
             imageInputRef.current.click();
         }
