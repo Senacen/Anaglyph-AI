@@ -87,9 +87,9 @@ def clear_old_session_files():
     current_time = time.time()
     session_files_cleared = 0
 
-    # Delete any session files that are more than a day old
+    # Delete any session files that are more than an hour old
     for filename in os.listdir(SESSION_DATA_FOLDER):
-        if current_time - os.path.getmtime(os.path.join(SESSION_DATA_FOLDER, filename)) > 60 * 60 * 24:
+        if current_time - os.path.getmtime(os.path.join(SESSION_DATA_FOLDER, filename)) > 60 * 60:
             os.remove(os.path.join(SESSION_DATA_FOLDER, filename))
             session_files_cleared += 1
 

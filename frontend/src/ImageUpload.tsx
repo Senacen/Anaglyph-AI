@@ -3,7 +3,7 @@ import "./styles/ImageUpload.css";
 import ResizeObserver from 'react-resize-observer'; // To trigger re calculation of image pair layout on window resize
 
 // @ts-ignore
-function ImageUpload({ setIsDepthMapReadyStateLifter }) {
+function ImageUpload({ setIsDepthMapReadyStateLifter, isUploadReady, setIsUploadReadyStateLifter }) {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
@@ -17,6 +17,9 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     }); // State just to change, so that the component re-renders
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        // Uploading, so block the upload buttons
+        setIsUploadReadyStateLifter(false);
+
         const files = event.target.files;
         if (files && files.length > 0) {
             const selectedImage = files[0]; // Get the selected image file
@@ -99,8 +102,12 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
 
 
     const handleRandomButtonClick = async () => {
+        // Check if the upload is ready (so image upload, depth map retrieval and anaglyph generation is done)
+        if (isUploadReady == false) return;
         try {
             setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
+            // Uploading, so block the upload buttons
+            setIsUploadReadyStateLifter(false);
             const response = await fetch(`${apiUrl}/random_image`, {
                 method: "GET",
                 credentials: "include",
@@ -162,6 +169,8 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
     }
 
      const handleUploadButtonClick = () => {
+        // Check if the upload is ready (so image upload, depth map retrieval and anaglyph generation is done)
+        if (isUploadReady == false) return;
         if (imageInputRef.current) {
             imageInputRef.current.click();
         }
@@ -243,19 +252,20 @@ function ImageUpload({ setIsDepthMapReadyStateLifter }) {
             />
 
             {/* Div around each button to put them on the rightmost and leftmost, with width 50% to make them half the page each
-                and then div around that to make the gap centred on the page */}
-            <div style={{display: "flex", justifyContent: "center", marginBottom: "50px"}}>
-                <div style={{display: "flex", justifyContent: "right", width: "50%"}}>
+                and then div around that to make the gap centred on the page. Also only render if anaglyph is done */}
+           <div style={{ display: "flex", justifyContent: "center", marginBottom: "50px" }}>
+                <div style={{ display: "flex", justifyContent: "right", width: "50%" }}>
                     <button onClick={handleUploadButtonClick} className="anaglyphButton">
                         Upload Image
                     </button>
                 </div>
-                <div style={{display: "flex", justifyContent: "left", width: "50%"}}>
+                <div style={{ display: "flex", justifyContent: "left", width: "50%" }}>
                     <button onClick={handleRandomButtonClick} className="anaglyphButton">
                         Random Image
                     </button>
                 </div>
             </div>
+
 
             <input
                 type="file"

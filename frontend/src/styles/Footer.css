@@ -1,0 +1,27 @@
+.footer {
+    color: grey;              /* Text color */
+    text-align: center;        /* Center text */
+    padding: 10px 0;          /* Vertical padding */
+    width: 100%;              /* Full width */
+}
+
+.container {
+    max-width: 1200px;       /* Max width of content */
+    margin: 0 auto;          /* Center content */
+    padding: 0 20px;         /* Horizontal padding */
+    line-height: 0.5;
+}
+
+.social-links {
+    margin-top: 0px;        /* Space above links */
+}
+
+.social-links a {
+    color: black;          /* Link color */
+    text-decoration: none;    /* No underline */
+    margin: 0 10px;          /* Space between links */
+}
+
+.social-links a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./styles/AnaglyphEditor.css";
 
-function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
+function AnaglyphEditor({ isDepthMapReady, setIsUploadReadyStateLifter}: { isDepthMapReady: boolean , setIsUploadReadyStateLifter: any}) {
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
     const [anaglyphUrl, setAnaglyphUrl] = useState<string | null>(null);
     const [anaglyphIsLoading, setAnaglyphIsLoading] = useState<boolean>(false);
@@ -20,6 +20,13 @@ function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
             fetchAnaglyph();
         }
     }, [isDepthMapReady, popOut, maxDisparityPercentage, optimiseRRAnaglyph]);
+
+     // Pass up the state of the anaglyph loading (negated)
+    // If the anaglyph goes from not loading to loading, then upload should be disabled
+    // If the anaglyph goes from loading to not loading, then upload should be enabled, as just done the entire cycle
+     useEffect(() => {
+         setIsUploadReadyStateLifter(!anaglyphIsLoading);
+     }, [anaglyphIsLoading]);
 
     const fetchAnaglyph = async () => {
         try {
@@ -55,6 +62,8 @@ function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
     }
 
     const handleDownload = () => {
+        // Tried to use web share api so that on iphone it allows to save image to camera roll
+        // But then on mac it doesn't allow downloading at all
         const link = document.createElement("a");
         link.href = anaglyphUrl!; // Non-null assertion operator
         link.download = "anaglyph.jpeg";
@@ -107,9 +116,7 @@ function AnaglyphEditor({ isDepthMapReady }: { isDepthMapReady: boolean }) {
                 { anaglyphIsLoading && isDepthMapReady && <div className="loader"></div>} {/* Only show loader if depth map is ready but anaglyph is not*/}
                 { (!anaglyphIsLoading && anaglyphUrl) && <button className="anaglyphButton" onClick={handleDownload}>Download</button>}
             </div>
-            <div className="anaglyphImageContainer">
-                {anaglyphUrl && <img src={anaglyphUrl} alt="Anaglyph" className="anaglyphImage"/>}
-            </div>
+            {anaglyphUrl && <img src={anaglyphUrl} alt="Anaglyph" className="anaglyphImage" />}
 
         </div>
     );
