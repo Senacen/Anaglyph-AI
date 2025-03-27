@@ -67,6 +67,10 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isUploadReady, setIsUpload
             // Now send the image to the server
             canvas.toBlob(async (blob) => {
                 if (blob) {
+                    // Display the image they uploaded as soon as possible
+                    const imageUrl = URL.createObjectURL(blob);
+                    setImageUrl(imageUrl);
+
                     formData.append("file", blob, imageFile.name);
                     console.log("Uploading image...");
 
@@ -81,10 +85,9 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isUploadReady, setIsUpload
                         if (response.ok) {
                             const data = await response.json();
                             console.log("Upload successful:", data);
-                            const imageUrl = URL.createObjectURL(blob);
+
                             setDepthMapUrl(null); // To unload the previous depth map image so the container will fit the new image
                             setDepthMapIsLoading(true); // Start loading spinner
-                            setImageUrl(imageUrl);
                             // Don't use await, causes error where depth map is not shown
                             fetchDepthMap();
                         } else {
