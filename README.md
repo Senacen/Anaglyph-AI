@@ -1,7 +1,7 @@
 # Anaglyph AI
 A Flask-React website that allows a user to upload a monocular image, and converts it to a [3D Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses.
 
-Check it out: [Anaglyph AI](https://anaglyph-ai.com)!
+Check it out here: [Anaglyph AI](https://anaglyph-ai.com)!
 
 ## Contents
 - [Image Upload and Depth Map Generation](#image-upload-and-depth-map-generation)
