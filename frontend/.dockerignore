@@ -1,12 +1,12 @@
 # Ignore Python cache and virtual environments
-__pycache__/
+__pycache__
 *.pyc
 *.pyo
 *.pyd
 *.swp
 *.swo
-venv/
-.venv/
+venv
+.venv
 Pipfile
 Pipfile.lock
 
@@ -27,12 +27,12 @@ docker-compose.yml
 
 # Ignore system-specific files
 Thumbs.db
-.idea/
-.vscode/
+.idea
+.vscode
 *.iml
 
 # Ignore large or unnecessary files
-node_modules/
+node_modules
 *.mp4
 *.avi
 *.mkv
@@ -41,6 +41,6 @@ node_modules/
 *.gz
 
 # Ignore build and output directories
-build/
-dist/
-*.egg-info/
+build
+dist
+*.egg-info

@@ -1,26 +1,36 @@
-depth_anything_v2_vitl.pth
-unsplash-dataset/
-images/
-processing_random_images.ipynb
+**/depth_anything_v2_vitl.pth
+**/unsplash-dataset
+**/images
+**/processing_random_images.ipynb
 
-# Ignore Python cache and virtual environments
-__pycache__/
+__pycache__
 *.pyc
 *.pyo
 *.pyd
-*.swp
-*.swo
-venv/
-.venv/
-Pipfile
-Pipfile.lock
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+.venv
 
 # Ignore Git-related files
-.git/
+.git
 .gitignore
 
 # Ignore logs and temporary files
-logs/
+logs
 *.log
 *.tmp
 *.bak
@@ -32,21 +42,9 @@ docker-compose.yml
 
 # Ignore system-specific files
 Thumbs.db
-.idea/
-.vscode/
+.idea
+.vscode
 *.iml
 
-# Ignore large or unnecessary files
-node_modules/
-*.mp4
-*.avi
-*.mkv
-*.zip
-*.tar
-*.gz
 
-# Ignore build and output directories
-build/
-dist/
-*.egg-info/
 

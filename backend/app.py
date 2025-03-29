@@ -82,7 +82,7 @@ def assign_session_id():
 
 def clear_old_session_files():
     """
-    Clears all sessions that have been inactive for more than 30 minutes. Clears all files that haven't been modified in a day
+    Clears all files that haven't been modified in an hour. Sessions themselves are just cookies on the client side, so no need to clear them
     """
     current_time = time.time()
     session_files_cleared = 0

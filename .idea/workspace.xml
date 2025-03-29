@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="made it so you can't upload a new image, or change the anaglyph settings, until all is done (image upload, depth map, anaglyph generation)">
-      <change beforePath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Blurred_Depth_Map.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/ImageUpload.tsx" afterDir="false" />
+    <list default="true" id="2b0eb358-db41-425c-bf28-4455fa8e3627" name="Changes" comment="delete docker compose">
+      <change beforePath="$PROJECT_DIR$/backend/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.dockerignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -335,15 +336,7 @@
       <workItem from="1741024196500" duration="5335000" />
       <workItem from="1741170447726" duration="3494000" />
       <workItem from="1742902279755" duration="18960000" />
-      <workItem from="1743015808464" duration="9886000" />
-    </task>
-    <task id="LOCAL-00036" summary="added requirements.txt, and upgraded react to 19">
-      <option name="closed" value="true" />
-      <created>1736090540429</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1736090540429</updated>
+      <workItem from="1743015808464" duration="13111000" />
     </task>
     <task id="LOCAL-00037" summary="started website">
       <option name="closed" value="true" />
@@ -729,14 +722,21 @@
       <option name="project" value="LOCAL" />
       <updated>1743117989140</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="delete docker compose">
+      <option name="closed" value="true" />
+      <created>1743249278325</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1743249278325</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="client side resizing to reduce internet bandwidth" />
     <MESSAGE value="made max dimension an env variable in the vite" />
     <MESSAGE value="tried forward fill and blurring the depth map to fix some pixels being left behind, but neither work very well" />
     <MESSAGE value="fixed files disappearing" />
@@ -761,7 +761,8 @@
     <MESSAGE value="Disable image upload after upload until the anaglyph is done" />
     <MESSAGE value="Made it display the uploaded image as soon as the user uploads it, instead of waiting for the response first" />
     <MESSAGE value="made it so you can't upload a new image, or change the anaglyph settings, until all is done (image upload, depth map, anaglyph generation)" />
-    <option name="LAST_COMMIT_MESSAGE" value="made it so you can't upload a new image, or change the anaglyph settings, until all is done (image upload, depth map, anaglyph generation)" />
+    <MESSAGE value="delete docker compose" />
+    <option name="LAST_COMMIT_MESSAGE" value="delete docker compose" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Anaglyph_AI$Flask__backend_app_py_.coverage" NAME="Flask (backend/app.py) Coverage Results" MODIFIED="1736088038744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

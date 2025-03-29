@@ -32,9 +32,9 @@ requests-oauthlib==2.0.0
 requests-toolbelt==1.0.0
 setuptools==75.6.0
 six==1.17.0
-sympy==1.13.1
-torch==2.7.0
-torchvision==0.22.0
+sympy==1.13.3
+torch==2.7.0.dev20250302
+torchvision==0.22.0.dev20250302
 typing_extensions==4.12.2
 tzlocal==5.2
 urllib3==2.3.0
