@@ -1,19 +1,15 @@
-
-
 services:
   backend:
     build:
-      context: ./backend  # Use relative path if the backend folder is inside the project root
+      context: ./backend  
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    environment:
-      - FLASK_ENV=production  # Set environment variables for the backend service
 
   frontend:
     build:
-      context: ./frontend  # Assuming a frontend service; adjust path accordingly
+      context: ./frontend  
       dockerfile: Dockerfile
     ports:
-      - "80:80"  # Map port for the frontend service
+      - "80:80"  
 
