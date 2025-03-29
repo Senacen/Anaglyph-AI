@@ -257,7 +257,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isChangeAllowed, setIsUplo
 
             {/* Div around each button to put them on the rightmost and leftmost, with width 50% to make them half the page each
                 and then div around that to make the gap centred on the page. Also only render if anaglyph is done */}
-           <div style={{ display: "flex", justifyContent: "center", marginBottom: "50px" }}>
+           <div style={{ display: "flex", justifyContent: "center", marginBottom: "10px" }}>
                 <div style={{ display: "flex", justifyContent: "right", width: "50%" }}>
                     <button onClick={handleUploadButtonClick} className="anaglyphButton">
                         Upload Image
