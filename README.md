@@ -58,6 +58,11 @@ To see this effect with red-cyan anaglyph glasses, below is a pop in version of 
 
 <img width="1024" alt="PopOutVSPopIn" src="https://github.com/user-attachments/assets/01fc9fd3-d265-42fb-96fe-fccd142da64b" />
 
+And here is a another very effective example of Pop Out:
+
+<img widht = "1024" alt="IcebergPopOut" src="https://github.com/user-attachments/assets/5a197125-8ef3-420d-9427-1a254830324a" />
+
+
 
 ## Strength
 This slider actually sets the maximum disparity in terms of a percentage of the image width, from 0% to 6%. This means at 0%, there is no 3D effect, and at 6% of the image width, the two points with the most disparity (the furthest point in pop in, or the closest point in pop out) will have a distance of 6% of the image width between them when comparing the left eye image to the right eye image.
