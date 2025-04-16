@@ -61,7 +61,7 @@ To see this effect with red-cyan anaglyph glasses, below is a pop in version of 
 
 And here is a another very effective example of Pop Out:
 
-<img widht = "700" alt="IcebergPopOut" src="https://github.com/user-attachments/assets/5a197125-8ef3-420d-9427-1a254830324a" />
+<img width = "700" alt="IcebergPopOut" src="https://github.com/user-attachments/assets/5a197125-8ef3-420d-9427-1a254830324a" />
 
 
 
