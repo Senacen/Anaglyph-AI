@@ -10,7 +10,7 @@ function App() {
     // This is to check if the anaglyph is done and the depth map has been retrieved and the image has been retrieved
     // , to prevent uploading a new image until it is done
     // Init to true so that the user can upload an image at the start
-    const [isChangeAllowed, setIsUploadReady] = useState<boolean>(true)
+    const [isChangeAllowed, setIsChangeAllowed] = useState<boolean>(true)
 
     return (
         <>
@@ -19,8 +19,8 @@ function App() {
                    className="responsive_title"
                    alt="Anaglyph AI Logo"/>
             </div>
-            <ImageUpload setIsDepthMapReadyStateLifter={setIsDepthMapReady} isChangeAllowed={isChangeAllowed} setIsUploadReadyStateLifter={setIsUploadReady}/>
-            { <AnaglyphEditor isDepthMapReady={isDepthMapReady} isChangeAllowed={isChangeAllowed} setIsUploadReadyStateLifter={setIsUploadReady}/>}
+            <ImageUpload setIsDepthMapReadyStateLifter={setIsDepthMapReady} isChangeAllowed={isChangeAllowed} setIsChangeAllowed={setIsChangeAllowed}/>
+            { <AnaglyphEditor isDepthMapReady={isDepthMapReady} isChangeAllowed={isChangeAllowed} setIsChangeAllowed={setIsChangeAllowed}/>}
             <Footer />
         </>
   )

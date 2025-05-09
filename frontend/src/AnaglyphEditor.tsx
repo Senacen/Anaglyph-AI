@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./styles/AnaglyphEditor.css";
 
-function AnaglyphEditor({ isDepthMapReady, isChangeAllowed, setIsUploadReadyStateLifter}: { isDepthMapReady: boolean , isChangeAllowed: boolean, setIsUploadReadyStateLifter: (value: boolean) => void}) {
+function AnaglyphEditor({ isDepthMapReady, isChangeAllowed, setIsChangeAllowed}: { isDepthMapReady: boolean , isChangeAllowed: boolean, setIsChangeAllowed: (value: boolean) => void}) {
     const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
     const [anaglyphUrl, setAnaglyphUrl] = useState<string | null>(null);
     const [anaglyphIsLoading, setAnaglyphIsLoading] = useState<boolean>(false);
@@ -25,7 +25,7 @@ function AnaglyphEditor({ isDepthMapReady, isChangeAllowed, setIsUploadReadyStat
     // If the anaglyph goes from not loading to loading, then upload should be disabled
     // If the anaglyph goes from loading to not loading, then upload should be enabled, as just done the entire cycle
      useEffect(() => {
-         setIsUploadReadyStateLifter(!anaglyphIsLoading);
+         setIsChangeAllowed(!anaglyphIsLoading);
      }, [anaglyphIsLoading]);
 
     const fetchAnaglyph = async () => {
@@ -47,9 +47,12 @@ function AnaglyphEditor({ isDepthMapReady, isChangeAllowed, setIsUploadReadyStat
                 console.log("Anaglyph fetched successfully", anaglyphUrl);
             } else {
                 console.error("Failed to fetch Anaglyph", response.json());
+                setIsChangeAllowed(true); // If failed to get anaglyph, allow user to upload new image
+
             }
         } catch (error) {
             console.error("Failed to fetch Anaglyph", error);
+            setIsChangeAllowed(true); // If failed to get anaglyph, allow user to upload new image
         }
     };
 

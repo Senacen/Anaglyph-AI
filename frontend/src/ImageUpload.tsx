@@ -3,7 +3,7 @@ import "./styles/ImageUpload.css";
 import ResizeObserver from 'react-resize-observer'; // To trigger re calculation of image pair layout on window resize
 
 // @ts-ignore
-function ImageUpload({ setIsDepthMapReadyStateLifter, isChangeAllowed, setIsUploadReadyStateLifter }) {
+function ImageUpload({ setIsDepthMapReadyStateLifter, isChangeAllowed, setIsChangeAllowed }) {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [depthMapUrl, setDepthMapUrl] = useState<string | null>(null);
@@ -18,7 +18,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isChangeAllowed, setIsUplo
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         // Uploading, so block the upload buttons
-        setIsUploadReadyStateLifter(false);
+        setIsChangeAllowed(false);
 
         const files = event.target.files;
         if (files && files.length > 0) {
@@ -111,7 +111,7 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isChangeAllowed, setIsUplo
         try {
             setIsDepthMapReadyStateLifter(false); // Set depth map ready to false to stop rendering anaglyph editor
             // Uploading, so block the upload buttons
-            setIsUploadReadyStateLifter(false);
+            setIsChangeAllowed(false);
             const response = await fetch(`${apiUrl}/random_image`, {
                 method: "GET",
                 credentials: "include",
@@ -197,10 +197,9 @@ function ImageUpload({ setIsDepthMapReadyStateLifter, isChangeAllowed, setIsUplo
         const columnAspectRatio = imageAspectRatio / 2; // Doubling height
 
         // If change these display sizes in CSS, make sure to them here as well
-        const areaWidth = windowDimensions.width * 0.95; // 95% of the window width, as root has margins
-        const areaHeight = windowDimensions.height * 0.85; // 70% of the window height in css "height: 70vh; /* to always see the logo and the buttons*/"
-        // Actually I tweaked it, for some reason even though 0.7 would be the correct value, 0.85 turned out better
-        // As it switches  when the areas of each layout are closer to each other
+        const areaWidth = windowDimensions.width * 0.95; // 95% of the window width
+        const areaHeight = windowDimensions.height * 0.7; // 70% of the window height in css "height: 70vh; /* to always see the logo and the buttons*/"
+
 
         // Calculate the area covered by each layout
         const rowArea = aspectRatioAndAreaDimensionsToCoveredArea(rowAspectRatio, areaWidth, areaHeight);
