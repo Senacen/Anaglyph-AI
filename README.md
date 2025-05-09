@@ -1,7 +1,7 @@
 # Anaglyph AI
 A Flask-React website that allows a user to upload a monocular image, and converts it to a [3D Anaglyph](https://en.wikipedia.org/wiki/Anaglyph_3D) image to be viewed with red-cyan glasses.
 
-Check it out here: [anaglyph-ai.com](https://anaglyph-ai.com)!
+## Check it out here: [anaglyph-ai.com](https://anaglyph-ai.com)!
 
 ## Contents
 - [Image Upload and Depth Map Generation](#image-upload-and-depth-map-generation)
@@ -57,6 +57,12 @@ However to simplify use, I have decided to restrict the zero parallax plane to b
 To see this effect with red-cyan anaglyph glasses, below is a pop in version of an image, and then a pop out version of the image.
 
 <img width="1024" alt="PopOutVSPopIn" src="https://github.com/user-attachments/assets/01fc9fd3-d265-42fb-96fe-fccd142da64b" />
+
+
+And here is a another very effective example of Pop Out:
+
+<img width = "700" alt="IcebergPopOut" src="https://github.com/user-attachments/assets/5a197125-8ef3-420d-9427-1a254830324a" />
+
 
 
 ## Strength
