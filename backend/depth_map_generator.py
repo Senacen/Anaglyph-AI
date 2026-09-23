@@ -50,7 +50,7 @@ class DepthMapGenerator:
         :param image: Image to generate a depth map from.
         :return: Depth map with largest value as closest.
         """
-        return self.normalise(self.model.infer_image(image))  # HxW raw depth map in numpy, normalises to 0-1
+        return self.normalise(self.model.infer_image(image)) 
 
     def normalise(self, depth_map: np.ndarray) -> np.ndarray:
         """
@@ -135,9 +135,6 @@ class DepthMapGenerator:
 
         return blurred_depth_map
 
-
-# Singleton instance to be imported
-# Small for production, large for precomputing
 depth_map_generator = DepthMapGenerator(encoder="vits")
 
 if __name__ == '__main__':
@@ -154,7 +151,6 @@ if __name__ == '__main__':
     # Calculate the time taken
     elapsed_time = end_time - start_time
     print(f"Elapsed time for depth map: {elapsed_time:.4f} seconds")
-    # Display or save the image (for example, using OpenCV)
     cv2.imshow('Depth Map Full', depth_map_colored)
     cv2.imshow('Original Image', image)
 
@@ -170,10 +166,9 @@ if __name__ == '__main__':
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"Elapsed time for depth map downscaling and upscaling: {elapsed_time:.4f}")
-    # Display or save the image (for example, using OpenCV)
     cv2.imshow('Depth Map Downscaled Upscaled', depth_map_colored_upscaled)
 
 
-    cv2.waitKey(0)  # Wait until a key is pressed
+    cv2.waitKey(0)  
     cv2.destroyAllWindows()
 
