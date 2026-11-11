@@ -3,6 +3,10 @@ import { colourDepth, smoothDepth, Source } from "./stereo";
 const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
 const maxDimension = Number(import.meta.env.VITE_MAX_DIMENSION) || 1500;
 
+// The app itself uses no cookies, but Cloudflare's bot check sets a clearance cookie for *.anaglyph-ai.com.
+// It must be sent with API calls, otherwise Cloudflare challenges them and the browser reports "Load failed".
+const api = (path: string, init: RequestInit = {}) => fetch(`${apiUrl}${path}`, { ...init, credentials: "include" });
+
 // Uploaded images get their depth edges softened (as the backend used to); the example images'
 // precomputed depth maps were made without this, so they are left as they are.
 const UPLOAD_DEPTH_SMOOTHING = 15;
@@ -85,7 +89,7 @@ export async function sourceFromFile(file: Blob): Promise<Source> {
 
     const form = new FormData();
     form.append("file", jpeg, "image.jpg");
-    const response = await fetch(`${apiUrl}/depth-map`, { method: "POST", body: form });
+    const response = await api("/depth-map", { method: "POST", body: form });
     if (!response.ok) throw new Error(await errorMessage(response));
     const depthUrl = URL.createObjectURL(await response.blob());
     try {
@@ -97,12 +101,12 @@ export async function sourceFromFile(file: Blob): Promise<Source> {
 
 /** Pick a random example image with its precomputed depth map. */
 export async function randomSource(): Promise<Source> {
-    const pick = await fetch(`${apiUrl}/random`);
+    const pick = await api("/random");
     if (!pick.ok) throw new Error(await errorMessage(pick));
     const { index } = await pick.json();
     const [imageResponse, depthResponse] = await Promise.all([
-        fetch(`${apiUrl}/random/${index}/image`),
-        fetch(`${apiUrl}/random/${index}/depth-map`),
+        api(`/random/${index}/image`),
+        api(`/random/${index}/depth-map`),
     ]);
     if (!imageResponse.ok) throw new Error(await errorMessage(imageResponse));
     if (!depthResponse.ok) throw new Error(await errorMessage(depthResponse));

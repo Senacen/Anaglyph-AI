@@ -32,7 +32,9 @@ _default_origins = [
     re.compile(r"^http://(localhost|127\.0\.0\.1)(:\d+)?$"),
 ]
 _env_origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
-CORS(app, origins=_env_origins or _default_origins)
+# supports_credentials: the frontend sends cookies so Cloudflare's bot-check clearance cookie reaches the API.
+# The app sets and reads no cookies itself, and only the origins above are allowed.
+CORS(app, origins=_env_origins or _default_origins, supports_credentials=True)
 
 # Largest side the image is processed at. The client already resizes to this; this is the backstop.
 MAX_DIMENSION = 1500
