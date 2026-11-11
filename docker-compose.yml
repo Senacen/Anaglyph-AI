@@ -1,0 +1,20 @@
+# Deployment (Raspberry Pi). Images are built on a Mac (also arm64) and pushed to Docker Hub:
+#   docker build -t senacen/anaglyphai-backend:latest backend && docker push senacen/anaglyphai-backend:latest
+#   docker build -t senacen/anaglyphai-frontend:latest frontend && docker push senacen/anaglyphai-frontend:latest
+# then on the Pi:  docker compose pull && docker compose up -d
+services:
+  backend:
+    image: senacen/anaglyphai-backend:latest
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      # 10,000 example images + precomputed depth maps (~4 GB), kept out of the image
+      - ./data/random_images:/app/resources/random_images:ro
+      - ./data/random_images_depth_maps_greyscale:/app/resources/random_images_depth_maps_greyscale:ro
+
+  frontend:
+    image: senacen/anaglyphai-frontend:latest
+    restart: always
+    ports:
+      - "80:80"

@@ -51,8 +51,11 @@ ALLOWED_EXTENSIONS = {
 
 RANDOM_IMAGES_FOLDER = 'resources/random_images'
 RANDOM_DEPTH_MAPS_FOLDER = 'resources/random_images_depth_maps_greyscale'
+# The example images are mounted into the container (docker-compose.yml); without them the
+# random-image feature is simply unavailable rather than the whole app failing to start.
 num_random_images = len([n for n in os.listdir(RANDOM_IMAGES_FOLDER)
-                         if os.path.isfile(os.path.join(RANDOM_IMAGES_FOLDER, n))])
+                         if os.path.isfile(os.path.join(RANDOM_IMAGES_FOLDER, n))]) \
+    if os.path.isdir(RANDOM_IMAGES_FOLDER) else 0
 
 
 def png_response(array: np.ndarray):
@@ -107,6 +110,8 @@ def depth_map():
 @app.route('/random')
 def random_image():
     """Pick a random example image. Returns {"index": n}; fetch the files from the two routes below."""
+    if num_random_images == 0:
+        return jsonify({'error': 'Example images are not available'}), 503
     return jsonify({'index': int(np.random.randint(0, num_random_images))})
 
 

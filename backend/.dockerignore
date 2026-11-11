@@ -1,50 +1,13 @@
-**/depth_anything_v2_vitl.pth
-**/unsplash-dataset
-**/images
-**/processing_random_images.ipynb
-
-__pycache__
+# Example images are mounted at runtime (see docker-compose.yml), not baked into the image
+resources/
+# Only the small (vits) model is used
+ai_models/checkpoints/depth_anything_v2_vitl.pth
+ai_models/Depth_Anything_V2/assets/
+ai_models/Depth_Anything_V2/metric_depth/
+# Local-only config and dev leftovers
+.env
+*.ipynb
+Blurred_Depth_Map.jpg
+__pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
-env
-pip-log.txt
-pip-delete-this-directory.txt
-.tox
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git
-.mypy_cache
-.pytest_cache
-.hypothesis
-.venv
-
-# Ignore Git-related files
-.git
-.gitignore
-
-# Ignore logs and temporary files
-logs
-*.log
-*.tmp
-*.bak
 .DS_Store
-
-# Ignore Docker-related files (except Dockerfile)
-.dockerignore
-docker-compose.yml
-
-# Ignore system-specific files
-Thumbs.db
-.idea
-.vscode
-*.iml
-
-
-
