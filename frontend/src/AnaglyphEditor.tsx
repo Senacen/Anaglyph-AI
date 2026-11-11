@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { GIFEncoder, applyPalette, quantize } from "gifenc";
 import "./styles/AnaglyphEditor.css";
-import { anaglyph, Eyes, eyeImage, makeEyes, OutputMode, sideBySide, Source } from "./stereo";
+import { anaglyph, ColourMethod, Eyes, eyeImage, glassesTestCard, Leakage, makeEyes, OutputMode, sideBySide, Source } from "./stereo";
 
 const WIGGLE_INTERVAL_MS = 130;
 const WIGGLE_GIF_MAX_DIMENSION = 800; // keep downloaded GIFs a sensible size
@@ -12,6 +12,62 @@ const OUTPUT_NAMES: Record<OutputMode, string> = {
     "sbs-cross": "Side by side (cross-eye)",
     "wiggle": "Wiggle",
 };
+
+const COLOUR_METHOD_NAMES: Record<ColourMethod, string> = {
+    "pure": "Pure (full colour)",
+    "half": "Half colour",
+    "dubois": "Dubois (least rivalry)",
+};
+
+// Per-viewer preferences (their glasses don't change between visits). Storage may be unavailable: fall back to defaults.
+function loadSetting<T>(key: string, fallback: T): T {
+    try {
+        const raw = localStorage.getItem(key);
+        return raw === null ? fallback : (JSON.parse(raw) as T);
+    } catch {
+        return fallback;
+    }
+}
+function saveSetting(key: string, value: unknown) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch { /* ignore */ }
+}
+
+function GlassesTuning({ leak, setLeak }: { leak: Leakage; setLeak: (l: Leakage) => void }) {
+    const cardRef = useRef<HTMLCanvasElement>(null);
+    useEffect(() => {
+        const canvas = cardRef.current;
+        if (!canvas) return;
+        const card = glassesTestCard(640, 200, leak);
+        canvas.width = card.width;
+        canvas.height = card.height;
+        canvas.getContext("2d")!.putImageData(card, 0, 0);
+    }, [leak]);
+    return (
+        <div className="glassesTuning">
+            <p>
+                Put your glasses on. <b>Close your right eye</b> and move the red slider until the “3D” on the
+                left disappears. Then <b>close your left eye</b> and move the cyan slider until the “3D” on the right
+                disappears. Saved on this device.
+            </p>
+            <canvas ref={cardRef} className="testCard" />
+            <div className="anaglyphEditor">
+                <label>
+                    Red lens
+                    <input type="range" min="0" max="0.5" step="0.005" value={leak.red}
+                           onChange={(e) => setLeak({ ...leak, red: parseFloat(e.target.value) })} />
+                </label>
+                <label>
+                    Cyan lens
+                    <input type="range" min="0" max="0.5" step="0.005" value={leak.cyan}
+                           onChange={(e) => setLeak({ ...leak, cyan: parseFloat(e.target.value) })} />
+                </label>
+                <button className="linkButton" onClick={() => setLeak({ red: 0, cyan: 0 })}>Reset</button>
+            </div>
+        </div>
+    );
+}
 
 function toCanvas(data: ImageData, maxDimension = Infinity): HTMLCanvasElement {
     const full = document.createElement("canvas");
@@ -61,7 +117,11 @@ function wiggleGif(eyes: Eyes): Blob {
 function AnaglyphEditor({ source }: { source: Source }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [mode, setMode] = useState<OutputMode>("anaglyph");
-    const [reduceRivalry, setReduceRivalry] = useState(false);
+    const [colourMethod, setColourMethodState] = useState<ColourMethod>(() => loadSetting("colourMethod", "pure"));
+    const [leak, setLeakState] = useState<Leakage>(() => loadSetting("glassesLeakage", { red: 0, cyan: 0 }));
+    const [tuning, setTuning] = useState(false);
+    const setColourMethod = (m: ColourMethod) => { setColourMethodState(m); saveSetting("colourMethod", m); };
+    const setLeak = (l: Leakage) => { setLeakState(l); saveSetting("glassesLeakage", l); };
     const [strength, setStrength] = useState(2); // max disparity, % of image width
     const [plane, setPlane] = useState(1); // zero-parallax plane: 0 = everything pops out, 1 = everything sinks in
 
@@ -69,11 +129,11 @@ function AnaglyphEditor({ source }: { source: Source }) {
     const eyes = useMemo(() => makeEyes(source, source.depth, strength, plane), [source, strength, plane]);
 
     const output = useMemo<ImageData | null>(() => {
-        if (mode === "anaglyph") return anaglyph(eyes, reduceRivalry);
+        if (mode === "anaglyph") return anaglyph(eyes, colourMethod, leak);
         if (mode === "sbs-parallel") return sideBySide(eyes, false);
         if (mode === "sbs-cross") return sideBySide(eyes, true);
         return null; // wiggle is animated below
-    }, [eyes, mode, reduceRivalry]);
+    }, [eyes, mode, colourMethod, leak]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -120,12 +180,22 @@ function AnaglyphEditor({ source }: { source: Source }) {
                     </select>
                 </label>
                 {mode === "anaglyph" && (
-                    <label>
-                        Minimise Retinal Rivalry
-                        <input type="checkbox" checked={reduceRivalry} onChange={(e) => setReduceRivalry(e.target.checked)} />
-                    </label>
+                    <>
+                        <label>
+                            Colours
+                            <select value={colourMethod} onChange={(e) => setColourMethod(e.target.value as ColourMethod)}>
+                                {(Object.keys(COLOUR_METHOD_NAMES) as ColourMethod[]).map((m) => (
+                                    <option key={m} value={m}>{COLOUR_METHOD_NAMES[m]}</option>
+                                ))}
+                            </select>
+                        </label>
+                        <button className="linkButton" onClick={() => setTuning(!tuning)}>
+                            {tuning ? "Done tuning" : leak.red || leak.cyan ? "Glasses tuned ✓" : "Tune to my glasses"}
+                        </button>
+                    </>
                 )}
             </div>
+            {mode === "anaglyph" && tuning && <GlassesTuning leak={leak} setLeak={setLeak} />}
             <div className="anaglyphEditor">
                 <label>
                     Strength

@@ -46,3 +46,34 @@ input[type="checkbox"] {
 .planeSlider input {
     margin: 0 6px;
 }
+
+.linkButton {
+    font: inherit;
+    font-size: 0.9em;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    margin: 0 10px;
+    color: inherit;
+}
+
+.glassesTuning {
+    max-width: 680px;
+    margin: 0 auto 10px;
+    padding: 10px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.glassesTuning p {
+    margin: 0 0 10px;
+    font-size: 0.9em;
+}
+
+.testCard {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 10px;
+}

@@ -124,14 +124,65 @@ const RR_RIGHT = [
 
 const clamp255 = (v: number) => (v < 0 ? 0 : v > 255 ? 255 : v);
 
-export function anaglyph(eyes: Eyes, reduceRivalry: boolean): ImageData {
+/**
+ * How the two eye views are mixed into red and cyan.
+ * - pure: red channel of the left eye, green + blue of the right. Full colour, most retinal rivalry.
+ * - half: left eye as greyscale in red. Less rivalry on saturated reds, slightly less colour.
+ * - dubois: least-squares optimised matrices (Sanders & McAllister, after Dubois). Least rivalry, muted colour.
+ */
+export type ColourMethod = "pure" | "half" | "dubois";
+
+/**
+ * Glasses leak: how much of the *other* colour each lens lets through (0 = perfect filter).
+ * red: fraction of the screen's green that gets through the red (left) lens -> right image ghosts in the left eye.
+ * cyan: fraction of the screen's red that gets through the cyan (right) lens -> left image ghosts in the right eye.
+ */
+export interface Leakage {
+    red: number;
+    cyan: number;
+}
+
+// Ghost cancellation must happen in linear light (that's how light adds up at the lens), so convert sRGB <-> linear.
+const SRGB_TO_LINEAR = new Float32Array(256);
+for (let i = 0; i < 256; i++) {
+    const c = i / 255;
+    SRGB_TO_LINEAR[i] = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+const LINEAR_STEPS = 4096;
+const LINEAR_TO_SRGB = new Uint8ClampedArray(LINEAR_STEPS + 1);
+for (let i = 0; i <= LINEAR_STEPS; i++) {
+    const c = i / LINEAR_STEPS;
+    LINEAR_TO_SRGB[i] = Math.round(255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055));
+}
+const toSrgb = (linear: number) => LINEAR_TO_SRGB[Math.round((linear < 0 ? 0 : linear > 1 ? 1 : linear) * LINEAR_STEPS)];
+
+/**
+ * Pre-compensate one red/cyan pixel (sRGB 0-255, written into d at i) so that what leaks through each lens
+ * is cancelled. Through the red lens the eye sees r + k*g; so we output r' = k + (1-k)r - k*g, which makes
+ * r' + k*g = k + (1-k)r: the right image's green no longer shows, at the cost of slightly raised blacks.
+ * Likewise for the cyan lens with the left image's red.
+ */
+function cancelGhosts(d: Uint8ClampedArray, i: number, leak: Leakage) {
+    const r = SRGB_TO_LINEAR[d[i]], g = SRGB_TO_LINEAR[d[i + 1]], b = SRGB_TO_LINEAR[d[i + 2]];
+    const kr = leak.red, kc = leak.cyan;
+    d[i] = toSrgb(kr + (1 - kr) * r - kr * g);
+    d[i + 1] = toSrgb(kc + (1 - kc) * g - kc * r);
+    d[i + 2] = toSrgb(kc + (1 - kc) * b - kc * r);
+}
+
+export function anaglyph(eyes: Eyes, method: ColourMethod, leak: Leakage = { red: 0, cyan: 0 }): ImageData {
     const { width, height, left, right } = eyes;
     const out = new ImageData(width, height);
     const d = out.data;
+    const compensate = leak.red > 0 || leak.cyan > 0;
     for (let i = 0; i < d.length; i += 4) {
-        if (!reduceRivalry) {
+        if (method === "pure") {
             d[i] = left[i]; // red from the left eye
             d[i + 1] = right[i + 1]; // green + blue (cyan) from the right eye
+            d[i + 2] = right[i + 2];
+        } else if (method === "half") {
+            d[i] = 0.299 * left[i] + 0.587 * left[i + 1] + 0.114 * left[i + 2]; // left eye brightness in red
+            d[i + 1] = right[i + 1];
             d[i + 2] = right[i + 2];
         } else {
             const lr = left[i], lg = left[i + 1], lb = left[i + 2];
@@ -143,9 +194,42 @@ export function anaglyph(eyes: Eyes, reduceRivalry: boolean): ImageData {
                 d[i + c] = clamp255(l + r);
             }
         }
+        if (compensate) cancelGhosts(d, i, leak);
         d[i + 3] = 255;
     }
     return out;
+}
+
+/**
+ * Test card for tuning ghost cancellation to a pair of glasses. One half is for each lens: a word is drawn
+ * only in the colour that lens should block, on a mid-grey background in the colour it passes.
+ * Looking through that lens alone, the word is visible only because of leakage; the user raises the slider
+ * until it disappears. The card goes through the same cancelGhosts as real images.
+ */
+export function glassesTestCard(width: number, height: number, leak: Leakage): ImageData {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+    const half = width / 2;
+    ctx.font = `bold ${Math.round(height * 0.32)}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    // Left half, red lens: grey red background (the left eye's own content), word in green+blue (right eye only)
+    ctx.fillStyle = "rgb(128,0,0)";
+    ctx.fillRect(0, 0, half, height);
+    ctx.fillStyle = "rgb(128,255,255)";
+    ctx.fillText("3D", half / 2, height / 2);
+    // Right half, cyan lens: grey cyan background, word in red (left eye only)
+    ctx.fillStyle = "rgb(0,128,128)";
+    ctx.fillRect(half, 0, half, height);
+    ctx.fillStyle = "rgb(255,128,128)";
+    ctx.fillText("3D", half + half / 2, height / 2);
+    const data = ctx.getImageData(0, 0, width, height);
+    if (leak.red > 0 || leak.cyan > 0) {
+        for (let i = 0; i < data.data.length; i += 4) cancelGhosts(data.data, i, leak);
+    }
+    return data;
 }
 
 /** Side by side. Parallel: left eye on the left. Cross-eye: swapped. */
