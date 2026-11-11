@@ -18,6 +18,31 @@ function firstImage(files: FileList | null | undefined): File | null {
     return null;
 }
 
+/**
+ * Stand-in for the depth map while it loads: the photo, faded, laid out exactly as the depth map will be,
+ * with the spinner measured onto its centre (so it sits where the depth map will appear in any layout).
+ */
+function DepthPlaceholder({ imageUrl }: { imageUrl: string }) {
+    const imageRef = useRef<HTMLImageElement>(null);
+    const [centre, setCentre] = useState<{ x: number; y: number } | null>(null);
+    useEffect(() => {
+        const image = imageRef.current;
+        if (!image) return;
+        const update = () => setCentre({ x: image.offsetLeft + image.offsetWidth / 2, y: image.offsetTop + image.offsetHeight / 2 });
+        const observer = new window.ResizeObserver(update);
+        observer.observe(image);
+        image.addEventListener("load", update);
+        update();
+        return () => { observer.disconnect(); image.removeEventListener("load", update); };
+    }, [imageUrl]);
+    return (
+        <>
+            <img ref={imageRef} src={imageUrl} alt="" className="image depthPlaceholderImage" />
+            {centre && <div className="loader depthPlaceholderSpinner" style={{ left: centre.x, top: centre.y }}></div>}
+        </>
+    );
+}
+
 const seconds = (ms?: number) => (ms === undefined ? null : `${(ms / 1000).toFixed(1)}s`);
 
 /** e.g. "Photo prep 0.3s · Network 0.4s · Server 1.9s (model 1.7s) · Depth prep 0.2s" */
@@ -119,7 +144,11 @@ function ImageUpload({ source, loading, progress, onFile, onRandom }: Props) {
                     <img src={imageUrl} alt="Uploaded" className="image" />
                 </div>
                 <div className={`imagePairRight${layout}`}>
-                    {depthUrl ? <img src={depthUrl} alt="Depth Map" className="image" /> : <div className="loader"></div>}
+                    {depthUrl ? <img src={depthUrl} alt="Depth Map" className="image" /> : (
+                        // Same image and sizing as the depth map will have, faded, with the spinner on top:
+                        // keeps the spinner centred on exactly where the depth map will appear
+                        <DepthPlaceholder imageUrl={imageUrl} />
+                    )}
                 </div>
             </div>
         );

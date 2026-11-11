@@ -75,7 +75,17 @@
     min-height: 1.5em;
 }
 
-.imagePairRightRow > .loader, .imagePairRightColumn > .loader {
-    align-self: center;
-    margin: auto 40px;
+/* Placeholder while the depth map loads: a faded copy of the photo, spinner positioned on its centre in JS */
+.imagePairRightRow, .imagePairRightColumn {
+    position: relative;
+}
+.depthPlaceholderImage {
+    filter: blur(8px) grayscale(1);
+    opacity: 0.25;
+}
+.depthPlaceholderSpinner {
+    position: absolute;
+    margin: 0;
+    transform-origin: center;
+    translate: -50% -50%;
 }

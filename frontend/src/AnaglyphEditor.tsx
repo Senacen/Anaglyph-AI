@@ -5,8 +5,10 @@ import { encodeJpeg } from "./loadSource";
 import { anaglyph, ColourMethod, eyeImage, glassesTestCard, Leakage, makeEyes, OutputMode, sideBySide, Source, wiggleFrames } from "./stereo";
 
 const WIGGLE_INTERVAL_MS = 130; // classic two-frame flip
-const SMOOTH_WIGGLE_FRAMES = 12; // in-between viewpoints per left -> right -> left sweep
-const SMOOTH_WIGGLE_INTERVAL_MS = 60; // 12 x 60 ms = one sweep every 0.72 s
+// Smooth wiggle sweeps left -> right -> left at the same speed as the classic flip (2 x 130 ms = 260 ms),
+// just with in-between viewpoints. 8 x 33 ms; GIFs can't reliably show frames shorter than 20 ms.
+const SMOOTH_WIGGLE_FRAMES = 8;
+const SMOOTH_WIGGLE_INTERVAL_MS = 33;
 const WIGGLE_GIF_MAX_DIMENSION = 800; // keep downloaded GIFs a sensible size
 
 const OUTPUT_NAMES: Record<OutputMode, string> = {
@@ -133,15 +135,7 @@ function AnaglyphEditor({ source }: { source: Source }) {
     const setSmoothWiggle = (v: boolean) => { setSmoothWiggleState(v); saveSetting("smoothWiggle", v); };
 
     // Recomputed live as the sliders move (all in the browser, no server round trip)
-    const [buildMs, setBuildMs] = useState<number | null>(null);
-    const lastBuildMs = useRef(0);
-    const eyes = useMemo(() => {
-        const start = performance.now();
-        const result = makeEyes(source, source.depth, strength, plane);
-        lastBuildMs.current = performance.now() - start;
-        return result;
-    }, [source, strength, plane]);
-    useEffect(() => setBuildMs(lastBuildMs.current), [eyes]);
+    const eyes = useMemo(() => makeEyes(source, source.depth, strength, plane), [source, strength, plane]);
 
     const output = useMemo<ImageData | null>(() => {
         if (mode === "anaglyph") return anaglyph(eyes, colourMethod, leak);
@@ -243,7 +237,6 @@ function AnaglyphEditor({ source }: { source: Source }) {
             <div style={{ display: "flex", justifyContent: "center", padding: "10px 0" }}>
                 <button className="anaglyphButton" onClick={handleDownload}>Download</button>
             </div>
-            {buildMs !== null && <p className="status">3D views built in your browser in {Math.round(buildMs)} ms</p>}
             <canvas ref={canvasRef} className="anaglyphImage" />
         </div>
     );
