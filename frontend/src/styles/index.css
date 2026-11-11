@@ -73,3 +73,14 @@
 
 
 
+
+.anaglyphButton:disabled {
+    opacity: 0.4;
+    cursor: default;
+    scale: 1;
+}
+
+.error {
+    color: #b00020;
+    font-weight: 500;
+}

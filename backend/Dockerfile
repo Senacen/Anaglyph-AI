@@ -7,12 +7,13 @@ COPY requirements.txt /app
 # Install OpenGL library for OpenCV
 RUN apt-get update && apt-get install -y libgl1-mesa-glx
 
-# Needs to be nightly version to work, as requires version 2.7.0, and stable is 2.6.0
-RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/nightly/cpu
+# Stable CPU-only torch wheels (avoids pulling CUDA builds on amd64)
+RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
 COPY . /app
 
 EXPOSE 8000
 
 # Doesn't work in docker compose if using localhost, must be 0.0.0.0
-ENTRYPOINT ["gunicorn", "-w", "1", "app:app", "-b", "0.0.0.0:8000"]
+# 1 worker process = 1 copy of the model in RAM; threads share it (inference itself is serialised by a lock)
+ENTRYPOINT ["gunicorn", "-w", "1", "--threads", "4", "--timeout", "120", "app:app", "-b", "0.0.0.0:8000"]

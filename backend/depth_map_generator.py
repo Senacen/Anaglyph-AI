@@ -1,3 +1,5 @@
+import os
+import threading
 import time
 
 start_import_time = time.time()
@@ -9,6 +11,12 @@ from ai_models.Depth_Anything_V2.depth_anything_v2.dpt import DepthAnythingV2
 end_import_time = time.time()
 elapsed_import_time = end_import_time - start_import_time
 print(f"Elapsed time for imports: {elapsed_import_time:.4f} seconds")
+
+# One model instance shared by all gunicorn threads (threads share memory, worker processes would not).
+# The lock runs one inference at a time so concurrent uploads don't multiply RAM use or fight over CPU cores;
+# other requests (example images, health checks) are still served by the other threads meanwhile.
+torch.set_num_threads(int(os.getenv("TORCH_NUM_THREADS", os.cpu_count() or 4)))
+_inference_lock = threading.Lock()
 
 # Singleton
 class DepthMapGenerator:
@@ -50,7 +58,10 @@ class DepthMapGenerator:
         :param image: Image to generate a depth map from.
         :return: Depth map with largest value as closest.
         """
-        return self.normalise(self.model.infer_image(image)) 
+        # inference_mode: no autograd bookkeeping -> less memory and faster than plain forward
+        with _inference_lock, torch.inference_mode():
+            depth_map = self.model.infer_image(image)
+        return self.normalise(depth_map)
 
     def normalise(self, depth_map: np.ndarray) -> np.ndarray:
         """
@@ -59,7 +70,10 @@ class DepthMapGenerator:
         :return: Normalised depth map, with direction flipped so 0 is closest and 1 is furthest.
         """
         # 0 is closest, 1 is furthest
-        return ((depth_map - np.min(depth_map)) / (np.max(depth_map) - np.min(depth_map)))
+        depth_range = np.max(depth_map) - np.min(depth_map)
+        if depth_range == 0:  # Completely flat prediction (e.g. a blank image): avoid dividing by zero
+            return np.zeros_like(depth_map)
+        return (depth_map - np.min(depth_map)) / depth_range
 
     def downscale_image(self, image:np.ndarray, width:int, height:int):
         """
@@ -127,8 +141,6 @@ class DepthMapGenerator:
         # Apply horizontal blur
         blurred_depth_map_scaled = cv2.blur(depth_map_scaled, (kernel_width, 1))
 
-        # To check its working
-        cv2.imwrite('Blurred_Depth_Map.jpg', blurred_depth_map_scaled)
 
         # Normalize back to the range [0, 1]
         blurred_depth_map = blurred_depth_map_scaled / 255.0

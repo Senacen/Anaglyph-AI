@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 import time
 
-from matplotlib.pyplot import imshow
 
 from depth_map_generator import depth_map_generator
 

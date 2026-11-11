@@ -1,145 +1,150 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { GIFEncoder, applyPalette, quantize } from "gifenc";
 import "./styles/AnaglyphEditor.css";
+import { anaglyph, Eyes, eyeImage, makeEyes, OutputMode, sideBySide, Source } from "./stereo";
 
-function AnaglyphEditor({ isDepthMapReady, isChangeAllowed, setIsChangeAllowed}: { isDepthMapReady: boolean , isChangeAllowed: boolean, setIsChangeAllowed: (value: boolean) => void}) {
-    const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
-    const [anaglyphUrl, setAnaglyphUrl] = useState<string | null>(null);
-    const [anaglyphIsLoading, setAnaglyphIsLoading] = useState<boolean>(false);
+const WIGGLE_INTERVAL_MS = 130;
+const WIGGLE_GIF_MAX_DIMENSION = 800; // keep downloaded GIFs a sensible size
 
-    // State for form inputs
-    const [popOut, setPopOut] = useState<boolean>(false);
-    const [maxDisparityPercentage, setMaxDisparityPercentage] = useState<number>(2); // Default value
-    const [optimiseRRAnaglyph, setOptimiseRRAnaglyph] = useState<boolean>(false);
-    const[sliderValue, setSliderValue] = useState<number>(2);
+const OUTPUT_NAMES: Record<OutputMode, string> = {
+    "anaglyph": "Red–cyan anaglyph",
+    "sbs-parallel": "Side by side (parallel)",
+    "sbs-cross": "Side by side (cross-eye)",
+    "wiggle": "Wiggle",
+};
 
-    // If the depth map is ready, fetch the anaglyph
-    // Causes it be retriggered for every new depth map
-    // Also if the settings change
-     useEffect(() => {
-        if (isDepthMapReady) {
-            fetchAnaglyph();
-        }
-    }, [isDepthMapReady, popOut, maxDisparityPercentage, optimiseRRAnaglyph]);
+function toCanvas(data: ImageData, maxDimension = Infinity): HTMLCanvasElement {
+    const full = document.createElement("canvas");
+    full.width = data.width;
+    full.height = data.height;
+    full.getContext("2d")!.putImageData(data, 0, 0);
+    const scale = Math.min(1, maxDimension / Math.max(data.width, data.height));
+    if (scale === 1) return full;
+    const small = document.createElement("canvas");
+    small.width = Math.round(data.width * scale);
+    small.height = Math.round(data.height * scale);
+    small.getContext("2d")!.drawImage(full, 0, 0, small.width, small.height);
+    return small;
+}
 
-     // Pass up the state of the anaglyph loading (negated)
-    // If the anaglyph goes from not loading to loading, then upload should be disabled
-    // If the anaglyph goes from loading to not loading, then upload should be enabled, as just done the entire cycle
-     useEffect(() => {
-         setIsChangeAllowed(!anaglyphIsLoading);
-     }, [anaglyphIsLoading]);
+function download(blob: Blob, name: string) {
+    // Tried to use web share api so that on iphone it allows to save image to camera roll
+    // But then on mac it doesn't allow downloading at all
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 
-    const fetchAnaglyph = async () => {
-        try {
-            setAnaglyphIsLoading(true); // Start loading spinner
-            const response = await fetch(
-                `${apiUrl}/anaglyph?pop_out=${popOut}&max_disparity_percentage=${maxDisparityPercentage}&optimised_RR_anaglyph=${optimiseRRAnaglyph}`,
-                {
-                    method: "GET",
-                    credentials: "include",
-                }
-            );
+function wiggleGif(eyes: Eyes): Blob {
+    const frames = [eyeImage(eyes, "left"), eyeImage(eyes, "right")].map((frame) => {
+        const canvas = toCanvas(frame, WIGGLE_GIF_MAX_DIMENSION);
+        return canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height);
+    });
+    // One shared palette for both frames so colours don't flicker between them
+    const combined = new Uint8ClampedArray(frames[0].data.length * 2);
+    combined.set(frames[0].data, 0);
+    combined.set(frames[1].data, frames[0].data.length);
+    const palette = quantize(combined, 256);
+    const gif = GIFEncoder();
+    for (const frame of frames) {
+        gif.writeFrame(applyPalette(frame.data, palette), frame.width, frame.height, { palette, delay: WIGGLE_INTERVAL_MS });
+    }
+    gif.finish();
+    return new Blob([gif.bytes()], { type: "image/gif" });
+}
 
-            if (response.ok) {
-                setAnaglyphIsLoading(false); // Stop loading spinner
-                const anaglyphBlob = await response.blob();
-                const anaglyphUrl = URL.createObjectURL(anaglyphBlob);
-                setAnaglyphUrl(anaglyphUrl);
-                console.log("Anaglyph fetched successfully", anaglyphUrl);
-            } else {
-                console.error("Failed to fetch Anaglyph", response.json());
-                setIsChangeAllowed(true); // If failed to get anaglyph, allow user to upload new image
+function AnaglyphEditor({ source }: { source: Source }) {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [mode, setMode] = useState<OutputMode>("anaglyph");
+    const [reduceRivalry, setReduceRivalry] = useState(false);
+    const [strength, setStrength] = useState(2); // max disparity, % of image width
+    const [plane, setPlane] = useState(1); // zero-parallax plane: 0 = everything pops out, 1 = everything sinks in
 
-            }
-        } catch (error) {
-            console.error("Failed to fetch Anaglyph", error);
-            setIsChangeAllowed(true); // If failed to get anaglyph, allow user to upload new image
-        }
-    };
+    // Recomputed live as the sliders move (all in the browser, no server round trip)
+    const eyes = useMemo(() => makeEyes(source, source.depth, strength, plane), [source, strength, plane]);
 
-    const handleSliderChange = (e: { target: { value: string; }; }) => {
-        if (!isChangeAllowed) {
+    const output = useMemo<ImageData | null>(() => {
+        if (mode === "anaglyph") return anaglyph(eyes, reduceRivalry);
+        if (mode === "sbs-parallel") return sideBySide(eyes, false);
+        if (mode === "sbs-cross") return sideBySide(eyes, true);
+        return null; // wiggle is animated below
+    }, [eyes, mode, reduceRivalry]);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d")!;
+        if (output) {
+            canvas.width = output.width;
+            canvas.height = output.height;
+            ctx.putImageData(output, 0, 0);
             return;
         }
-        setSliderValue(parseFloat(e.target.value));
-    }
-
-    const handleSliderReleased = () => {
-        if (!isChangeAllowed) {
-            return;
-        }
-        setMaxDisparityPercentage(sliderValue)
-    }
-
-    const handleMinimiseRRCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (isChangeAllowed) {
-            setOptimiseRRAnaglyph(e.target.checked);
-        }
-    };
-
-    const handlePopOutCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (isChangeAllowed) {
-            setPopOut(e.target.checked);
-        }
-    }
-
+        const frames = [eyeImage(eyes, "left"), eyeImage(eyes, "right")];
+        canvas.width = eyes.width;
+        canvas.height = eyes.height;
+        let frame = 0;
+        ctx.putImageData(frames[0], 0, 0);
+        const timer = setInterval(() => {
+            frame = 1 - frame;
+            ctx.putImageData(frames[frame], 0, 0);
+        }, WIGGLE_INTERVAL_MS);
+        return () => clearInterval(timer);
+    }, [output, eyes]);
 
     const handleDownload = () => {
-        // Tried to use web share api so that on iphone it allows to save image to camera roll
-        // But then on mac it doesn't allow downloading at all
-        const link = document.createElement("a");
-        link.href = anaglyphUrl!; // Non-null assertion operator
-        link.download = "anaglyph.jpeg";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link); // Clean up, remove from dom
-    }
+        if (mode === "wiggle") {
+            download(wiggleGif(eyes), "anaglyph-ai-wiggle.gif");
+            return;
+        }
+        canvasRef.current?.toBlob((blob) => {
+            if (blob) download(blob, mode === "anaglyph" ? "anaglyph.jpeg" : `anaglyph-ai-${mode}.jpeg`);
+        }, "image/jpeg", 0.92);
+    };
+
     return (
         <div>
-            <h1>Anaglyph</h1>
+            <h1>{OUTPUT_NAMES[mode]}</h1>
             <div className="anaglyphEditor">
-                <form>
-                    <label>
-                        Pop Out
-                        <input
-                            type="checkbox"
-                            checked={popOut}
-                            onChange={handlePopOutCheckboxChange}
-                        />
-                    </label>
-                </form>
-                <form>
-                    <label>
-                        Strength
-                        <input
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="0.1"
-                            value={sliderValue}
-                            onChange={handleSliderChange}
-                            onMouseUp={handleSliderReleased}
-                            onTouchEnd={handleSliderReleased}
-                        />
-                    </label>
-                </form>
-                <form>
+                <label>
+                    Output
+                    <select value={mode} onChange={(e) => setMode(e.target.value as OutputMode)}>
+                        {(Object.keys(OUTPUT_NAMES) as OutputMode[]).map((m) => (
+                            <option key={m} value={m}>{OUTPUT_NAMES[m]}</option>
+                        ))}
+                    </select>
+                </label>
+                {mode === "anaglyph" && (
                     <label>
                         Minimise Retinal Rivalry
-                        <input
-                            type="checkbox"
-                            checked={optimiseRRAnaglyph}
-                            onChange={handleMinimiseRRCheckboxChange}
-                        />
+                        <input type="checkbox" checked={reduceRivalry} onChange={(e) => setReduceRivalry(e.target.checked)} />
                     </label>
-                </form>
+                )}
             </div>
-            {/* Below div is used to display loading spinner, otherwise the image will shift down while it loads then shift back up */}
-            <div style={{display: "flex", height: "40px", justifyContent: "center", alignContent: "center", padding: "10px 0"}}>
-                { anaglyphIsLoading && isDepthMapReady && <div className="loader"></div>} {/* Only show loader if depth map is ready but anaglyph is not*/}
-                { (!anaglyphIsLoading && anaglyphUrl) && <button className="anaglyphButton" onClick={handleDownload}>Download</button>}
+            <div className="anaglyphEditor">
+                <label>
+                    Strength
+                    <input type="range" min="0" max="6" step="0.1" value={strength}
+                           onChange={(e) => setStrength(parseFloat(e.target.value))} />
+                </label>
+                <label className="planeSlider">
+                    <span>Pop out</span>
+                    <input type="range" min="0" max="1" step="0.01" value={plane}
+                           aria-label="Depth at screen level"
+                           title="Which depth sits at the screen: things nearer than it pop out, things further sink in"
+                           onChange={(e) => setPlane(parseFloat(e.target.value))} />
+                    <span>Sink in</span>
+                </label>
             </div>
-            {anaglyphUrl && <img src={anaglyphUrl} alt="Anaglyph" className="anaglyphImage" />}
-
+            <div style={{ display: "flex", justifyContent: "center", padding: "10px 0" }}>
+                <button className="anaglyphButton" onClick={handleDownload}>Download</button>
+            </div>
+            <canvas ref={canvasRef} className="anaglyphImage" />
         </div>
     );
 }

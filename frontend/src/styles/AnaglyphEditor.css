@@ -27,3 +27,22 @@ label, input {
 input[type="checkbox"] {
     accent-color: #000;
 }
+.anaglyphEditor {
+    flex-wrap: wrap;
+    gap: 8px 0;
+}
+
+.anaglyphEditor select {
+    margin: 0 10px;
+    font: inherit;
+    padding: 2px 4px;
+}
+
+.planeSlider span {
+    font-size: 0.85em;
+    color: #555;
+}
+
+.planeSlider input {
+    margin: 0 6px;
+}

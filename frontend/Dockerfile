@@ -1,6 +1,6 @@
 # Stage 1: Build the application using Node.js
 # Cloudrun requires linux amd64, used buildx tool to convert it to linux/amd64
-FROM node:18-alpine AS build
+FROM node:22-alpine AS build
 
 # Set the working directory
 WORKDIR /app
