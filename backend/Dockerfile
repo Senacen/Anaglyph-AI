@@ -4,6 +4,8 @@ FROM python:3.13-slim-bookworm
 LABEL authors="duyhuynh"
 
 WORKDIR /app
+# Print straight to the container log (otherwise timings sit in a buffer and never show in `docker compose logs`)
+ENV PYTHONUNBUFFERED=1
 COPY requirements.txt /app
 
 # opencv-python-headless needs no system OpenGL libraries; inference uses onnxruntime (no torch at runtime).

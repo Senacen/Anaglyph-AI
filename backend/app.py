@@ -8,6 +8,7 @@ never hit the server and no per-user files or sessions are stored.
 import io
 import os
 import re
+import time
 
 import cv2
 import numpy as np
@@ -34,7 +35,8 @@ _default_origins = [
 _env_origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
 # supports_credentials: the frontend sends cookies so Cloudflare's bot-check clearance cookie reaches the API.
 # The app sets and reads no cookies itself, and only the origins above are allowed.
-CORS(app, origins=_env_origins or _default_origins, supports_credentials=True)
+CORS(app, origins=_env_origins or _default_origins, supports_credentials=True,
+     expose_headers=["Server-Timing"])  # lets the frontend show how long the server took
 
 # Largest side the image is processed at. The client already resizes to this; this is the backstop.
 MAX_DIMENSION = 1500
@@ -83,6 +85,7 @@ def depth_map():
     Upload an image (multipart field "file"); returns its depth map as an 8-bit greyscale PNG
     the same size as the (possibly downscaled) image. 255 = closest.
     """
+    start = time.perf_counter()
     image = request.files.get('file')
     if image is None or image.filename == '':
         return jsonify({'error': 'No file uploaded'}), 400
@@ -100,13 +103,19 @@ def depth_map():
         return jsonify({'error': 'Could not read that file as an image'}), 400
 
     bgr = cv2.cvtColor(np.asarray(pillow_image), cv2.COLOR_RGB2BGR)
+    model_start = time.perf_counter()
     try:
         depth = depth_map_generator.generate_depth_map_performant(bgr, DEPTH_MAP_RESIZE_DIMENSION, DEPTH_MAP_RESIZE_DIMENSION)
     except Exception as e:
         app.logger.exception("Depth map generation failed")
         return jsonify({'error': f'Depth map generation failed: {e}'}), 500
 
-    return png_response((depth * 255).round().astype(np.uint8))
+    model_ms = (time.perf_counter() - model_start) * 1000
+    response = png_response((depth * 255).round().astype(np.uint8))
+    total_ms = (time.perf_counter() - start) * 1000
+    response.headers['Server-Timing'] = f'model;dur={model_ms:.0f}, total;dur={total_ms:.0f}'
+    print(f"depth-map {bgr.shape[1]}x{bgr.shape[0]}: model {model_ms:.0f} ms, total {total_ms:.0f} ms", flush=True)
+    return response
 
 
 @app.route('/random')

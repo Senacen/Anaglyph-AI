@@ -8,7 +8,8 @@ export interface Source {
     rgba: Uint8ClampedArray; // the image, RGBA
     depth: Float32Array; // 0 = furthest, 1 = closest
     imageUrl: string; // for display
-    depthColourUrl: string; // jet-coloured depth map, for display
+    depthColourUrl: string; // jet-coloured depth map (before smoothing), for display
+    timings?: import("./loadSource").Timings; // how long loading took, for display
 }
 
 export interface Eyes {

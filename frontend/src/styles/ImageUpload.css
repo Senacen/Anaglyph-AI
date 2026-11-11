@@ -67,3 +67,15 @@
     border: 4px dashed #000;
     pointer-events: none;
 }
+
+.status {
+    margin: 0 0 8px;
+    font-size: 0.85em;
+    color: #555;
+    min-height: 1.5em;
+}
+
+.imagePairRightRow > .loader, .imagePairRightColumn > .loader {
+    align-self: center;
+    margin: auto 40px;
+}

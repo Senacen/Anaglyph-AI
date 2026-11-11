@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { GIFEncoder, applyPalette, quantize } from "gifenc";
 import "./styles/AnaglyphEditor.css";
+import { encodeJpeg } from "./loadSource";
 import { anaglyph, ColourMethod, Eyes, eyeImage, glassesTestCard, Leakage, makeEyes, OutputMode, sideBySide, Source } from "./stereo";
 
 const WIGGLE_INTERVAL_MS = 130;
@@ -126,7 +127,15 @@ function AnaglyphEditor({ source }: { source: Source }) {
     const [plane, setPlane] = useState(1); // zero-parallax plane: 0 = everything pops out, 1 = everything sinks in
 
     // Recomputed live as the sliders move (all in the browser, no server round trip)
-    const eyes = useMemo(() => makeEyes(source, source.depth, strength, plane), [source, strength, plane]);
+    const [buildMs, setBuildMs] = useState<number | null>(null);
+    const lastBuildMs = useRef(0);
+    const eyes = useMemo(() => {
+        const start = performance.now();
+        const result = makeEyes(source, source.depth, strength, plane);
+        lastBuildMs.current = performance.now() - start;
+        return result;
+    }, [source, strength, plane]);
+    useEffect(() => setBuildMs(lastBuildMs.current), [eyes]);
 
     const output = useMemo<ImageData | null>(() => {
         if (mode === "anaglyph") return anaglyph(eyes, colourMethod, leak);
@@ -162,9 +171,9 @@ function AnaglyphEditor({ source }: { source: Source }) {
             download(wiggleGif(eyes), "anaglyph-ai-wiggle.gif");
             return;
         }
-        canvasRef.current?.toBlob((blob) => {
-            if (blob) download(blob, mode === "anaglyph" ? "anaglyph.jpeg" : `anaglyph-ai-${mode}.jpeg`);
-        }, "image/jpeg", 0.92);
+        if (canvasRef.current) {
+            download(encodeJpeg(canvasRef.current, 0.92), mode === "anaglyph" ? "anaglyph.jpeg" : `anaglyph-ai-${mode}.jpeg`);
+        }
     };
 
     return (
@@ -214,6 +223,7 @@ function AnaglyphEditor({ source }: { source: Source }) {
             <div style={{ display: "flex", justifyContent: "center", padding: "10px 0" }}>
                 <button className="anaglyphButton" onClick={handleDownload}>Download</button>
             </div>
+            {buildMs !== null && <p className="status">3D views built in your browser in {Math.round(buildMs)} ms</p>}
             <canvas ref={canvasRef} className="anaglyphImage" />
         </div>
     );

@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import "./styles/ImageUpload.css";
 import ResizeObserver from "react-resize-observer"; // To trigger re calculation of image pair layout on window resize
 import { Source } from "./stereo";
+import { Progress, Timings } from "./loadSource";
 
 interface Props {
     source: Source | null;
     loading: boolean;
+    progress: Progress | null;
     onFile: (file: Blob) => void;
     onRandom: () => void;
 }
@@ -16,9 +18,31 @@ function firstImage(files: FileList | null | undefined): File | null {
     return null;
 }
 
-function ImageUpload({ source, loading, onFile, onRandom }: Props) {
+const seconds = (ms?: number) => (ms === undefined ? null : `${(ms / 1000).toFixed(1)}s`);
+
+/** e.g. "Photo prep 0.3s · Network 0.4s · Server 1.9s (model 1.7s) · Depth prep 0.2s" */
+function timingSummary(t?: Timings): string | null {
+    if (!t) return null;
+    const parts = [
+        t.resize !== undefined && `Photo prep ${seconds(t.resize)}`,
+        t.network !== undefined && `Network ${seconds(t.network)}`,
+        t.server !== undefined && `Server ${seconds(t.server)}${t.model !== undefined ? ` (model ${seconds(t.model)})` : ""}`,
+        t.prepare !== undefined && `Depth prep ${seconds(t.prepare)}`,
+    ].filter(Boolean);
+    return parts.length ? parts.join(" · ") : null;
+}
+
+function ImageUpload({ source, loading, progress, onFile, onRandom }: Props) {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [dragging, setDragging] = useState(false);
+    // Aspect ratio of the photo being loaded, so the preview uses the same row/column layout as the result
+    const [previewAspect, setPreviewAspect] = useState<number | null>(null);
+    useEffect(() => {
+        if (!progress?.previewUrl) return;
+        const image = new Image();
+        image.onload = () => setPreviewAspect(image.naturalWidth / image.naturalHeight);
+        image.src = progress.previewUrl;
+    }, [progress?.previewUrl]);
     const [windowDimensions, setWindowDimensions] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -81,8 +105,8 @@ function ImageUpload({ source, loading, onFile, onRandom }: Props) {
         return width * height;
     };
 
-    const imagePair = (source: Source) => {
-        const imageAspectRatio = source.width / source.height;
+    // While loading, `depthUrl` is null and a spinner stands in for the depth map
+    const imagePair = (imageUrl: string, depthUrl: string | null, imageAspectRatio: number) => {
         // If change these display sizes in CSS, make sure to them here as well
         const areaWidth = windowDimensions.width * 0.95; // 95% of the window width
         const areaHeight = windowDimensions.height * 0.7; // 70vh in css
@@ -92,10 +116,10 @@ function ImageUpload({ source, loading, onFile, onRandom }: Props) {
         return (
             <div className={`imagePairContainer${layout}`}>
                 <div className={`imagePairLeft${layout}`}>
-                    <img src={source.imageUrl} alt="Uploaded" className="image" />
+                    <img src={imageUrl} alt="Uploaded" className="image" />
                 </div>
                 <div className={`imagePairRight${layout}`}>
-                    <img src={source.depthColourUrl} alt="Depth Map" className="image" />
+                    {depthUrl ? <img src={depthUrl} alt="Depth Map" className="image" /> : <div className="loader"></div>}
                 </div>
             </div>
         );
@@ -104,8 +128,12 @@ function ImageUpload({ source, loading, onFile, onRandom }: Props) {
     return (
         <div>
             {dragging && <div className="dropOverlay">Drop image to convert</div>}
-            {loading && <div className="loaderRow"><div className="loader"></div></div>}
-            {source && !loading && imagePair(source)}
+            {loading && progress?.previewUrl && imagePair(progress.previewUrl, null, previewAspect ?? 1)}
+            {loading && !progress?.previewUrl && <div className="loaderRow"><div className="loader"></div></div>}
+            {source && !loading && imagePair(source.imageUrl, source.depthColourUrl, source.width / source.height)}
+            <p className="status">
+                {loading ? progress?.status ?? "Loading…" : timingSummary(source?.timings) ?? "\u00a0"}
+            </p>
             {!source && !loading && (
                 <p className="hint">Upload, drag in or paste a photo, or try a random one.</p>
             )}
