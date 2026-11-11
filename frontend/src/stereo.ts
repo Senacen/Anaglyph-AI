@@ -48,6 +48,15 @@ export function smoothDepth(depth: Float32Array, width: number, height: number, 
  * since a gap is background revealed from behind a closer object.
  */
 function makeEye(src: Source, depth: Float32Array, maxShift: number, plane: number, isLeft: boolean): Uint8ClampedArray {
+    return makeView(src, depth, isLeft ? maxShift : -maxShift, plane);
+}
+
+/**
+ * Render the scene from a horizontally offset viewpoint. shiftScale > 0 looks from further left (the left eye
+ * at +maxShift), < 0 from further right; 0 is the original photo. In-between values give the in-between
+ * viewpoints used for a smooth wiggle.
+ */
+function makeView(src: Source, depth: Float32Array, shiftScale: number, plane: number): Uint8ClampedArray {
     const { width, height, rgba } = src;
     const out = new Uint8ClampedArray(width * height * 4);
     const from = new Int32Array(width); // source x for each output x in this row, -1 = hole
@@ -55,16 +64,16 @@ function makeEye(src: Source, depth: Float32Array, maxShift: number, plane: numb
     for (let y = 0; y < height; y++) {
         const row = y * width;
         from.fill(-1);
-        if (isLeft) {
-            // Left eye: closer pixels move right. Iterate right-to-left so the leftmost (closer) source is written last and wins.
+        if (shiftScale >= 0) {
+            // Viewpoint to the left: closer pixels move right. Iterate right-to-left so the leftmost (closer) source is written last and wins.
             for (let x = width - 1; x >= 0; x--) {
-                const dest = x + Math.trunc(maxShift * (depth[row + x] - plane));
+                const dest = x + Math.trunc(shiftScale * (depth[row + x] - plane));
                 if (dest >= 0 && dest < width) from[dest] = x;
             }
         } else {
-            // Right eye: closer pixels move left. Iterate left-to-right so the rightmost (closer) source wins.
+            // Viewpoint to the right: closer pixels move left. Iterate left-to-right so the rightmost (closer) source wins.
             for (let x = 0; x < width; x++) {
-                const dest = x - Math.trunc(maxShift * (depth[row + x] - plane));
+                const dest = x + Math.trunc(shiftScale * (depth[row + x] - plane));
                 if (dest >= 0 && dest < width) from[dest] = x;
             }
         }
@@ -93,6 +102,20 @@ function makeEye(src: Source, depth: Float32Array, maxShift: number, plane: numb
         }
     }
     return out;
+}
+
+/**
+ * Frames for a smooth wiggle: the viewpoint sweeps left -> right -> left along a cosine, so it eases at each end
+ * like a gently swaying camera. frames = 2 gives the classic left/right flip.
+ */
+export function wiggleFrames(src: Source, depth: Float32Array, strength: number, plane: number, frames: number): ImageData[] {
+    const maxShift = (strength / 100) * src.width / 2;
+    const result: ImageData[] = [];
+    for (let k = 0; k < frames; k++) {
+        const t = frames === 2 ? (k === 0 ? 1 : -1) : Math.cos((2 * Math.PI * k) / frames); // +1 = left eye, -1 = right eye
+        result.push(new ImageData(makeView(src, depth, t * maxShift, plane), src.width, src.height));
+    }
+    return result;
 }
 
 /**

@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { GIFEncoder, applyPalette, quantize } from "gifenc";
 import "./styles/AnaglyphEditor.css";
 import { encodeJpeg } from "./loadSource";
-import { anaglyph, ColourMethod, Eyes, eyeImage, glassesTestCard, Leakage, makeEyes, OutputMode, sideBySide, Source } from "./stereo";
+import { anaglyph, ColourMethod, eyeImage, glassesTestCard, Leakage, makeEyes, OutputMode, sideBySide, Source, wiggleFrames } from "./stereo";
 
-const WIGGLE_INTERVAL_MS = 130;
+const WIGGLE_INTERVAL_MS = 130; // classic two-frame flip
+const SMOOTH_WIGGLE_FRAMES = 12; // in-between viewpoints per left -> right -> left sweep
+const SMOOTH_WIGGLE_INTERVAL_MS = 60; // 12 x 60 ms = one sweep every 0.72 s
 const WIGGLE_GIF_MAX_DIMENSION = 800; // keep downloaded GIFs a sensible size
 
 const OUTPUT_NAMES: Record<OutputMode, string> = {
@@ -97,19 +99,21 @@ function download(blob: Blob, name: string) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function wiggleGif(eyes: Eyes): Blob {
-    const frames = [eyeImage(eyes, "left"), eyeImage(eyes, "right")].map((frame) => {
+function wiggleGif(fullFrames: ImageData[], delayMs: number): Blob {
+    const frames = fullFrames.map((frame) => {
         const canvas = toCanvas(frame, WIGGLE_GIF_MAX_DIMENSION);
         return canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height);
     });
-    // One shared palette for both frames so colours don't flicker between them
-    const combined = new Uint8ClampedArray(frames[0].data.length * 2);
-    combined.set(frames[0].data, 0);
-    combined.set(frames[1].data, frames[0].data.length);
+    // One shared palette so colours don't flicker between frames. The two extreme viewpoints (first frame and
+    // the one halfway through) between them contain essentially every colour, and quantising just those is fast.
+    const extremes = [frames[0], frames[Math.floor(frames.length / 2)]];
+    const combined = new Uint8ClampedArray(extremes[0].data.length * 2);
+    combined.set(extremes[0].data, 0);
+    combined.set(extremes[1].data, extremes[0].data.length);
     const palette = quantize(combined, 256);
     const gif = GIFEncoder();
     for (const frame of frames) {
-        gif.writeFrame(applyPalette(frame.data, palette), frame.width, frame.height, { palette, delay: WIGGLE_INTERVAL_MS });
+        gif.writeFrame(applyPalette(frame.data, palette), frame.width, frame.height, { palette, delay: delayMs });
     }
     gif.finish();
     return new Blob([gif.bytes()], { type: "image/gif" });
@@ -125,6 +129,8 @@ function AnaglyphEditor({ source }: { source: Source }) {
     const setLeak = (l: Leakage) => { setLeakState(l); saveSetting("glassesLeakage", l); };
     const [strength, setStrength] = useState(2); // max disparity, % of image width
     const [plane, setPlane] = useState(1); // zero-parallax plane: 0 = everything pops out, 1 = everything sinks in
+    const [smoothWiggle, setSmoothWiggleState] = useState<boolean>(() => loadSetting("smoothWiggle", true));
+    const setSmoothWiggle = (v: boolean) => { setSmoothWiggleState(v); saveSetting("smoothWiggle", v); };
 
     // Recomputed live as the sliders move (all in the browser, no server round trip)
     const [buildMs, setBuildMs] = useState<number | null>(null);
@@ -144,6 +150,14 @@ function AnaglyphEditor({ source }: { source: Source }) {
         return null; // wiggle is animated below
     }, [eyes, mode, colourMethod, leak]);
 
+    // Wiggle frames: smooth = in-between viewpoints sweeping between the eyes; classic = flip left/right
+    const wiggle = useMemo(() => {
+        if (mode !== "wiggle") return null;
+        return smoothWiggle
+            ? { frames: wiggleFrames(source, source.depth, strength, plane, SMOOTH_WIGGLE_FRAMES), interval: SMOOTH_WIGGLE_INTERVAL_MS }
+            : { frames: [eyeImage(eyes, "left"), eyeImage(eyes, "right")], interval: WIGGLE_INTERVAL_MS };
+    }, [mode, smoothWiggle, source, strength, plane, eyes]);
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -154,21 +168,21 @@ function AnaglyphEditor({ source }: { source: Source }) {
             ctx.putImageData(output, 0, 0);
             return;
         }
-        const frames = [eyeImage(eyes, "left"), eyeImage(eyes, "right")];
+        if (!wiggle) return;
         canvas.width = eyes.width;
         canvas.height = eyes.height;
         let frame = 0;
-        ctx.putImageData(frames[0], 0, 0);
+        ctx.putImageData(wiggle.frames[0], 0, 0);
         const timer = setInterval(() => {
-            frame = 1 - frame;
-            ctx.putImageData(frames[frame], 0, 0);
-        }, WIGGLE_INTERVAL_MS);
+            frame = (frame + 1) % wiggle.frames.length;
+            ctx.putImageData(wiggle.frames[frame], 0, 0);
+        }, wiggle.interval);
         return () => clearInterval(timer);
-    }, [output, eyes]);
+    }, [output, wiggle, eyes]);
 
     const handleDownload = () => {
         if (mode === "wiggle") {
-            download(wiggleGif(eyes), "anaglyph-ai-wiggle.gif");
+            if (wiggle) download(wiggleGif(wiggle.frames, wiggle.interval), "anaglyph-ai-wiggle.gif");
             return;
         }
         if (canvasRef.current) {
@@ -188,6 +202,12 @@ function AnaglyphEditor({ source }: { source: Source }) {
                         ))}
                     </select>
                 </label>
+                {mode === "wiggle" && (
+                    <label>
+                        Smooth
+                        <input type="checkbox" checked={smoothWiggle} onChange={(e) => setSmoothWiggle(e.target.checked)} />
+                    </label>
+                )}
                 {mode === "anaglyph" && (
                     <>
                         <label>
