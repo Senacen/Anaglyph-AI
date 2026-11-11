@@ -2,65 +2,66 @@ import os
 import threading
 import time
 
-start_import_time = time.time()
 import cv2
-import torch
 import numpy as np
-from ai_models.Depth_Anything_V2.depth_anything_v2.dpt import DepthAnythingV2
-# Had to rename Depth-Anything-V2 to Depth_Anything_V2 as hyphens are not allowed in module names
-end_import_time = time.time()
-elapsed_import_time = end_import_time - start_import_time
-print(f"Elapsed time for imports: {elapsed_import_time:.4f} seconds")
+import onnxruntime as ort
+
+# Depth Anything V2 Small, exported to ONNX by tools/export_onnx.py. The int8-quantised model is the default
+# (smaller and faster on CPU); set DEPTH_MODEL=fp32 to use the full-precision export instead.
+MODEL_FILES = {
+    "int8": "ai_models/checkpoints/depth_anything_v2_vits_int8.onnx",
+    "fp32": "ai_models/checkpoints/depth_anything_v2_vits.onnx",
+}
+MODEL_INPUT_SIZE = 518  # the model was exported for a fixed 518x518 input
+IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
+IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
 # One model instance shared by all gunicorn threads (threads share memory, worker processes would not).
 # The lock runs one inference at a time so concurrent uploads don't multiply RAM use or fight over CPU cores;
 # other requests (example images, health checks) are still served by the other threads meanwhile.
-torch.set_num_threads(int(os.getenv("TORCH_NUM_THREADS", os.cpu_count() or 4)))
 _inference_lock = threading.Lock()
+
 
 # Singleton
 class DepthMapGenerator:
     _instance = None
-    model = None
+    session = None
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(DepthMapGenerator, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, encoder="vits"): # or 'vitl', 'vits', 'vitb', 'vitg'
-        if self.model is None: # Required as __init__ is called
-            self.load_model(encoder)
+    def __init__(self, precision=None):
+        if self.session is None:  # Required as __init__ is called on every DepthMapGenerator()
+            self.load_model(precision or os.getenv("DEPTH_MODEL", "int8"))
 
-    def load_model(self, encoder):
+    def load_model(self, precision: str):
         """
-        Load the pre-trained model.
-        :param encoder: The version of the model to load. Options: 'vits', 'vitb', 'vitl', 'vitg'.
+        Load the ONNX model.
+        :param precision: "int8" (default) or "fp32".
         """
-        print("Loading model")
-        DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
-
-        model_configs = {
-            'vits': {'encoder': 'vits', 'features': 64, 'out_channels': [48, 96, 192, 384]},
-            'vitb': {'encoder': 'vitb', 'features': 128, 'out_channels': [96, 192, 384, 768]},
-            'vitl': {'encoder': 'vitl', 'features': 256, 'out_channels': [256, 512, 1024, 1024]},
-            'vitg': {'encoder': 'vitg', 'features': 384, 'out_channels': [1536, 1536, 1536, 1536]}
-        }
-
-        self.model = DepthAnythingV2(**model_configs[encoder])
-        self.model.load_state_dict(torch.load(f'ai_models/checkpoints/depth_anything_v2_{encoder}.pth', map_location='cpu'))
-        self.model = self.model.to(DEVICE).eval()
-        print("Loaded model")
+        start_time = time.time()
+        options = ort.SessionOptions()
+        options.intra_op_num_threads = int(os.getenv("INFERENCE_THREADS", os.cpu_count() or 4))
+        options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+        self.session = ort.InferenceSession(MODEL_FILES[precision], options, providers=["CPUExecutionProvider"])
+        self.input_name = self.session.get_inputs()[0].name
+        print(f"Loaded {precision} depth model in {time.time() - start_time:.2f} seconds")
 
     def generate_depth_map(self, image: np.ndarray) -> np.ndarray:
         """
-        Generate a normalised (0,1) depth map from an image.
-        :param image: Image to generate a depth map from.
+        Generate a normalised (0,1) depth map from a 518x518 BGR image.
+        Same preprocessing as Depth Anything V2's infer_image: RGB, 0-1, ImageNet normalisation, CHW.
+        :param image: Image to generate a depth map from (already resized to the model input size).
         :return: Depth map with largest value as closest.
         """
-        # inference_mode: no autograd bookkeeping -> less memory and faster than plain forward
-        with _inference_lock, torch.inference_mode():
-            depth_map = self.model.infer_image(image)
+        if image.shape[:2] != (MODEL_INPUT_SIZE, MODEL_INPUT_SIZE):
+            image = cv2.resize(image, (MODEL_INPUT_SIZE, MODEL_INPUT_SIZE), interpolation=cv2.INTER_CUBIC)
+        rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32) / 255.0
+        tensor = ((rgb - IMAGENET_MEAN) / IMAGENET_STD).transpose(2, 0, 1)[np.newaxis]
+        with _inference_lock:
+            depth_map = self.session.run(None, {self.input_name: np.ascontiguousarray(tensor)})[0][0]
         return self.normalise(depth_map)
 
     def normalise(self, depth_map: np.ndarray) -> np.ndarray:
@@ -147,7 +148,7 @@ class DepthMapGenerator:
 
         return blurred_depth_map
 
-depth_map_generator = DepthMapGenerator(encoder="vits")
+depth_map_generator = DepthMapGenerator()
 
 if __name__ == '__main__':
 

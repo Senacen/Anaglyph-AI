@@ -6,11 +6,10 @@ LABEL authors="duyhuynh"
 WORKDIR /app
 COPY requirements.txt /app
 
-# opencv-python-headless needs no system OpenGL libraries.
-# CPU-only torch wheels (avoids pulling CUDA builds on amd64).
-RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+# opencv-python-headless needs no system OpenGL libraries; inference uses onnxruntime (no torch at runtime).
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Code + depth model only; the example images are mounted at runtime (see docker-compose.yml and .dockerignore)
+# Code + int8 ONNX depth model only; the example images are mounted at runtime (see docker-compose.yml and .dockerignore)
 COPY . /app
 
 EXPOSE 8000
