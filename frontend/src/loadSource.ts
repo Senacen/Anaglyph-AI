@@ -1,4 +1,4 @@
-import { colourDepth, smoothDepth, Source } from "./stereo";
+import { colourDepth, smoothDepthEdges, Source } from "./stereo";
 
 const apiUrl = import.meta.env.VITE_FLASK_BACKEND_API_URL;
 const maxDimension = Number(import.meta.env.VITE_MAX_DIMENSION) || 1500;
@@ -7,9 +7,6 @@ const maxDimension = Number(import.meta.env.VITE_MAX_DIMENSION) || 1500;
 // It must be sent with API calls, otherwise Cloudflare challenges them and the browser reports "Load failed".
 const api = (path: string, init: RequestInit = {}) => fetch(`${apiUrl}${path}`, { ...init, credentials: "include" });
 
-// Uploaded images get their depth edges softened (as the backend used to); the example images'
-// precomputed depth maps were made without this, so they are left as they are.
-const UPLOAD_DEPTH_SMOOTHING = 15;
 
 function loadImage(url: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
@@ -86,7 +83,7 @@ function serverTiming(response: Response, name: string): number | undefined {
 }
 
 async function buildSource(image: HTMLImageElement, depthImage: HTMLImageElement, imageUrl: string,
-                           smoothing: number, timings: Timings): Promise<Source> {
+                           timings: Timings): Promise<Source> {
     const start = performance.now();
     const [width, height] = fitWithin(image.naturalWidth, image.naturalHeight);
     const rgba = pixels(image, width, height);
@@ -94,10 +91,10 @@ async function buildSource(image: HTMLImageElement, depthImage: HTMLImageElement
     const depthPixels = pixels(depthImage, width, height);
     const rawDepth = new Float32Array(width * height);
     for (let i = 0; i < rawDepth.length; i++) rawDepth[i] = depthPixels[i * 4] / 255;
-    // The preview shows the depth map as the model made it; the smoothed copy is only used to build the
-    // stereo views (it softens depth edges so they tear less, but looks blurry if displayed)
+    // The preview shows the depth map as the model made it; the edge-aware smoothed copy (depth edges snapped
+    // to the photo's outlines) is what the stereo views are built from
     const depthColourUrl = imageDataUrl(colourDepth(rawDepth, width, height));
-    const depth = smoothDepth(rawDepth, width, height, smoothing);
+    const depth = smoothDepthEdges(rawDepth, rgba, width, height);
     timings.prepare = performance.now() - start;
     return { width, height, rgba, depth, imageUrl, depthColourUrl, timings };
 }
@@ -142,7 +139,7 @@ export async function sourceFromFile(file: Blob, onProgress: OnProgress): Promis
 
     const depthUrl = URL.createObjectURL(depthBlob);
     try {
-        return await buildSource(resized, await loadImage(depthUrl), imageUrl, UPLOAD_DEPTH_SMOOTHING, timings);
+        return await buildSource(resized, await loadImage(depthUrl), imageUrl, timings);
     } finally {
         URL.revokeObjectURL(depthUrl);
     }
@@ -168,7 +165,7 @@ export async function randomSource(onProgress: OnProgress): Promise<Source> {
     onProgress({ status: "Building 3D…", previewUrl: imageUrl });
     try {
         const [image, depthImage] = await Promise.all([loadImage(imageUrl), loadImage(depthUrl)]);
-        return await buildSource(image, depthImage, imageUrl, 1, timings);
+        return await buildSource(image, depthImage, imageUrl, timings);
     } finally {
         URL.revokeObjectURL(depthUrl);
     }

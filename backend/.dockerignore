@@ -3,7 +3,8 @@ resources/
 # Only the int8 ONNX model is used at runtime (made by tools/export_onnx.py, which needs the
 # PyTorch weights and model code on the dev machine)
 ai_models/checkpoints/*.pth
-ai_models/checkpoints/depth_anything_v2_vits.onnx
+ai_models/checkpoints/*.onnx
+!ai_models/checkpoints/depth_anything_v2_vits_int8_392.onnx
 ai_models/Depth_Anything_V2/
 tools/
 # Local-only config and dev leftovers

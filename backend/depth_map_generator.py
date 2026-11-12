@@ -6,13 +6,17 @@ import cv2
 import numpy as np
 import onnxruntime as ort
 
-# Depth Anything V2 Small, exported to ONNX by tools/export_onnx.py. The int8-quantised model is the default
-# (smaller and faster on CPU); set DEPTH_MODEL=fp32 to use the full-precision export instead.
-MODEL_FILES = {
-    "int8": "ai_models/checkpoints/depth_anything_v2_vits_int8.onnx",
-    "fp32": "ai_models/checkpoints/depth_anything_v2_vits.onnx",
-}
-MODEL_INPUT_SIZE = 518  # the model was exported for a fixed 518x518 input
+# Depth Anything V2 Small, exported to ONNX by tools/export_onnx.py for a fixed square input size.
+# Default: int8-quantised at 392x392. On the Raspberry Pi that takes 0.73 s per image vs 1.73 s at 518x518,
+# with near-identical edges (the depth map is upscaled to the photo's size either way).
+# DEPTH_MODEL=fp32 and DEPTH_MODEL_SIZE=518/448 select other exports (the file must be in the image).
+MODEL_INPUT_SIZE = int(os.getenv("DEPTH_MODEL_SIZE", 392))
+
+
+def model_file(precision: str, size: int) -> str:
+    quantised = "_int8" if precision == "int8" else ""
+    suffix = "" if size == 518 else f"_{size}"
+    return f"ai_models/checkpoints/depth_anything_v2_vits{quantised}{suffix}.onnx"
 IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
@@ -45,13 +49,13 @@ class DepthMapGenerator:
         options = ort.SessionOptions()
         options.intra_op_num_threads = int(os.getenv("INFERENCE_THREADS", os.cpu_count() or 4))
         options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
-        self.session = ort.InferenceSession(MODEL_FILES[precision], options, providers=["CPUExecutionProvider"])
+        self.session = ort.InferenceSession(model_file(precision, MODEL_INPUT_SIZE), options, providers=["CPUExecutionProvider"])
         self.input_name = self.session.get_inputs()[0].name
-        print(f"Loaded {precision} depth model in {time.time() - start_time:.2f} seconds")
+        print(f"Loaded {precision} {MODEL_INPUT_SIZE}px depth model in {time.time() - start_time:.2f} seconds")
 
     def generate_depth_map(self, image: np.ndarray) -> np.ndarray:
         """
-        Generate a normalised (0,1) depth map from a 518x518 BGR image.
+        Generate a normalised (0,1) depth map from a BGR image (resized to the model's input size).
         Same preprocessing as Depth Anything V2's infer_image: RGB, 0-1, ImageNet normalisation, CHW.
         :param image: Image to generate a depth map from (already resized to the model input size).
         :return: Depth map with largest value as closest.

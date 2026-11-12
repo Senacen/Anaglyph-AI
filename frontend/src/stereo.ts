@@ -21,7 +21,83 @@ export interface Eyes {
 
 export type OutputMode = "anaglyph" | "sbs-parallel" | "sbs-cross" | "wiggle";
 
-/** Horizontal box blur (like cv2.blur(depth, (k, 1))) to soften depth edges and reduce tearing. */
+/** Mean over a (2r+1)x(2r+1) window, edges clamped. Two running-sum passes, so O(pixels) whatever r is. */
+function boxMean(src: Float32Array, width: number, height: number, r: number): Float32Array {
+    const tmp = new Float32Array(src.length);
+    const out = new Float32Array(src.length);
+    const n = 2 * r + 1;
+    for (let y = 0; y < height; y++) { // horizontal pass
+        const row = y * width;
+        let sum = 0;
+        for (let k = -r; k <= r; k++) sum += src[row + Math.min(width - 1, Math.max(0, k))];
+        for (let x = 0; x < width; x++) {
+            tmp[row + x] = sum / n;
+            sum += src[row + Math.min(width - 1, x + r + 1)] - src[row + Math.max(0, x - r)];
+        }
+    }
+    for (let x = 0; x < width; x++) { // vertical pass
+        let sum = 0;
+        for (let k = -r; k <= r; k++) sum += tmp[Math.min(height - 1, Math.max(0, k)) * width + x];
+        for (let y = 0; y < height; y++) {
+            out[y * width + x] = sum / n;
+            sum += tmp[Math.min(height - 1, y + r + 1) * width + x] - tmp[Math.max(0, y - r) * width + x];
+        }
+    }
+    return out;
+}
+
+/**
+ * Edge-aware depth smoothing, guided by the photo:
+ * 1. Expand nearer depth sideways by a couple of pixels (a horizontal max filter), so the photo's soft edge
+ *    pixels move with the foreground object instead of being left behind as a fringe on the background.
+ * 2. Guided filter (He et al.): in each window, fit depth = a * brightness + b. Where the photo is flat,
+ *    a -> 0 and depth is simply averaged (noise smoothed); where the photo has an edge, the depth edge snaps
+ *    onto it. eps sets how strong a photo edge must be for depth to follow it.
+ * This replaces the old horizontal box blur, which smeared depth across object outlines.
+ */
+export function smoothDepthEdges(depth: Float32Array, rgba: Uint8ClampedArray, width: number, height: number,
+                                 expand = 2, radius = 8, eps = 1e-3): Float32Array {
+    const n = width * height;
+    // 1. foreground expansion
+    const p = new Float32Array(n);
+    for (let y = 0; y < height; y++) {
+        const row = y * width;
+        for (let x = 0; x < width; x++) {
+            let m = 0;
+            for (let k = Math.max(0, x - expand); k <= Math.min(width - 1, x + expand); k++) {
+                const v = depth[row + k];
+                if (v > m) m = v;
+            }
+            p[row + x] = m;
+        }
+    }
+    // 2. guided filter with the photo's brightness as guide
+    const I = new Float32Array(n);
+    const Ip = new Float32Array(n);
+    const II = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+        const v = (0.299 * rgba[i * 4] + 0.587 * rgba[i * 4 + 1] + 0.114 * rgba[i * 4 + 2]) / 255;
+        I[i] = v; Ip[i] = v * p[i]; II[i] = v * v;
+    }
+    const meanI = boxMean(I, width, height, radius);
+    const meanP = boxMean(p, width, height, radius);
+    const meanIp = boxMean(Ip, width, height, radius);
+    const meanII = boxMean(II, width, height, radius);
+    const a = new Float32Array(n);
+    const b = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+        const variance = meanII[i] - meanI[i] * meanI[i];
+        a[i] = (meanIp[i] - meanI[i] * meanP[i]) / (variance + eps);
+        b[i] = meanP[i] - a[i] * meanI[i];
+    }
+    const meanA = boxMean(a, width, height, radius);
+    const meanB = boxMean(b, width, height, radius);
+    const out = new Float32Array(n);
+    for (let i = 0; i < n; i++) out[i] = Math.min(1, Math.max(0, meanA[i] * I[i] + meanB[i]));
+    return out;
+}
+
+/** Horizontal box blur (like cv2.blur(depth, (k, 1))): the original smoothing, kept for reference. */
 export function smoothDepth(depth: Float32Array, width: number, height: number, kernel: number): Float32Array {
     if (kernel <= 1) return depth;
     const out = new Float32Array(depth.length);

@@ -18,7 +18,7 @@ from flask_cors import CORS
 from PIL import Image, ImageOps, UnidentifiedImageError
 from werkzeug.exceptions import RequestEntityTooLarge
 
-from depth_map_generator import depth_map_generator
+from depth_map_generator import MODEL_INPUT_SIZE, depth_map_generator
 
 load_dotenv()
 host = os.getenv("FLASK_HOST", "0.0.0.0")
@@ -44,9 +44,9 @@ MAX_DIMENSION = 1500
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024
 Image.MAX_IMAGE_PIXELS = 40_000_000
 
-# The model was trained at 518x518. Images are resized to this square before inference, which also
+# Images are resized to the model's square input size (392 by default) before inference, which also
 # keeps very long thin images from blowing up inference time.
-DEPTH_MAP_RESIZE_DIMENSION = 518
+DEPTH_MAP_RESIZE_DIMENSION = MODEL_INPUT_SIZE
 
 ALLOWED_EXTENSIONS = {
     'bmp', 'dib', 'jpeg', 'jpg', 'jpe', 'jp2', 'png', 'webp',

@@ -2,8 +2,9 @@
 Export Depth Anything V2 Small to ONNX and make an int8-quantised copy.
 
 Run on a dev machine (needs torch, onnx, onnxruntime, onnxscript), from the backend folder:
-    python tools/export_onnx.py
-Writes ai_models/checkpoints/depth_anything_v2_vits.onnx and depth_anything_v2_vits_int8.onnx.
+    python tools/export_onnx.py [input size, default 518, must be a multiple of 14]
+Writes ai_models/checkpoints/depth_anything_v2_vits.onnx and depth_anything_v2_vits_int8.onnx
+(with a _<size> suffix for sizes other than 518).
 The backend only needs onnxruntime at runtime.
 """
 import os
@@ -16,10 +17,12 @@ from onnxruntime.quantization.shape_inference import quant_pre_process
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ai_models.Depth_Anything_V2.depth_anything_v2.dpt import DepthAnythingV2  # noqa: E402
 
-SIZE = 518  # the backend always resizes to 518x518 before inference
+SIZE = int(sys.argv[1]) if len(sys.argv) > 1 else 518  # the backend resizes to SIZE x SIZE before inference
+assert SIZE % 14 == 0, "input size must be a multiple of the ViT patch size (14)"
 CHECKPOINTS = "ai_models/checkpoints"
-FP32 = f"{CHECKPOINTS}/depth_anything_v2_vits.onnx"
-INT8 = f"{CHECKPOINTS}/depth_anything_v2_vits_int8.onnx"
+SUFFIX = "" if SIZE == 518 else f"_{SIZE}"
+FP32 = f"{CHECKPOINTS}/depth_anything_v2_vits{SUFFIX}.onnx"
+INT8 = f"{CHECKPOINTS}/depth_anything_v2_vits_int8{SUFFIX}.onnx"
 
 model = DepthAnythingV2(encoder="vits", features=64, out_channels=[48, 96, 192, 384])
 model.load_state_dict(torch.load(f"{CHECKPOINTS}/depth_anything_v2_vits.pth", map_location="cpu"))

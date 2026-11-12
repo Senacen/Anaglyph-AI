@@ -22,7 +22,7 @@ function firstImage(files: FileList | null | undefined): File | null {
  * Stand-in for the depth map while it loads: the photo, faded, laid out exactly as the depth map will be,
  * with the spinner measured onto its centre (so it sits where the depth map will appear in any layout).
  */
-function DepthPlaceholder({ imageUrl }: { imageUrl: string }) {
+function DepthPlaceholder({ imageUrl, size }: { imageUrl: string; size: { width: number; height: number } }) {
     const imageRef = useRef<HTMLImageElement>(null);
     const [centre, setCentre] = useState<{ x: number; y: number } | null>(null);
     useEffect(() => {
@@ -37,7 +37,7 @@ function DepthPlaceholder({ imageUrl }: { imageUrl: string }) {
     }, [imageUrl]);
     return (
         <>
-            <img ref={imageRef} src={imageUrl} alt="" className="image depthPlaceholderImage" />
+            <img ref={imageRef} src={imageUrl} alt="" className="image depthPlaceholderImage" style={size} />
             {centre && <div className="loader depthPlaceholderSpinner" style={{ left: centre.x, top: centre.y }}></div>}
         </>
     );
@@ -119,35 +119,42 @@ function ImageUpload({ source, loading, progress, onFile, onRandom }: Props) {
         };
     }, [loading, onFile]);
 
-    const aspectRatioAndAreaDimensionsToCoveredArea = (aspectRatio: number, areaWidth: number, areaHeight: number) => {
-        let width = areaWidth; // Start with full width
-        let height = width / aspectRatio; // Calculate height based on aspect ratio
-        // If the calculated height exceeds areaHeight, scale down
+    /** Largest width x height with the given aspect ratio that fits in the area. */
+    const fit = (aspectRatio: number, areaWidth: number, areaHeight: number) => {
+        let width = areaWidth;
+        let height = width / aspectRatio;
         if (height > areaHeight) {
             height = areaHeight;
-            width = height * aspectRatio; // Recalculate width based on the height
+            width = height * aspectRatio;
         }
-        return width * height;
+        return { width, height };
     };
 
     // While loading, `depthUrl` is null and a spinner stands in for the depth map
     const imagePair = (imageUrl: string, depthUrl: string | null, imageAspectRatio: number) => {
-        // If change these display sizes in CSS, make sure to them here as well
-        const areaWidth = windowDimensions.width * 0.95; // 95% of the window width
-        const areaHeight = windowDimensions.height * 0.7; // 70vh in css
-        const rowArea = aspectRatioAndAreaDimensionsToCoveredArea(imageAspectRatio * 2, areaWidth, areaHeight);
-        const columnArea = aspectRatioAndAreaDimensionsToCoveredArea(imageAspectRatio / 2, areaWidth, areaHeight);
-        const layout = rowArea > columnArea ? "Row" : "Column";
+        // The pair may use up to 95% of the window width and 70% of its height
+        const areaWidth = windowDimensions.width * 0.95;
+        const areaHeight = windowDimensions.height * 0.7;
+        // Side by side (pair is twice as wide) or stacked (twice as tall): pick whichever shows the images bigger
+        const row = fit(imageAspectRatio * 2, areaWidth, areaHeight);
+        const column = fit(imageAspectRatio / 2, areaWidth, areaHeight);
+        const layout = row.width * row.height > column.width * column.height ? "Row" : "Column";
+        // Give each image its exact size and make the area only as tall as the pair needs, so there is no empty
+        // band left under the images (e.g. landscape photos stacked on a portrait phone)
+        const image = layout === "Row"
+            ? { width: Math.floor(row.width / 2), height: Math.floor(row.height) }
+            : { width: Math.floor(column.width), height: Math.floor(column.height / 2) };
+        const containerHeight = layout === "Row" ? image.height : image.height * 2;
+        const size = { width: image.width, height: image.height };
         return (
-            <div className={`imagePairContainer${layout}`}>
+            <div className={`imagePairContainer${layout}`} style={{ height: containerHeight }}>
                 <div className={`imagePairLeft${layout}`}>
-                    <img src={imageUrl} alt="Uploaded" className="image" />
+                    <img src={imageUrl} alt="Uploaded" className="image" style={size} />
                 </div>
                 <div className={`imagePairRight${layout}`}>
-                    {depthUrl ? <img src={depthUrl} alt="Depth Map" className="image" /> : (
-                        // Same image and sizing as the depth map will have, faded, with the spinner on top:
-                        // keeps the spinner centred on exactly where the depth map will appear
-                        <DepthPlaceholder imageUrl={imageUrl} />
+                    {depthUrl ? <img src={depthUrl} alt="Depth Map" className="image" style={size} /> : (
+                        // Same image and size as the depth map will have, faded, with the spinner on its centre
+                        <DepthPlaceholder imageUrl={imageUrl} size={size} />
                     )}
                 </div>
             </div>
