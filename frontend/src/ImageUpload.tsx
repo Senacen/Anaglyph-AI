@@ -61,14 +61,6 @@ function timingSummary(t?: Timings): string | null {
 function ImageUpload({ source, loading, progress, onFile, onRandom }: Props) {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const [dragging, setDragging] = useState(false);
-    // Aspect ratio of the photo being loaded, so the preview uses the same row/column layout as the result
-    const [previewAspect, setPreviewAspect] = useState<number | null>(null);
-    useEffect(() => {
-        if (!progress?.previewUrl) return;
-        const image = new Image();
-        image.onload = () => setPreviewAspect(image.naturalWidth / image.naturalHeight);
-        image.src = progress.previewUrl;
-    }, [progress?.previewUrl]);
     const [windowDimensions, setWindowDimensions] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -165,8 +157,13 @@ function ImageUpload({ source, loading, progress, onFile, onRandom }: Props) {
     return (
         <div>
             {dragging && <div className="dropOverlay">Drop image to convert</div>}
-            {loading && progress?.previewUrl && imagePair(progress.previewUrl, null, previewAspect ?? 1)}
-            {loading && !progress?.previewUrl && <div className="loaderRow"><div className="loader"></div></div>}
+            {/* Loading: the new photo (at its real aspect ratio) with a placeholder for the depth map; before the
+                photo is ready, the previous pair stays in place (faded) so the page doesn't collapse and jump */}
+            {loading && progress?.previewUrl && imagePair(progress.previewUrl, null, progress.aspect ?? 1)}
+            {loading && !progress?.previewUrl && source && (
+                <div className="fadedPair">{imagePair(source.imageUrl, source.depthColourUrl, source.width / source.height)}</div>
+            )}
+            {loading && !progress?.previewUrl && !source && <div className="loaderRow"><div className="loader"></div></div>}
             {source && !loading && imagePair(source.imageUrl, source.depthColourUrl, source.width / source.height)}
             <p className="status">
                 {loading ? progress?.status ?? "Loading…" : timingSummary(source?.timings) ?? "\u00a0"}

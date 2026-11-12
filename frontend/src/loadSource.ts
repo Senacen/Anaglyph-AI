@@ -76,6 +76,7 @@ export interface Timings {
 export interface Progress {
     status: string;
     previewUrl?: string;
+    aspect?: number; // width / height of the preview, so the layout is right from the first frame
 }
 type OnProgress = (progress: Progress) => void;
 
@@ -126,7 +127,8 @@ export async function sourceFromFile(file: Blob, onProgress: OnProgress): Promis
     const imageUrl = URL.createObjectURL(jpeg);
     const resized = await loadImage(imageUrl);
     timings.resize = performance.now() - start;
-    onProgress({ status: "Estimating depth…", previewUrl: imageUrl });
+    const aspect = width / height;
+    onProgress({ status: "Estimating depth…", previewUrl: imageUrl, aspect });
 
     const form = new FormData();
     form.append("file", jpeg, "image.jpg");
@@ -146,7 +148,7 @@ export async function sourceFromFile(file: Blob, onProgress: OnProgress): Promis
         timings.upload = Math.max(0, entry.responseStart - entry.requestStart - (timings.server ?? 0));
         timings.download = Math.max(0, entry.responseEnd - entry.responseStart);
     }
-    onProgress({ status: "Building 3D…", previewUrl: imageUrl });
+    onProgress({ status: "Building 3D…", previewUrl: imageUrl, aspect });
 
     const depthUrl = URL.createObjectURL(depthBlob);
     try {
@@ -173,9 +175,9 @@ export async function randomSource(onProgress: OnProgress): Promise<Source> {
     const imageUrl = URL.createObjectURL(await imageResponse.blob());
     const depthUrl = URL.createObjectURL(await depthResponse.blob());
     timings.network = performance.now() - start; // precomputed depth map: no model run
-    onProgress({ status: "Building 3D…", previewUrl: imageUrl });
     try {
         const [image, depthImage] = await Promise.all([loadImage(imageUrl), loadImage(depthUrl)]);
+        onProgress({ status: "Building 3D…", previewUrl: imageUrl, aspect: image.naturalWidth / image.naturalHeight });
         return await buildSource(image, depthImage, imageUrl, timings);
     } finally {
         URL.revokeObjectURL(depthUrl);

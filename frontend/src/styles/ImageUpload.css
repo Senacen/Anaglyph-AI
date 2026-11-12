@@ -89,3 +89,9 @@
     transform-origin: center;
     translate: -50% -50%;
 }
+
+/* Previous image pair while the next one is being fetched: stays put so the layout doesn't jump */
+.fadedPair {
+    opacity: 0.35;
+    transition: opacity 0.2s;
+}
