@@ -64,6 +64,9 @@ function imageDataUrl(data: ImageData): string {
 export interface Timings {
     resize?: number; // browser: decode + shrink + JPEG-encode the photo
     network?: number; // upload + download (request time minus server time)
+    connect?: number; // part of network: DNS + TCP/QUIC + TLS (0 when the connection is reused)
+    upload?: number; // part of network: sending the photo + Cloudflare/tunnel, until the server starts replying
+    download?: number; // part of network: receiving the depth map
     server?: number; // backend total, from the Server-Timing header
     model?: number; // backend depth model only
     prepare?: number; // browser: decode depth map, smooth, colour
@@ -135,6 +138,14 @@ export async function sourceFromFile(file: Blob, onProgress: OnProgress): Promis
     timings.server = serverTiming(response, "total");
     timings.model = serverTiming(response, "model");
     timings.network = timings.server !== undefined ? Math.max(0, requestMs - timings.server) : requestMs;
+    // Detailed breakdown from the browser's Resource Timing (the backend sends Timing-Allow-Origin)
+    const entry = performance.getEntriesByType("resource")
+        .filter((e) => e.name === `${apiUrl}/depth-map`).pop() as PerformanceResourceTiming | undefined;
+    if (entry && entry.responseStart > 0 && entry.requestStart > 0) {
+        timings.connect = Math.max(0, entry.connectEnd - entry.startTime);
+        timings.upload = Math.max(0, entry.responseStart - entry.requestStart - (timings.server ?? 0));
+        timings.download = Math.max(0, entry.responseEnd - entry.responseStart);
+    }
     onProgress({ status: "Building 3D…", previewUrl: imageUrl });
 
     const depthUrl = URL.createObjectURL(depthBlob);

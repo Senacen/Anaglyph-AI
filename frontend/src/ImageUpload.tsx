@@ -50,7 +50,8 @@ function timingSummary(t?: Timings): string | null {
     if (!t) return null;
     const parts = [
         t.resize !== undefined && `Photo prep ${seconds(t.resize)}`,
-        t.network !== undefined && `Network ${seconds(t.network)}`,
+        t.network !== undefined && `Network ${seconds(t.network)}` +
+            (t.upload !== undefined ? ` (connect ${seconds(t.connect)}, upload ${seconds(t.upload)}, download ${seconds(t.download)})` : ""),
         t.server !== undefined && `Server ${seconds(t.server)}${t.model !== undefined ? ` (model ${seconds(t.model)})` : ""}`,
         t.prepare !== undefined && `Depth prep ${seconds(t.prepare)}`,
     ].filter(Boolean);

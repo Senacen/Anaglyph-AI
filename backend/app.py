@@ -69,6 +69,14 @@ def png_response(array: np.ndarray):
     return send_file(io.BytesIO(buffer.tobytes()), mimetype='image/png')
 
 
+@app.after_request
+def allow_timing(response):
+    # Lets the browser expose detailed timing (connect / upload / download) for these cross-origin requests,
+    # so the frontend can show where network time goes. Timing only; no data is exposed.
+    response.headers['Timing-Allow-Origin'] = '*'
+    return response
+
+
 @app.errorhandler(RequestEntityTooLarge)
 def too_large(_):
     return jsonify({'error': 'Image is too large (max 20 MB)'}), 413
