@@ -98,13 +98,10 @@ class DepthMapGenerator:
         :param height: Desired height for the depth map.
         :return: Upscaled normalised depth map.
         """
-        # Convert to image first to use image resizing
-        depth_map_scaled = (depth_map * 255).astype(np.uint8)
-
-        # Use inter_cubic as better result, even though slower, as only slower than inter_linear by about 2ms
-        depth_map_upscaled = cv2.resize(depth_map_scaled, (width, height), interpolation=cv2.INTER_CUBIC)/ 255
-
-        return depth_map_upscaled
+        # Resize in float: cubic overshoots slightly at sharp depth edges, and doing it on 8-bit values clipped
+        # that overshoot into visible stair-step "teeth" along diagonal edges. Quantise only once, at the end.
+        depth_map_upscaled = cv2.resize(depth_map.astype(np.float32), (width, height), interpolation=cv2.INTER_CUBIC)
+        return np.clip(depth_map_upscaled, 0.0, 1.0)
     
     def generate_depth_map_performant(self, image: np.ndarray, intermediateWidth:int, intermediateHeight:int) -> np.ndarray:
         """
